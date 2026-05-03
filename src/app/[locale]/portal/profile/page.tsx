@@ -11,9 +11,29 @@ export default async function ProfilePage({ params }: { params: { locale: Locale
   const actions = await getTranslations({ locale: params.locale, namespace: "common.actions" });
 
   return (
-    <section>
-      <h1 className="font-display text-4xl font-bold">{t("title")}</h1>
-      <ProfileForm locale={params.locale} submitLabel={actions("saveProfile")} defaults={dancer ?? undefined} />
+    <section className="max-w-4xl">
+      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+        {t("account")}
+      </p>
+      <h1 className="mt-2 font-display text-4xl font-bold">{t("title")}</h1>
+      <ProfileForm
+        locale={params.locale}
+        submitLabel={actions("saveProfile")}
+        defaults={dancer ?? undefined}
+        labels={{
+          dancerDetails: t("dancerDetails"),
+          firstName: t("firstName"),
+          lastName: t("lastName"),
+          phone: t("phone"),
+          instagram: t("instagram"),
+          dateOfBirth: t("dateOfBirth"),
+          emergencyName: t("emergencyName"),
+          emergencyPhone: t("emergencyPhone"),
+          guardianName: t("guardianName"),
+          guardianEmail: t("guardianEmail"),
+          guardianPhone: t("guardianPhone")
+        }}
+      />
     </section>
   );
 }

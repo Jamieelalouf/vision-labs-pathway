@@ -1,45 +1,49 @@
-# VISION LABS Pathway Phase 3 Handoff
+# VISION LABS Pathway Phase 4 Handoff
 
-This repo is ready for another agent to continue from Phase 3 into Phase 4. Phase 1 foundation and Phase 2 public website are present, and Phase 3 registration/payment infrastructure has been hardened.
+This repo is ready for another agent to continue from Phase 4 into Phase 5. Phase 1 foundation, Phase 2 public website, Phase 3 registration/payment infrastructure, and Phase 4 student portal polish are present.
 
 ## Current Status
 
 - Framework: Next.js 14 App Router, TypeScript strict, Tailwind, next-intl.
 - Locales: `/fr` and `/en`, with `/` redirecting to `/fr`.
 - Public site: landing, Pathway, cohorts, cohort detail, FAQ.
-- Admin: seasons, settings, cohorts, cohort detail/edit, and operational table shells.
-- Student portal: dashboard and registration-success polling notice.
-- Supabase schema: initial migration plus a Phase 3 hardening migration.
+- Registration: Stripe checkout action, webhook route, payment polling notice, and race-safe enrollment reservation RPC.
+- Student portal: dashboard, My Cohort, Pathway, Rewards, Videos, Profile.
+- Supabase schema: initial migration plus Phase 3 registration hardening migration.
 
-## Phase 3 Work Completed
+## Phase 4 Work Completed
 
-- Added race-safe cohort capacity reservation via Postgres RPC:
-  - `supabase/migrations/20260503010000_phase3_registration_hardening.sql`
-  - `public.reserve_cohort_enrollment(...)`
-- Updated registration flow:
-  - creates/reuses a pending enrollment through the RPC
-  - passes `cohort_id`, `dancer_id`, `enrollment_id`, `price_type`, and `returning_override_id` into Stripe metadata
-  - fixes server-action redirect handling so successful Stripe redirects are not caught as errors
-  - no longer consumes returning-price overrides before payment
-- Hardened Stripe webhook:
-  - verifies signature
-  - records raw event in `payments`
-  - marks enrollment paid/registered on successful checkout or payment intent
-  - sends confirmation email only on first transition to paid
-  - consumes returning-price override only after paid webhook
-  - marks async failures and expired checkout sessions
-  - handles `charge.refunded` by payment intent even when metadata is absent
-- Improved returning price logic:
-  - immediate-next cohort is based on all non-draft, non-cancelled cohorts, not only currently open cohorts
-  - skipping an already-completed cohort correctly loses returning eligibility
-- Added dashboard success polling:
-  - `src/components/portal/payment-status-notice.tsx`
-  - polls `/api/me/enrollments/latest` after `?registration=success`
-- Added/expanded admin Phase 3 tools:
-  - full season edit action and UI
-  - full cohort detail/edit page at `/[locale]/admin/cohorts/[id]`
-  - cohort list links into edit page
-  - settings page stores Stripe price IDs
+- Rebuilt the student dashboard into the PRD card structure:
+  - welcome row and tier badge
+  - season progress with Pathway progress bar
+  - next unlock card
+  - current cohort or current reward card
+  - context-aware primary action
+  - recent video uploads
+  - notifications empty state
+  - payment success polling notice remains active after Stripe redirect
+- Rebuilt My Cohort:
+  - current cohort header
+  - dates, location, address
+  - upload CTA
+  - four-session timeline using generated `cohort_sessions`
+  - resources panel with localized DB fields
+  - uploads for the current cohort
+  - empty state when no paid/current cohort exists
+- Rebuilt My LABS Pathway:
+  - active-season progress
+  - tier badge
+  - bilingual reward ladder
+  - completed cohort history
+  - rules panel
+- Rebuilt My Rewards:
+  - status-aware reward card
+  - generated code display if a code already exists
+  - `DiscountCodeReveal` copy-to-clipboard component
+  - no Phase 7 code-generation CTA yet, matching the PRD phase order
+- Localized portal copy across EN/FR for dashboard, cohort, pathway, rewards, videos, and profile labels.
+- Improved profile form localization and profile page structure.
+- Adjusted `getStudentPortalData` so the current cohort is selected from paid enrollments with active/open/non-final cohorts before falling back to the latest paid enrollment.
 
 ## Validation Run
 
@@ -51,7 +55,7 @@ pnpm run lint
 env NODE_PATH=/Users/jamie/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules /Users/jamie/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node node_modules/next/dist/bin/next build
 ```
 
-The production build completed successfully and generated the new admin cohort detail route.
+The production build completed successfully.
 
 ## Setup On Another Computer
 
@@ -87,32 +91,22 @@ Seed data is available at:
 supabase/seed/phase8_seed.sql
 ```
 
-## Stripe Test Checklist For Next Machine
-
-1. Put test price IDs into `/fr/admin/settings`.
-2. Create an active season.
-3. Create an open cohort with registration set to `open`.
-4. Complete a dancer profile.
-5. Register for cohort and pay with Stripe test card `4242 4242 4242 4242`.
-6. Confirm webhook changes enrollment to `paid` / `registered`.
-7. Confirm four attendance rows are auto-created.
-8. Confirm dashboard payment notice resolves once webhook is processed.
-
 ## Suggested Next Step
 
-Move to Phase 4:
+Move to Phase 5:
 
-- student dashboard polish with real data states
-- My Cohort page with resources and session timeline
-- My LABS Pathway page with completed cohort history
-- My Rewards page status handling
-- Profile editing pass
-- portal mobile pass
+- admin overview KPI polish
+- admin dancers table filters
+- admin dancer profile page
+- admin enrollments action menus
+- admin attendance grid
+- admin rewards and discount code pages
+- admin operational empty/error/loading states
 
 ## Notes For The Next Agent
 
-- Do not rebuild Phase 1 or Phase 2 from scratch.
+- Do not rebuild previous phases from scratch.
 - Keep the PRD business rules as the contract.
-- Continue phase by phase; Phase 4 should be the next implementation milestone.
+- Continue phase by phase; Phase 5 should be the next implementation milestone.
+- Phase 4 intentionally displays generated reward codes if present, but does not expose the Phase 7 "Get my code" generation flow.
 - Replace the generated hero poster with real VISION LABS photography or a training reel when brand assets are available.
-- The app is intentionally usable without Supabase env vars for public empty states, but real registration needs Supabase + Stripe configured.

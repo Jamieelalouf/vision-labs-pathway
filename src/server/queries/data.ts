@@ -14,7 +14,10 @@ export const getActiveSeason = cache(async () => {
 export const getSeasons = cache(async () => {
   if (!hasSupabaseEnv()) return [];
   const supabase = createServerClient();
-  const { data } = await supabase.from("seasons").select("*").order("start_date", { ascending: false });
+  const { data } = await supabase
+    .from("seasons")
+    .select("*")
+    .order("start_date", { ascending: false });
   return data ?? [];
 });
 
@@ -80,7 +83,9 @@ export const getDancersForAdmin = cache(async () => {
   const supabase = createServerClient();
   const { data } = await supabase
     .from("dancers")
-    .select("*, profiles(email,language_pref), enrollments(id,payment_status,completion_status,price_paid_cad), dancer_rewards(tier,status,cohorts_completed_count)")
+    .select(
+      "*, profiles(email,language_pref), enrollments(id,payment_status,completion_status,price_paid_cad), dancer_rewards(tier,status,cohorts_completed_count)"
+    )
     .order("last_name", { ascending: true });
   return data ?? [];
 });
@@ -100,7 +105,9 @@ export const getAttendanceForAdmin = cache(async () => {
   const supabase = createServerClient();
   const { data } = await supabase
     .from("attendance")
-    .select("*, enrollments(dancers(first_name,last_name), cohorts(name)), cohort_sessions(session_number,session_date)")
+    .select(
+      "*, enrollments(dancers(first_name,last_name), cohorts(name)), cohort_sessions(session_number,session_date)"
+    )
     .order("created_at", { ascending: false })
     .limit(200);
   return data ?? [];
@@ -111,7 +118,9 @@ export const getRewardsForAdmin = cache(async () => {
   const supabase = createServerClient();
   const { data } = await supabase
     .from("dancer_rewards")
-    .select("*, dancers(first_name,last_name,profiles(email)), seasons(name), discount_codes(code,status)")
+    .select(
+      "*, dancers(first_name,last_name,profiles(email)), seasons(name), discount_codes(code,status)"
+    )
     .order("updated_at", { ascending: false });
   return data ?? [];
 });
@@ -131,7 +140,9 @@ export const getVideosForAdmin = cache(async () => {
   const supabase = createServerClient();
   const { data } = await supabase
     .from("video_uploads")
-    .select("*, dancers(first_name,last_name,profiles(email)), cohorts(name), cohort_sessions(session_number)")
+    .select(
+      "*, dancers(first_name,last_name,profiles(email)), cohorts(name), cohort_sessions(session_number)"
+    )
     .order("created_at", { ascending: false });
   return data ?? [];
 });
@@ -147,15 +158,13 @@ export const getStudentPortalData = cache(async () => {
     .select("*")
     .eq("is_active", true)
     .maybeSingle();
-  const { data: currentEnrollment } = await supabase
+  const { data: paidEnrollments } = await supabase
     .from("enrollments")
     .select("*, cohorts(*, cohort_sessions(*), resources(*))")
     .eq("dancer_id", dancer.id)
     .eq("payment_status", "paid")
     .in("enrollment_status", ["registered", "completed"])
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .order("created_at", { ascending: false });
   const { data: reward } = activeSeason
     ? await supabase
         .from("dancer_rewards")
@@ -182,6 +191,17 @@ export const getStudentPortalData = cache(async () => {
     .order("start_date", { ascending: true })
     .limit(1)
     .maybeSingle();
+
+  const currentEnrollment =
+    paidEnrollments
+      ?.map((enrollment) => ({
+        enrollment,
+        cohort: Array.isArray(enrollment.cohorts) ? enrollment.cohorts[0] : enrollment.cohorts
+      }))
+      .filter(({ cohort }) => cohort && !["completed", "cancelled"].includes(cohort.status))
+      .sort((a, b) => a.cohort.start_date.localeCompare(b.cohort.start_date))[0]?.enrollment ??
+    paidEnrollments?.[0] ??
+    null;
 
   return {
     dancer,
