@@ -10,7 +10,7 @@ function isAuthorized(request: NextRequest) {
   return secret && request.headers.get("authorization") === `Bearer ${secret}`;
 }
 
-export async function POST(request: NextRequest) {
+async function handleCron(request: NextRequest) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -84,4 +84,8 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json({ cohorts: cohorts?.length ?? 0, completedEnrollments, rewardEmails });
+}
+
+export async function POST(request: NextRequest) {
+  return handleCron(request);
 }

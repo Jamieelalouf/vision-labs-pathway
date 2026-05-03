@@ -17,13 +17,14 @@ const requiredEnv = [
 export function GET() {
   const missing = requiredEnv.filter((key) => !process.env[key]);
   const status = missing.length === 0 ? 200 : 503;
+  const isProduction = process.env.NODE_ENV === "production";
 
   return NextResponse.json(
     {
       ok: missing.length === 0,
       service: "vision-labs-pathway",
       checkedAt: new Date().toISOString(),
-      missing
+      ...(isProduction ? {} : { missing })
     },
     {
       status,

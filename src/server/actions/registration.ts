@@ -148,6 +148,10 @@ export async function registerForCohortAction(formData: FormData) {
 
 export async function markDevEnrollmentPaidAction(formData: FormData) {
   const locale = actionLocale(formData);
+
+  if (process.env.NODE_ENV !== "development") {
+    redirect(`/${locale}/portal/dashboard?error=not-available`);
+  }
   const dancer = await requireCompleteDancerProfile(locale);
   const enrollmentId = readString(formData, "enrollment_id");
   const supabase = createServerClient();

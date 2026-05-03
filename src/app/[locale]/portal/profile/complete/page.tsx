@@ -8,7 +8,13 @@ import type { Locale } from "@/i18n/routing";
 import { updateDancerProfileAction } from "@/server/actions/auth";
 import { requireUser } from "@/server/queries/auth";
 
-export default async function CompleteProfilePage({ params }: { params: { locale: Locale } }) {
+export default async function CompleteProfilePage({
+  params,
+  searchParams
+}: {
+  params: { locale: Locale };
+  searchParams?: { cohort?: string };
+}) {
   await requireUser(params.locale);
   const t = await getTranslations({ locale: params.locale, namespace: "auth" });
   const profile = await getTranslations({ locale: params.locale, namespace: "portal.profile" });
@@ -21,6 +27,7 @@ export default async function CompleteProfilePage({ params }: { params: { locale
       <p className="mt-4 text-muted-foreground">{t("profileIntro")}</p>
       <ProfileForm
         locale={params.locale}
+        cohort={searchParams?.cohort}
         submitLabel={actions("saveProfile")}
         labels={{
           dancerDetails: profile("dancerDetails"),
@@ -44,11 +51,13 @@ export function ProfileForm({
   locale,
   submitLabel,
   defaults,
+  cohort,
   labels
 }: {
   locale: Locale;
   submitLabel: string;
   defaults?: Record<string, string | null>;
+  cohort?: string;
   labels: {
     dancerDetails: string;
     firstName: string;
@@ -71,6 +80,7 @@ export function ProfileForm({
       <CardContent>
         <form action={updateDancerProfileAction} className="grid gap-5 md:grid-cols-2">
           <input type="hidden" name="language_pref" value={locale} />
+          <input type="hidden" name="cohort" value={cohort ?? ""} />
           <div className="space-y-2">
             <Label htmlFor="first_name">{labels.firstName}</Label>
             <Input

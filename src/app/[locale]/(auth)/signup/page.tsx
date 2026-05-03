@@ -12,7 +12,7 @@ export default async function SignUpPage({
   searchParams
 }: {
   params: { locale: Locale };
-  searchParams: { error?: string };
+  searchParams: { error?: string; cohort?: string };
 }) {
   const t = await getTranslations({ locale: params.locale, namespace: "auth" });
 
@@ -25,6 +25,7 @@ export default async function SignUpPage({
         <CardContent>
           <form action={signUpAction} className="space-y-5">
             <input type="hidden" name="locale" value={params.locale} />
+            <input type="hidden" name="cohort" value={searchParams.cohort ?? ""} />
             <div className="space-y-2">
               <Label htmlFor="email">{t("email")}</Label>
               <Input id="email" name="email" type="email" autoComplete="email" required />

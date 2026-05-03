@@ -18,6 +18,8 @@ function formValue(formData: FormData, key: string) {
 }
 
 export async function signUpAction(formData: FormData) {
+  const cohortId = formValue(formData, "cohort");
+  const cohortQuery = cohortId ? `?cohort=${encodeURIComponent(cohortId)}` : "";
   const parsed = signUpSchema.safeParse({
     email: formValue(formData, "email"),
     password: formValue(formData, "password"),
@@ -34,15 +36,18 @@ export async function signUpAction(formData: FormData) {
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
-      emailRedirectTo: `${origin}/${parsed.data.locale}/portal/profile/complete`
+      emailRedirectTo: `${origin}/${parsed.data.locale}/portal/profile/complete${cohortQuery}`
     }
   });
 
   if (error) {
-    redirect(`/${parsed.data.locale}/signup?error=${encodeURIComponent(error.message)}`);
+    const separator = cohortQuery ? "&" : "?";
+    redirect(
+      `/${parsed.data.locale}/signup${cohortQuery}${separator}error=${encodeURIComponent(error.message)}`
+    );
   }
 
-  redirect(`/${parsed.data.locale}/portal/profile/complete`);
+  redirect(`/${parsed.data.locale}/portal/profile/complete${cohortQuery}`);
 }
 
 export async function signInAction(formData: FormData) {
@@ -130,6 +135,8 @@ export async function updateLanguagePrefAction(locale: Locale) {
 export async function updateDancerProfileAction(formData: FormData) {
   const localeValue = formValue(formData, "language_pref");
   const locale = isLocale(localeValue) ? localeValue : defaultLocale;
+  const cohortId = formValue(formData, "cohort");
+  const cohortQuery = cohortId ? `?cohort=${encodeURIComponent(cohortId)}` : "";
   const parsed = profileSchema.safeParse({
     first_name: formValue(formData, "first_name"),
     last_name: formValue(formData, "last_name"),
@@ -145,7 +152,8 @@ export async function updateDancerProfileAction(formData: FormData) {
   });
 
   if (!parsed.success) {
-    redirect(`/${locale}/portal/profile/complete?error=invalid`);
+    const separator = cohortQuery ? "&" : "?";
+    redirect(`/${locale}/portal/profile/complete${cohortQuery}${separator}error=invalid`);
   }
 
   const supabase = createServerClient();
@@ -176,9 +184,12 @@ export async function updateDancerProfileAction(formData: FormData) {
   const { error } = await supabase.from("dancers").upsert(payload, { onConflict: "profile_id" });
 
   if (error) {
-    redirect(`/${locale}/portal/profile/complete?error=${encodeURIComponent(error.message)}`);
+    const separator = cohortQuery ? "&" : "?";
+    redirect(
+      `/${locale}/portal/profile/complete${cohortQuery}${separator}error=${encodeURIComponent(error.message)}`
+    );
   }
 
   revalidatePath(`/${locale}/portal`, "layout");
-  redirect(`/${locale}/portal/dashboard`);
+  redirect(`/${locale}/portal/dashboard${cohortQuery}`);
 }

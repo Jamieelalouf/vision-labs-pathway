@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Globe } from "lucide-react";
 import { useTransition } from "react";
 
@@ -10,6 +10,7 @@ import { updateLanguagePrefAction } from "@/server/actions/auth";
 export function LanguageSwitcher({ locale }: { locale: "en" | "fr" }) {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const nextLocale = locale === "fr" ? "en" : "fr";
 
@@ -17,10 +18,12 @@ export function LanguageSwitcher({ locale }: { locale: "en" | "fr" }) {
     const segments = pathname.split("/");
     segments[1] = nextLocale;
     const nextPath = segments.join("/") || `/${nextLocale}`;
+    const query = searchParams.toString();
+    const nextUrl = query ? `${nextPath}?${query}` : nextPath;
 
     startTransition(async () => {
       await updateLanguagePrefAction(nextLocale);
-      router.push(nextPath);
+      router.push(nextUrl);
       router.refresh();
     });
   }
