@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import { getLocale } from "next-intl/server";
 
 import "@/app/globals.css";
-import { defaultLocale, isLocale } from "@/i18n/routing";
 
 export const metadata: Metadata = {
   title: {
@@ -14,9 +13,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000")
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const requestedLocale = headers().get("x-next-intl-locale");
-  const locale = requestedLocale && isLocale(requestedLocale) ? requestedLocale : defaultLocale;
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale();
 
   return (
     <html lang={locale} className="dark">

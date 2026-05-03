@@ -13,7 +13,7 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
       <h1 className="font-display text-4xl font-bold">My Cohort</h1>
       <EmptyState
         title="No active cohort yet"
-        description="After payment is confirmed, your current cohort details, sessions, and resources will appear here."
+        description="Once your enrollment is active, your cohort details, sessions, and resources will appear here."
         action={
           <Button asChild>
             <Link href={`/${params.locale}/cohorts`}>View cohorts</Link>

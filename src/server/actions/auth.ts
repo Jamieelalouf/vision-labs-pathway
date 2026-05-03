@@ -21,12 +21,15 @@ export async function signUpAction(formData: FormData) {
   const parsed = signUpSchema.safeParse({
     email: formValue(formData, "email"),
     password: formValue(formData, "password"),
-    locale: formValue(formData, "locale") || defaultLocale
+    locale: formValue(formData, "locale") || defaultLocale,
+    cohort: formValue(formData, "cohort") || undefined
   });
 
   if (!parsed.success) {
     redirect(`/${defaultLocale}/signup?error=invalid`);
   }
+
+  const cohortQuery = parsed.data.cohort ? `&cohort=${encodeURIComponent(parsed.data.cohort)}` : "";
 
   const supabase = createServerClient();
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -39,10 +42,10 @@ export async function signUpAction(formData: FormData) {
   });
 
   if (error) {
-    redirect(`/${parsed.data.locale}/signup?error=${encodeURIComponent(error.message)}`);
+    redirect(`/${parsed.data.locale}/signup?error=${encodeURIComponent(error.message)}${cohortQuery}`);
   }
 
-  redirect(`/${parsed.data.locale}/portal/profile/complete`);
+  redirect(`/${parsed.data.locale}/portal/profile/complete${cohortQuery ? `?${cohortQuery.slice(1)}` : ""}`);
 }
 
 export async function signInAction(formData: FormData) {
