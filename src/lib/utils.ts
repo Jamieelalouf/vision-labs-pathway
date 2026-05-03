@@ -21,6 +21,13 @@ export function formatDate(value: string | Date, locale: string) {
   }).format(new Date(value));
 }
 
+export function formatTime(value: string, locale: string) {
+  return new Intl.DateTimeFormat(locale === "fr" ? "fr-CA" : "en-CA", {
+    hour: "numeric",
+    minute: "2-digit"
+  }).format(new Date(`1970-01-01T${value}`));
+}
+
 export function localizedField<T extends Record<string, unknown>>(
   record: T,
   field: string,

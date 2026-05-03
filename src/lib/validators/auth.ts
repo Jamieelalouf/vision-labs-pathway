@@ -3,8 +3,7 @@ import { z } from "zod";
 export const signUpSchema = z.object({
   email: z.string().email(),
   password: z.string().min(10, "Password must be at least 10 characters."),
-  locale: z.enum(["en", "fr"]).default("fr"),
-  cohort: z.string().trim().min(1).optional()
+  locale: z.enum(["en", "fr"]).default("fr")
 });
 
 export const signInSchema = z.object({

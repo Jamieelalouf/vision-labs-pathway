@@ -1,19 +1,23 @@
 import { cn } from "@/lib/utils";
 
-const milestones = [
-  { count: 1, label: "Member" },
-  { count: 2, label: "Alumni" },
-  { count: 3, label: "Elite" },
-  { count: 5, label: "Legacy" }
-];
+const defaultMilestones = [
+  { count: 1, key: "member", label: "Member" },
+  { count: 2, key: "alumni", label: "Alumni" },
+  { count: 3, key: "elite", label: "Elite" },
+  { count: 5, key: "legacy", label: "Legacy" }
+] as const;
+
+type MilestoneKey = (typeof defaultMilestones)[number]["key"];
 
 export function PathwayProgress({
   completed,
   max = 5,
+  labels,
   className
 }: {
   completed: number;
   max?: number;
+  labels?: Partial<Record<MilestoneKey, string>>;
   className?: string;
 }) {
   const clamped = Math.min(Math.max(completed, 0), max);
@@ -26,7 +30,7 @@ export function PathwayProgress({
           className="absolute left-0 top-0 h-2 rounded-full bg-primary transition-all"
           style={{ width: `${percentage}%` }}
         />
-        {milestones.map((milestone) => {
+        {defaultMilestones.map((milestone) => {
           const left = `${(milestone.count / max) * 100}%`;
           const reached = clamped >= milestone.count;
           return (
@@ -46,10 +50,10 @@ export function PathwayProgress({
         })}
       </div>
       <div className="grid grid-cols-4 gap-2 text-xs text-muted-foreground">
-        {milestones.map((milestone) => (
+        {defaultMilestones.map((milestone) => (
           <div key={milestone.count} className="min-w-0">
             <p className="font-semibold text-foreground">{milestone.count}</p>
-            <p className="truncate">{milestone.label}</p>
+            <p className="truncate">{labels?.[milestone.key] ?? milestone.label}</p>
           </div>
         ))}
       </div>

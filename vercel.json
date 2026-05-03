@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/compute-completions",
+      "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/expire-rewards",
+      "schedule": "0 8 * * *"
+    }
+  ]
+}

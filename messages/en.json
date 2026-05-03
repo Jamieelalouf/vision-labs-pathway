@@ -37,6 +37,7 @@
     "actions": {
       "registerNext": "Register for Next Cohort",
       "viewPathway": "View LABS Pathway",
+      "viewDetails": "View details",
       "saveProfile": "Save profile",
       "continue": "Continue"
     }
@@ -45,6 +46,7 @@
     "eyebrow": "VISION LABS · Season 2027",
     "headline": "A 4-week training experience for dancers ready to grow with intention.",
     "subhead": "Train, reflect, film, and develop through a focused cohort built for dancers who want to take their growth seriously.",
+    "heroMeta": "4 weeks / 5 milestones / 1 season",
     "whatTitle": "What is VISION LABS?",
     "whatBody": "VISION LABS is a four-week training container for dancers who want structure, accountability, and momentum without turning growth into noise.",
     "points": {
@@ -53,31 +55,157 @@
       "momentum": "Build toward convention rewards"
     },
     "howTitle": "How the 4-week cohort works",
+    "weeks": [
+      {
+        "step": "Week 1",
+        "title": "Set the intention",
+        "description": "Establish the training focus, season goal, and personal growth target for the cohort."
+      },
+      {
+        "step": "Week 2",
+        "title": "Build the material",
+        "description": "Push technique, texture, memory, and performance choices inside a focused rehearsal room."
+      },
+      {
+        "step": "Week 3",
+        "title": "Film and refine",
+        "description": "Capture progress, review what is landing, and tighten the details that change the work."
+      },
+      {
+        "step": "Week 4",
+        "title": "Complete the cycle",
+        "description": "Close the cohort with momentum, completion tracking, and the next Pathway milestone."
+      }
+    ],
     "getsTitle": "What dancers get",
+    "gets": [
+      {
+        "title": "Focused weekly training",
+        "description": "Four sessions built for dancers who want accountability, stamina, and sharper choices."
+      },
+      {
+        "title": "Cohort rhythm",
+        "description": "A clear start, a clear finish, and enough pressure to make the work feel real."
+      },
+      {
+        "title": "Video momentum",
+        "description": "Upload files or links so your training record stays connected to the cohort."
+      },
+      {
+        "title": "Pathway tracking",
+        "description": "Every completed cohort moves you closer to convention rewards and Legacy status."
+      },
+      {
+        "title": "Returning pricing",
+        "description": "Complete the immediate previous cohort and your next LABS registration drops to $247."
+      },
+      {
+        "title": "Convention alignment",
+        "description": "The season points toward the annual VISION Dance Convention without making rewards messy."
+      }
+    ],
     "pathwayTitle": "The more you complete, the more you unlock",
+    "pathwayIntro": "Rewards upgrade as you finish cohorts in the active season. Nothing stacks, so the highest unlocked tier is always the one that matters.",
+    "rewardCards": [
+      {
+        "tier": "member",
+        "title": "LABS Member",
+        "reward": "$25 off VISION Convention",
+        "required": "1 cohort completed"
+      },
+      {
+        "tier": "alumni",
+        "title": "LABS Alumni",
+        "reward": "$50 off VISION Convention",
+        "required": "2 cohorts completed"
+      },
+      {
+        "tier": "elite",
+        "title": "LABS Elite",
+        "reward": "$100 off VISION Convention",
+        "required": "3 cohorts completed"
+      },
+      {
+        "tier": "legacy",
+        "title": "LABS Legacy",
+        "reward": "Free Weekend Pass",
+        "required": "5 cohorts completed"
+      }
+    ],
+    "progressLabels": {
+      "member": "Member",
+      "alumni": "Alumni",
+      "elite": "Elite",
+      "legacy": "Legacy"
+    },
     "cohortTitle": "Upcoming cohort",
+    "cohortEmptyTitle": "The next cohort is coming",
+    "cohortEmptyDescription": "Once registration opens, the featured cohort will appear here automatically.",
+    "testimonialsTitle": "What the room feels like",
+    "testimonials": [
+      {
+        "quote": "The structure made me show up differently every week.",
+        "name": "LABS dancer"
+      },
+      {
+        "quote": "It felt serious without feeling cold. You knew what you were working toward.",
+        "name": "Returning dancer"
+      },
+      {
+        "quote": "The Pathway made consistency feel visible.",
+        "name": "VISION LABS participant"
+      }
+    ],
     "faqTitle": "Questions before you step in?",
-    "finalTitle": "Apply intention. Join the next cohort."
+    "faqLink": "Read the full FAQ",
+    "finalTitle": "Apply intention. Join the next cohort.",
+    "finalBody": "Registration, payment, cohort access, progress, and rewards all live in one clean pathway."
   },
   "pathway": {
     "title": "The LABS Pathway",
     "intro": "Complete cohorts in a season and unlock upgraded rewards toward the annual VISION Dance Convention.",
+    "ladderTitle": "One season, one highest tier",
+    "ladderBody": "The ladder is designed to reward consistency without stacking codes or creating checkout confusion.",
     "rulesTitle": "Rules that keep it clean",
     "rules": [
       "Rewards apply to the next annual VISION Convention only.",
       "Rewards upgrade and never stack.",
       "Returning dancers keep the $247 price for the immediate next cohort.",
       "Legacy is a free Weekend Pass and resets each season."
-    ]
+    ],
+    "seasonTitle": "How a season moves",
+    "seasonEyebrow": "Season",
+    "seasonSteps": ["Cohort", "Cohort", "Cohort", "Convention"],
+    "seasonBody": "Each LABS completion updates your season progress. At convention time, you claim the best reward you earned."
   },
   "cohorts": {
     "title": "Upcoming Cohorts",
     "intro": "Open and active VISION LABS cohorts will appear here once an admin publishes them.",
     "emptyTitle": "No cohorts are open yet",
-    "emptyDescription": "Create a cohort in the admin area, set it open, and it will show up here automatically."
+    "emptyDescription": "Create a cohort in the admin area, set it open, and it will show up here automatically.",
+    "dateRange": "Dates",
+    "location": "Location",
+    "regularPrice": "Regular price",
+    "returningPrice": "Returning price",
+    "capacity": "Capacity",
+    "full": "Cohort full",
+    "featured": "Featured cohort",
+    "detailsEyebrow": "VISION LABS Cohort",
+    "sessionsTitle": "Four-week timeline",
+    "descriptionTitle": "About this cohort",
+    "registrationTitle": "Registration",
+    "returningNote": "Returning dancer price",
+    "securePayment": "Secure payment through Stripe after profile completion.",
+    "weekPrefix": "Week",
+    "sessionFallback": "Focused cohort training session",
+    "registrationClosed": "Registration closed",
+    "errorTitle": "Registration needs attention",
+    "supabaseMissingTitle": "Supabase is not configured",
+    "supabaseMissingDescription": "Add Supabase environment variables to load live cohort details."
   },
   "faq": {
     "title": "FAQ",
+    "description": "VISION LABS registration, completion, pricing, and rewards FAQ.",
     "items": [
       {
         "q": "How long is a LABS cohort?",
@@ -114,7 +242,10 @@
     "dashboard": {
       "welcome": "Welcome back",
       "emptyTitle": "Your dashboard is ready",
-      "emptyDescription": "Once you register for a cohort, your sessions, progress, uploads, and rewards will appear here."
+      "emptyDescription": "Once you register for a cohort, your sessions, progress, uploads, and rewards will appear here.",
+      "paymentProcessingTitle": "Processing your payment",
+      "paymentProcessingDescription": "Stripe confirmed your checkout. The portal may take up to a minute to show the paid cohort while the webhook finishes.",
+      "paymentConfirmedTitle": "Registration confirmed"
     },
     "profile": {
       "title": "Profile",

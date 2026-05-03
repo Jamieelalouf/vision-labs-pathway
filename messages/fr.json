@@ -37,6 +37,7 @@
     "actions": {
       "registerNext": "S'inscrire a la prochaine cohorte",
       "viewPathway": "Voir le LABS Pathway",
+      "viewDetails": "Voir les details",
       "saveProfile": "Enregistrer le profil",
       "continue": "Continuer"
     }
@@ -45,6 +46,7 @@
     "eyebrow": "VISION LABS · Saison 2027",
     "headline": "Une experience d'entrainement de 4 semaines pour les danseurs prets a grandir avec intention.",
     "subhead": "Entraine-toi, reflechis, filme et evolue dans une cohorte ciblee pour les danseurs qui prennent leur croissance au serieux.",
+    "heroMeta": "4 semaines / 5 jalons / 1 saison",
     "whatTitle": "C'est quoi VISION LABS?",
     "whatBody": "VISION LABS est un cadre d'entrainement de quatre semaines pour les danseurs qui veulent de la structure, de l'imputabilite et du momentum.",
     "points": {
@@ -53,31 +55,157 @@
       "momentum": "Avancer vers les recompenses de convention"
     },
     "howTitle": "Comment fonctionne la cohorte de 4 semaines",
+    "weeks": [
+      {
+        "step": "Semaine 1",
+        "title": "Definir l'intention",
+        "description": "Clarifie le focus d'entrainement, l'objectif de saison et la direction personnelle de la cohorte."
+      },
+      {
+        "step": "Semaine 2",
+        "title": "Construire la matiere",
+        "description": "Travaille la technique, la texture, la memoire et les choix de performance dans un cadre cible."
+      },
+      {
+        "step": "Semaine 3",
+        "title": "Filmer et raffiner",
+        "description": "Capture le progres, observe ce qui fonctionne et precise les details qui changent le travail."
+      },
+      {
+        "step": "Semaine 4",
+        "title": "Completer le cycle",
+        "description": "Termine la cohorte avec momentum, suivi de completion et prochain jalon du Pathway."
+      }
+    ],
     "getsTitle": "Ce que les danseurs recoivent",
+    "gets": [
+      {
+        "title": "Entrainement hebdomadaire cible",
+        "description": "Quatre sessions pour les danseurs qui veulent de l'imputabilite, de l'endurance et des choix plus clairs."
+      },
+      {
+        "title": "Rythme de cohorte",
+        "description": "Un debut clair, une fin claire, et assez de pression pour rendre le travail concret."
+      },
+      {
+        "title": "Momentum video",
+        "description": "Televerse des fichiers ou liens pour garder ton parcours connecte a la cohorte."
+      },
+      {
+        "title": "Suivi Pathway",
+        "description": "Chaque cohorte completee te rapproche des recompenses de convention et du statut Legacy."
+      },
+      {
+        "title": "Prix de retour",
+        "description": "Complete la cohorte precedente immediate et ta prochaine inscription LABS passe a 247 $."
+      },
+      {
+        "title": "Lien avec la convention",
+        "description": "La saison pointe vers la convention annuelle VISION Dance sans compliquer les recompenses."
+      }
+    ],
     "pathwayTitle": "Plus tu completes, plus tu debloques",
+    "pathwayIntro": "Les recompenses montent de niveau quand tu completes des cohortes dans la saison active. Rien ne se combine: le plus haut niveau debloque est toujours celui qui compte.",
+    "rewardCards": [
+      {
+        "tier": "member",
+        "title": "Membre LABS",
+        "reward": "25 $ de rabais sur la convention VISION",
+        "required": "1 cohorte completee"
+      },
+      {
+        "tier": "alumni",
+        "title": "Ancien LABS",
+        "reward": "50 $ de rabais sur la convention VISION",
+        "required": "2 cohortes completees"
+      },
+      {
+        "tier": "elite",
+        "title": "LABS Elite",
+        "reward": "100 $ de rabais sur la convention VISION",
+        "required": "3 cohortes completees"
+      },
+      {
+        "tier": "legacy",
+        "title": "LABS Legacy",
+        "reward": "Pass week-end gratuit",
+        "required": "5 cohortes completees"
+      }
+    ],
+    "progressLabels": {
+      "member": "Membre",
+      "alumni": "Ancien",
+      "elite": "Elite",
+      "legacy": "Legacy"
+    },
     "cohortTitle": "Prochaine cohorte",
+    "cohortEmptyTitle": "La prochaine cohorte arrive",
+    "cohortEmptyDescription": "Quand les inscriptions ouvrent, la cohorte en vedette apparaitra ici automatiquement.",
+    "testimonialsTitle": "Ce qu'on ressent dans la salle",
+    "testimonials": [
+      {
+        "quote": "La structure m'a fait arriver differemment chaque semaine.",
+        "name": "Danseur LABS"
+      },
+      {
+        "quote": "C'etait serieux sans etre froid. Tu savais vers quoi tu travaillais.",
+        "name": "Danseur de retour"
+      },
+      {
+        "quote": "Le Pathway rendait la constance visible.",
+        "name": "Participant VISION LABS"
+      }
+    ],
     "faqTitle": "Des questions avant de commencer?",
-    "finalTitle": "Mets l'intention en action. Joins la prochaine cohorte."
+    "faqLink": "Lire la FAQ complete",
+    "finalTitle": "Mets l'intention en action. Joins la prochaine cohorte.",
+    "finalBody": "Inscription, paiement, acces cohorte, progres et recompenses vivent dans un pathway clair."
   },
   "pathway": {
     "title": "Le LABS Pathway",
     "intro": "Complete des cohortes dans une saison et debloque des recompenses vers la convention annuelle VISION Dance.",
+    "ladderTitle": "Une saison, un plus haut niveau",
+    "ladderBody": "L'echelle recompense la constance sans empiler les codes ni compliquer le paiement.",
     "rulesTitle": "Les regles du systeme",
     "rules": [
       "Les recompenses s'appliquent seulement a la prochaine convention annuelle VISION.",
       "Les recompenses montent de niveau et ne se combinent jamais.",
       "Les danseurs qui reviennent gardent le prix de 247 $ pour la cohorte immediate suivante.",
       "Legacy donne un Pass week-end gratuit et recommence a chaque saison."
-    ]
+    ],
+    "seasonTitle": "Comment avance une saison",
+    "seasonEyebrow": "Saison",
+    "seasonSteps": ["Cohorte", "Cohorte", "Cohorte", "Convention"],
+    "seasonBody": "Chaque completion LABS met a jour ton progres de saison. Au moment de la convention, tu reclames la meilleure recompense gagnee."
   },
   "cohorts": {
     "title": "Cohortes a venir",
     "intro": "Les cohortes VISION LABS ouvertes et actives apparaitront ici lorsqu'un admin les publie.",
     "emptyTitle": "Aucune cohorte ouverte pour le moment",
-    "emptyDescription": "Cree une cohorte dans l'espace admin, ouvre les inscriptions, et elle apparaitra ici automatiquement."
+    "emptyDescription": "Cree une cohorte dans l'espace admin, ouvre les inscriptions, et elle apparaitra ici automatiquement.",
+    "dateRange": "Dates",
+    "location": "Lieu",
+    "regularPrice": "Prix regulier",
+    "returningPrice": "Prix de retour",
+    "capacity": "Capacite",
+    "full": "Cohorte complete",
+    "featured": "Cohorte en vedette",
+    "detailsEyebrow": "Cohorte VISION LABS",
+    "sessionsTitle": "Timeline de 4 semaines",
+    "descriptionTitle": "A propos de cette cohorte",
+    "registrationTitle": "Inscription",
+    "returningNote": "Prix danseur de retour",
+    "securePayment": "Paiement securise avec Stripe apres completion du profil.",
+    "weekPrefix": "Semaine",
+    "sessionFallback": "Session d'entrainement ciblee",
+    "registrationClosed": "Inscriptions fermees",
+    "errorTitle": "L'inscription demande ton attention",
+    "supabaseMissingTitle": "Supabase n'est pas configure",
+    "supabaseMissingDescription": "Ajoute les variables d'environnement Supabase pour charger les details de cohorte."
   },
   "faq": {
     "title": "FAQ",
+    "description": "Questions sur l'inscription, la completion, les prix et les recompenses VISION LABS.",
     "items": [
       {
         "q": "Combien de temps dure une cohorte LABS?",
@@ -114,7 +242,10 @@
     "dashboard": {
       "welcome": "Bon retour",
       "emptyTitle": "Ton tableau de bord est pret",
-      "emptyDescription": "Quand tu t'inscris a une cohorte, tes sessions, ton progres, tes videos et tes recompenses apparaitront ici."
+      "emptyDescription": "Quand tu t'inscris a une cohorte, tes sessions, ton progres, tes videos et tes recompenses apparaitront ici.",
+      "paymentProcessingTitle": "Traitement de ton paiement",
+      "paymentProcessingDescription": "Stripe a confirme ton paiement. Le portail peut prendre jusqu'a une minute avant d'afficher la cohorte payee pendant que le webhook se termine.",
+      "paymentConfirmedTitle": "Inscription confirmee"
     },
     "profile": {
       "title": "Profil",

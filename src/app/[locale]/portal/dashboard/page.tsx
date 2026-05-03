@@ -4,44 +4,44 @@ import { getTranslations } from "next-intl/server";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PaymentStatusNotice } from "@/components/portal/payment-status-notice";
 import { EmptyState } from "@/components/vision/empty-state";
 import { PathwayProgress } from "@/components/vision/pathway-progress";
 import { TierBadge } from "@/components/vision/tier-badge";
 import type { Locale } from "@/i18n/routing";
-import { hasSupabaseEnv } from "@/lib/env";
-import { createServerClient } from "@/lib/supabase/server";
+import { nextTierForCompletedCount, rewardTierMeta } from "@/lib/domain/rewards";
 import { getCurrentDancer, requireCompleteDancerProfile } from "@/server/queries/auth";
+import { getStudentPortalData } from "@/server/queries/data";
 
-async function getDashboardReward(dancerId: string) {
-  if (!hasSupabaseEnv()) return null;
-  const supabase = createServerClient();
-  const { data: activeSeason } = await supabase
-    .from("seasons")
-    .select("id,name")
-    .eq("is_active", true)
-    .maybeSingle();
-
-  if (!activeSeason) return null;
-
-  const { data: reward } = await supabase
-    .from("dancer_rewards")
-    .select("*")
-    .eq("dancer_id", dancerId)
-    .eq("season_id", activeSeason.id)
-    .maybeSingle();
-
-  return { activeSeason, reward };
-}
-
-export default async function DashboardPage({ params }: { params: { locale: Locale } }) {
+export default async function DashboardPage({
+  params,
+  searchParams
+}: {
+  params: { locale: Locale };
+  searchParams?: { registration?: string };
+}) {
   await requireCompleteDancerProfile(params.locale);
   const dancer = await getCurrentDancer();
   const t = await getTranslations({ locale: params.locale, namespace: "portal.dashboard" });
-  const dashboard = dancer ? await getDashboardReward(dancer.id) : null;
-  const completed = dashboard?.reward?.cohorts_completed_count ?? 0;
+  const portal = await getStudentPortalData();
+  const completed = portal?.reward?.cohorts_completed_count ?? 0;
+  const nextTier = nextTierForCompletedCount(completed);
+  const currentCohort = portal?.currentEnrollment
+    ? Array.isArray(portal.currentEnrollment.cohorts)
+      ? portal.currentEnrollment.cohorts[0]
+      : portal.currentEnrollment.cohorts
+    : null;
 
   return (
     <section className="space-y-8">
+      {searchParams?.registration === "success" ? (
+        <PaymentStatusNotice
+          title={t("paymentProcessingTitle")}
+          description={t("paymentProcessingDescription")}
+          confirmedTitle={t("paymentConfirmedTitle")}
+        />
+      ) : null}
+
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
@@ -51,7 +51,7 @@ export default async function DashboardPage({ params }: { params: { locale: Loca
             {dancer?.first_name ?? "VISION"}.
           </h1>
         </div>
-        <TierBadge tier={dashboard?.reward?.tier} />
+        <TierBadge tier={portal?.reward?.tier} />
       </div>
 
       <div className="grid gap-5 lg:grid-cols-3">
@@ -63,7 +63,7 @@ export default async function DashboardPage({ params }: { params: { locale: Loca
             <PathwayProgress completed={completed} />
             <p className="mt-6 text-sm text-muted-foreground">
               {completed} of 5 cohorts completed
-              {dashboard?.activeSeason?.name ? ` in ${dashboard.activeSeason.name}` : ""}.
+              {portal?.activeSeason?.name ? ` in ${portal.activeSeason.name}` : ""}.
             </p>
           </CardContent>
         </Card>
@@ -74,8 +74,8 @@ export default async function DashboardPage({ params }: { params: { locale: Loca
           <CardContent className="space-y-4">
             <Ticket className="h-8 w-8 text-primary" aria-hidden="true" />
             <p className="text-sm text-muted-foreground">
-              {dashboard?.reward
-                ? `Your reward is ${dashboard.reward.status}.`
+              {portal?.reward
+                ? `Your ${portal.reward.tier} reward is ${portal.reward.status}.`
                 : "Complete your first cohort to unlock LABS Member."}
             </p>
             <Button asChild variant="secondary" className="w-full">
@@ -85,23 +85,49 @@ export default async function DashboardPage({ params }: { params: { locale: Loca
         </Card>
       </div>
 
-      <EmptyState
-        title={t("emptyTitle")}
-        description={t("emptyDescription")}
-        action={
-          <div className="flex flex-wrap justify-center gap-3">
-            <Button asChild>
-              <Link href={`/${params.locale}/cohorts`}>Register for next cohort</Link>
-            </Button>
+      <div className="grid gap-5 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>{currentCohort ? "Current cohort" : "Next unlock"}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {currentCohort ? (
+              <>
+                <p className="font-display text-2xl font-bold">{currentCohort.name}</p>
+                <p className="text-sm text-muted-foreground">
+                  {currentCohort.start_date} - {currentCohort.end_date}
+                </p>
+                <Button asChild variant="secondary">
+                  <Link href={`/${params.locale}/portal/cohort`}>Open my cohort</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  {nextTier
+                    ? `${rewardTierMeta[nextTier].cohortsRequired - completed} more cohort(s) to ${rewardTierMeta[nextTier].labelEn}.`
+                    : "You reached LABS Legacy for this season."}
+                </p>
+                <Button asChild>
+                  <Link href={`/${params.locale}/cohorts`}>Register for next cohort</Link>
+                </Button>
+              </>
+            )}
+          </CardContent>
+        </Card>
+        <EmptyState
+          title={t("emptyTitle")}
+          description={t("emptyDescription")}
+          action={
             <Button asChild variant="secondary">
               <Link href={`/${params.locale}/portal/videos`}>
                 <Upload className="h-4 w-4" aria-hidden="true" />
                 Upload video
               </Link>
             </Button>
-          </div>
-        }
-      />
+          }
+        />
+      </div>
     </section>
   );
 }

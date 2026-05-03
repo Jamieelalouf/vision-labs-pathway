@@ -205,6 +205,25 @@ export type Database = {
         Update: Partial<Database["public"]["Tables"]["enrollments"]["Insert"]>;
         Relationships: [];
       };
+      attendance: {
+        Row: {
+          id: string;
+          enrollment_id: string;
+          cohort_session_id: string;
+          status: AttendanceStatus;
+          notes: string | null;
+          marked_by: string | null;
+          marked_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["attendance"]["Row"]> & {
+          enrollment_id: string;
+          cohort_session_id: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["attendance"]["Insert"]>;
+        Relationships: [];
+      };
       reward_levels: {
         Row: {
           tier: RewardTier;
@@ -277,12 +296,125 @@ export type Database = {
         Update: Partial<Database["public"]["Tables"]["dancer_rewards"]["Insert"]>;
         Relationships: [];
       };
+      video_uploads: {
+        Row: {
+          id: string;
+          dancer_id: string;
+          cohort_id: string | null;
+          cohort_session_id: string | null;
+          title: string;
+          description: string | null;
+          source: VideoSource;
+          storage_path: string | null;
+          external_url: string | null;
+          file_size_bytes: number | null;
+          mime_type: string | null;
+          admin_notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["video_uploads"]["Row"]> & {
+          dancer_id: string;
+          title: string;
+          source: VideoSource;
+        };
+        Update: Partial<Database["public"]["Tables"]["video_uploads"]["Insert"]>;
+        Relationships: [];
+      };
+      resources: {
+        Row: {
+          id: string;
+          cohort_id: string | null;
+          title_en: string;
+          title_fr: string;
+          description_en: string | null;
+          description_fr: string | null;
+          url: string;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["resources"]["Row"]> & {
+          title_en: string;
+          title_fr: string;
+          url: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["resources"]["Insert"]>;
+        Relationships: [];
+      };
+      payments: {
+        Row: {
+          id: string;
+          enrollment_id: string | null;
+          dancer_id: string | null;
+          stripe_event_id: string;
+          stripe_event_type: string;
+          stripe_object_id: string | null;
+          amount_cad: number | null;
+          currency: string;
+          status: string | null;
+          raw_payload: Json;
+          processed_at: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["payments"]["Row"]> & {
+          stripe_event_id: string;
+          stripe_event_type: string;
+          raw_payload: Json;
+        };
+        Update: Partial<Database["public"]["Tables"]["payments"]["Insert"]>;
+        Relationships: [];
+      };
+      system_settings: {
+        Row: {
+          id: number;
+          regular_price_cad: number;
+          returning_price_cad: number;
+          completion_min_attendance: number;
+          reward_stacking_enabled: boolean;
+          max_video_size_mb: number;
+          accepted_video_formats: string[];
+          default_language: LanguagePref;
+          stripe_regular_price_id: string | null;
+          stripe_returning_price_id: string | null;
+          legacy_pass_uses_stripe: boolean;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["system_settings"]["Row"]>;
+        Update: Partial<Database["public"]["Tables"]["system_settings"]["Insert"]>;
+        Relationships: [];
+      };
+      returning_price_overrides: {
+        Row: {
+          id: string;
+          dancer_id: string;
+          granted_by: string | null;
+          reason: string | null;
+          consumed: boolean;
+          consumed_enrollment_id: string | null;
+          expires_at: string;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["returning_price_overrides"]["Row"]> & {
+          dancer_id: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["returning_price_overrides"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      reserve_cohort_enrollment: {
+        Args: {
+          p_dancer_id: string;
+          p_cohort_id: string;
+          p_price_type: PriceType;
+          p_price_paid_cad: number;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       user_role: UserRole;

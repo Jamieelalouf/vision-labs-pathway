@@ -10,6 +10,7 @@ export function RewardCard({
   title,
   reward,
   required,
+  requiredLabel,
   status = "locked",
   className
 }: {
@@ -17,6 +18,7 @@ export function RewardCard({
   title: string;
   reward: string;
   required: number;
+  requiredLabel?: string;
   status?: RewardStatus;
   className?: string;
 }) {
@@ -38,7 +40,7 @@ export function RewardCard({
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">{reward}</p>
         <p className="border-t border-border pt-4 text-xs uppercase tracking-[0.16em] text-muted-foreground">
-          {required} {required === 1 ? "cohort" : "cohorts"} completed
+          {requiredLabel ?? `${required} ${required === 1 ? "cohort" : "cohorts"} completed`}
         </p>
       </CardContent>
     </Card>

@@ -52,6 +52,6 @@ The first migration creates:
 - RLS policies
 - storage buckets and storage policies
 
-## Current Phase
+## Current Scope
 
-Phase 1 foundation is implemented. Later phases should build on the existing route shells instead of replacing them.
+V1 implementation scaffold is in place across the requested phases. Configure Supabase, Stripe, Resend, cron secrets, and DNS before production use.

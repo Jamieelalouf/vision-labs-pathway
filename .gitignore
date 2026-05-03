@@ -11,4 +11,3 @@ coverage
 .vercel
 tsconfig.tsbuildinfo
 .pnpm-store
-supabase/.temp/
