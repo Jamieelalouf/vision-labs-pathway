@@ -2,12 +2,14 @@ import { CheckCircle2, Clock, Lock, Ticket } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DiscountCodeReveal } from "@/components/vision/discount-code-reveal";
 import { TierBadge } from "@/components/vision/tier-badge";
 import type { Locale } from "@/i18n/routing";
 import { getRewardLabel } from "@/lib/domain/rewards";
 import { formatDate } from "@/lib/utils";
+import { claimRewardCodeAction } from "@/server/actions/rewards";
 import { requireCompleteDancerProfile } from "@/server/queries/auth";
 import { getStudentPortalData } from "@/server/queries/data";
 
@@ -72,6 +74,16 @@ export default async function RewardsPage({ params }: { params: { locale: Locale
                 <StatusIcon className="h-9 w-9 text-primary" aria-hidden="true" />
               </div>
               <p className="text-sm leading-6 text-muted-foreground">{statusNote}</p>
+              {reward.status === "unlocked" ? (
+                <form action={claimRewardCodeAction}>
+                  <input type="hidden" name="locale" value={params.locale} />
+                  <input type="hidden" name="dancer_reward_id" value={reward.id} />
+                  <Button size="lg">
+                    <Ticket className="h-4 w-4" aria-hidden="true" />
+                    {t(reward.tier === "legacy" ? "claimLegacyPass" : "claimCode")}
+                  </Button>
+                </form>
+              ) : null}
               {code ? (
                 <DiscountCodeReveal
                   code={code.code}

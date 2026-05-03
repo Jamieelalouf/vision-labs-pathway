@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { createServiceClient } from "@/lib/supabase/service";
+import { getRewardSnapshot, sendRewardChangeEmail } from "@/server/rewards/automation";
 
 export const dynamic = "force-dynamic";
 
@@ -27,18 +28,24 @@ export async function POST(request: NextRequest) {
     .from("cohorts")
     .select("id")
     .lt("end_date", today)
-    .not("status", "in", '("completed","cancelled")');
+    .not("status", "in", "(completed,cancelled)");
 
   let completedEnrollments = 0;
+  let rewardEmails = 0;
   for (const cohort of cohorts ?? []) {
     const { data: enrollments } = await supabase
       .from("enrollments")
-      .select("id")
+      .select("id,dancer_id,season_id")
       .eq("cohort_id", cohort.id)
       .eq("payment_status", "paid")
       .is("completion_status", null);
 
     for (const enrollment of enrollments ?? []) {
+      const beforeReward = await getRewardSnapshot(
+        supabase,
+        enrollment.dancer_id,
+        enrollment.season_id
+      );
       const { count } = await supabase
         .from("attendance")
         .select("id", { count: "exact", head: true })
@@ -54,11 +61,27 @@ export async function POST(request: NextRequest) {
         })
         .eq("id", enrollment.id);
 
-      if (completed) completedEnrollments += 1;
+      if (completed) {
+        completedEnrollments += 1;
+        await sendRewardChangeEmail({
+          supabase,
+          dancerId: enrollment.dancer_id,
+          seasonId: enrollment.season_id,
+          before: beforeReward
+        });
+        const afterReward = await getRewardSnapshot(
+          supabase,
+          enrollment.dancer_id,
+          enrollment.season_id
+        );
+        if (afterReward && (!beforeReward || beforeReward.tier !== afterReward.tier)) {
+          rewardEmails += 1;
+        }
+      }
     }
 
     await supabase.from("cohorts").update({ status: "completed" }).eq("id", cohort.id);
   }
 
-  return NextResponse.json({ cohorts: cohorts?.length ?? 0, completedEnrollments });
+  return NextResponse.json({ cohorts: cohorts?.length ?? 0, completedEnrollments, rewardEmails });
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, MapPin, Upload } from "lucide-react";
+import { CalendarDays, ExternalLink, FileVideo, MapPin, Upload } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { Button } from "@/components/ui/button";
@@ -126,10 +126,29 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
                 {cohortVideos.length ? (
                   cohortVideos.map((video) => (
                     <div key={video.id} className="rounded-md border border-border p-4">
-                      <p className="font-medium">{video.title}</p>
-                      <p className="mt-1 break-all text-sm text-muted-foreground">
-                        {video.external_url ?? video.storage_path}
-                      </p>
+                      {video.source === "upload" && (video as any).signed_url ? (
+                        <video
+                          src={(video as any).signed_url}
+                          controls
+                          preload="metadata"
+                          className="mb-4 aspect-video w-full rounded-md bg-black object-cover"
+                        />
+                      ) : (
+                        <div className="mb-4 flex aspect-video w-full items-center justify-center rounded-md border border-border bg-secondary">
+                          <FileVideo className="h-7 w-7 text-primary" aria-hidden="true" />
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="font-medium">{video.title}</p>
+                        {video.external_url ? (
+                          <Button asChild variant="link">
+                            <Link href={video.external_url} target="_blank" rel="noreferrer">
+                              <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                              {t("openVideo")}
+                            </Link>
+                          </Button>
+                        ) : null}
+                      </div>
                     </div>
                   ))
                 ) : (

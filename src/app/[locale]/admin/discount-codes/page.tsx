@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
 import type { Locale } from "@/i18n/routing";
 import { markCodeRedeemedAction } from "@/server/actions/admin";
 import { getDiscountCodesForAdmin } from "@/server/queries/data";
@@ -37,9 +44,13 @@ export default async function AdminDiscountCodesPage({ params }: { params: { loc
                 return (
                   <TableRow key={code.id}>
                     <TableCell className="font-mono">{code.code}</TableCell>
-                    <TableCell>{dancer?.first_name} {dancer?.last_name}</TableCell>
+                    <TableCell>
+                      {dancer?.first_name} {dancer?.last_name}
+                    </TableCell>
                     <TableCell>{season?.name ?? "-"}</TableCell>
-                    <TableCell>{code.is_free_pass ? "Weekend Pass" : `$${code.amount_cad}`}</TableCell>
+                    <TableCell>
+                      {code.is_free_pass ? "Weekend Pass" : `$${code.amount_cad}`}
+                    </TableCell>
                     <TableCell>{code.status}</TableCell>
                     <TableCell>{code.expires_at?.slice(0, 10)}</TableCell>
                     <TableCell>
@@ -47,7 +58,9 @@ export default async function AdminDiscountCodesPage({ params }: { params: { loc
                         <form action={markCodeRedeemedAction}>
                           <input type="hidden" name="locale" value={params.locale} />
                           <input type="hidden" name="code_id" value={code.id} />
-                          <Button size="sm" variant="secondary">Redeemed</Button>
+                          <Button size="sm" variant="secondary">
+                            Redeemed
+                          </Button>
                         </form>
                       ) : null}
                     </TableCell>

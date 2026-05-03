@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { createServiceClient } from "@/lib/supabase/service";
+import { cancelStripePromotionForDiscountCode } from "@/server/rewards/automation";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,17 @@ export async function POST(request: NextRequest) {
     .lt("convention_end_date", cutoffDate);
 
   for (const season of seasons ?? []) {
+    const { data: activeCodes } = await supabase
+      .from("discount_codes")
+      .select("id")
+      .eq("season_id", season.id)
+      .eq("status", "active")
+      .is("used_at", null);
+
+    await Promise.all(
+      (activeCodes ?? []).map((code) => cancelStripePromotionForDiscountCode(supabase, code.id))
+    );
+
     await supabase
       .from("dancer_rewards")
       .update({ status: "expired" })
@@ -36,7 +48,7 @@ export async function POST(request: NextRequest) {
       .from("discount_codes")
       .update({ status: "expired" })
       .eq("season_id", season.id)
-      .eq("status", "active")
+      .in("status", ["active", "cancelled"])
       .is("used_at", null);
   }
 

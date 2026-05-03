@@ -23,30 +23,64 @@ export default async function AdminSettingsPage({ params }: { params: { locale: 
             <input type="hidden" name="locale" value={params.locale} />
             <div className="space-y-2">
               <Label htmlFor="regular_price_cad">Regular price CAD</Label>
-              <Input id="regular_price_cad" name="regular_price_cad" type="number" defaultValue={settings?.regular_price_cad ?? 297} />
+              <Input
+                id="regular_price_cad"
+                name="regular_price_cad"
+                type="number"
+                defaultValue={settings?.regular_price_cad ?? 297}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="returning_price_cad">Returning price CAD</Label>
-              <Input id="returning_price_cad" name="returning_price_cad" type="number" defaultValue={settings?.returning_price_cad ?? 247} />
+              <Input
+                id="returning_price_cad"
+                name="returning_price_cad"
+                type="number"
+                defaultValue={settings?.returning_price_cad ?? 247}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="completion_min_attendance">Completion attendance minimum</Label>
-              <Input id="completion_min_attendance" name="completion_min_attendance" type="number" min="1" max="4" defaultValue={settings?.completion_min_attendance ?? 3} />
+              <Input
+                id="completion_min_attendance"
+                name="completion_min_attendance"
+                type="number"
+                min="1"
+                max="4"
+                defaultValue={settings?.completion_min_attendance ?? 3}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="max_video_size_mb">Max video size MB</Label>
-              <Input id="max_video_size_mb" name="max_video_size_mb" type="number" defaultValue={settings?.max_video_size_mb ?? 500} />
+              <Input
+                id="max_video_size_mb"
+                name="max_video_size_mb"
+                type="number"
+                defaultValue={settings?.max_video_size_mb ?? 500}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="stripe_regular_price_id">Stripe regular price ID</Label>
-              <Input id="stripe_regular_price_id" name="stripe_regular_price_id" defaultValue={settings?.stripe_regular_price_id ?? ""} />
+              <Input
+                id="stripe_regular_price_id"
+                name="stripe_regular_price_id"
+                defaultValue={settings?.stripe_regular_price_id ?? ""}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="stripe_returning_price_id">Stripe returning price ID</Label>
-              <Input id="stripe_returning_price_id" name="stripe_returning_price_id" defaultValue={settings?.stripe_returning_price_id ?? ""} />
+              <Input
+                id="stripe_returning_price_id"
+                name="stripe_returning_price_id"
+                defaultValue={settings?.stripe_returning_price_id ?? ""}
+              />
             </div>
             <label className="flex items-center gap-2 text-sm md:col-span-2">
-              <input type="checkbox" name="legacy_pass_uses_stripe" defaultChecked={settings?.legacy_pass_uses_stripe ?? false} />
+              <input
+                type="checkbox"
+                name="legacy_pass_uses_stripe"
+                defaultChecked={settings?.legacy_pass_uses_stripe ?? false}
+              />
               Generate Stripe promotion codes for Legacy passes
             </label>
             <div className="md:col-span-2">

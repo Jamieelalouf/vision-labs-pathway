@@ -23,6 +23,77 @@ function nullable(value?: string) {
   return trimmed ? trimmed : null;
 }
 
+async function assertVideoCohortAccess({
+  supabase,
+  dancerId,
+  cohortId,
+  cohortSessionId,
+  locale
+}: {
+  supabase: ReturnType<typeof createServerClient>;
+  dancerId: string;
+  cohortId: string;
+  cohortSessionId?: string | null;
+  locale: Locale;
+}) {
+  const { data: enrollment } = await supabase
+    .from("enrollments")
+    .select("id")
+    .eq("dancer_id", dancerId)
+    .eq("cohort_id", cohortId)
+    .eq("payment_status", "paid")
+    .in("enrollment_status", ["registered", "completed"])
+    .maybeSingle();
+
+  if (!enrollment) redirect(`/${locale}/portal/videos?error=cohort-access`);
+
+  if (cohortSessionId) {
+    const { data: session } = await supabase
+      .from("cohort_sessions")
+      .select("id")
+      .eq("id", cohortSessionId)
+      .eq("cohort_id", cohortId)
+      .maybeSingle();
+
+    if (!session) redirect(`/${locale}/portal/videos?error=session-access`);
+  }
+}
+
+async function assertVideoFileAllowed({
+  supabase,
+  fileSizeBytes,
+  mimeType,
+  locale
+}: {
+  supabase: ReturnType<typeof createServerClient>;
+  fileSizeBytes?: number;
+  mimeType?: string | null;
+  locale: Locale;
+}) {
+  const { data: settings } = await supabase
+    .from("system_settings")
+    .select("max_video_size_mb,accepted_video_formats")
+    .eq("id", 1)
+    .maybeSingle();
+  const maxMb = settings?.max_video_size_mb ?? 500;
+  const accepted = settings?.accepted_video_formats ?? ["mp4", "mov"];
+  const normalizedMime = mimeType?.toLowerCase() ?? "";
+  const mimeExtension =
+    normalizedMime === "video/mp4"
+      ? "mp4"
+      : normalizedMime === "video/quicktime" || normalizedMime === "video/x-quicktime"
+        ? "mov"
+        : null;
+
+  if (fileSizeBytes && fileSizeBytes > maxMb * 1024 * 1024) {
+    redirect(`/${locale}/portal/videos?error=file-too-large`);
+  }
+
+  if (mimeExtension && !accepted.includes(mimeExtension)) {
+    redirect(`/${locale}/portal/videos?error=unsupported-format`);
+  }
+}
+
 export async function addExternalVideoLinkAction(formData: FormData) {
   const locale = actionLocale(formData);
   const dancer = await requireCompleteDancerProfile(locale);
@@ -37,6 +108,14 @@ export async function addExternalVideoLinkAction(formData: FormData) {
   if (!parsed.success) redirect(`/${locale}/portal/videos?error=invalid`);
 
   const supabase = createServerClient();
+  await assertVideoCohortAccess({
+    supabase,
+    dancerId: dancer.id,
+    cohortId: parsed.data.cohort_id,
+    cohortSessionId: nullable(parsed.data.cohort_session_id),
+    locale
+  });
+
   const { error } = await supabase.from("video_uploads").insert({
     dancer_id: dancer.id,
     title: parsed.data.title,
@@ -68,6 +147,24 @@ export async function createUploadedVideoRecordAction(formData: FormData) {
   if (!parsed.success) redirect(`/${locale}/portal/videos?error=invalid`);
 
   const supabase = createServerClient();
+  if (!parsed.data.storage_path.startsWith(`${dancer.id}/`)) {
+    redirect(`/${locale}/portal/videos?error=storage-path`);
+  }
+
+  await assertVideoCohortAccess({
+    supabase,
+    dancerId: dancer.id,
+    cohortId: parsed.data.cohort_id,
+    cohortSessionId: nullable(parsed.data.cohort_session_id),
+    locale
+  });
+  await assertVideoFileAllowed({
+    supabase,
+    fileSizeBytes: parsed.data.file_size_bytes,
+    mimeType: nullable(parsed.data.mime_type),
+    locale
+  });
+
   const { error } = await supabase.from("video_uploads").insert({
     dancer_id: dancer.id,
     title: parsed.data.title,

@@ -49,18 +49,76 @@ export const getSettings = cache(async () => {
   return data;
 });
 
+async function addSignedVideoUrls<T extends { source?: string; storage_path?: string | null }>(
+  supabase: ReturnType<typeof createServerClient>,
+  videos: T[]
+) {
+  return Promise.all(
+    videos.map(async (video) => {
+      if (video.source !== "upload" || !video.storage_path) {
+        return { ...video, signed_url: null };
+      }
+
+      const { data } = await supabase.storage
+        .from("dancer-videos")
+        .createSignedUrl(video.storage_path, 60 * 60);
+
+      return { ...video, signed_url: data?.signedUrl ?? null };
+    })
+  );
+}
+
 export const getAdminDashboard = cache(async () => {
   if (!hasSupabaseEnv()) {
-    return { registered: 0, paid: 0, rewards: 0, videos: 0, revenue: 0 };
+    return {
+      registered: 0,
+      paid: 0,
+      rewards: 0,
+      videos: 0,
+      revenue: 0,
+      currentCohortRevenue: 0,
+      currentCohortRegistered: 0,
+      currentCohortPaid: 0,
+      newCount: 0,
+      returningCount: 0,
+      activeSeason: null,
+      activeCohort: null,
+      nearLegacy: [],
+      recentVideos: [],
+      pendingActions: 0
+    };
   }
   const supabase = createServerClient();
+  const { data: activeSeason } = await supabase
+    .from("seasons")
+    .select("*")
+    .eq("is_active", true)
+    .maybeSingle();
+  const { data: activeCohorts } = await supabase
+    .from("cohorts")
+    .select("*")
+    .in("status", ["active", "open"])
+    .order("status", { ascending: true })
+    .order("start_date", { ascending: true })
+    .limit(1);
+  const activeCohort = activeCohorts?.[0] ?? null;
   const { count: registered } = await supabase
     .from("enrollments")
     .select("id", { count: "exact", head: true });
   const { data: paidRows } = await supabase
     .from("enrollments")
-    .select("price_paid_cad")
+    .select("price_paid_cad,price_type,cohort_id")
     .eq("payment_status", "paid");
+  const currentCohortPaidRows = activeCohort
+    ? (paidRows?.filter((row) => row.cohort_id === activeCohort.id) ?? [])
+    : [];
+  const { count: currentCohortRegistered } = activeCohort
+    ? await supabase
+        .from("enrollments")
+        .select("id", { count: "exact", head: true })
+        .eq("cohort_id", activeCohort.id)
+        .in("enrollment_status", ["pending", "registered", "completed"])
+    : { count: 0 };
   const { count: rewards } = await supabase
     .from("dancer_rewards")
     .select("id", { count: "exact", head: true })
@@ -68,13 +126,40 @@ export const getAdminDashboard = cache(async () => {
   const { count: videos } = await supabase
     .from("video_uploads")
     .select("id", { count: "exact", head: true });
+  const { data: nearLegacy } = await supabase
+    .from("dancer_rewards")
+    .select("*, dancers(first_name,last_name,profiles(email)), seasons(name)")
+    .eq("cohorts_completed_count", 4)
+    .limit(8);
+  const { data: recentVideos } = await supabase
+    .from("video_uploads")
+    .select("*, dancers(first_name,last_name), cohorts(name)")
+    .order("created_at", { ascending: false })
+    .limit(10);
+  const { count: pendingActions } = await supabase
+    .from("enrollments")
+    .select("id", { count: "exact", head: true })
+    .or("payment_status.in.(failed,refunded),enrollment_status.in.(dropped,refunded)");
+
+  const signedRecentVideos = await addSignedVideoUrls(supabase, recentVideos ?? []);
 
   return {
     registered: registered ?? 0,
     paid: paidRows?.length ?? 0,
     rewards: rewards ?? 0,
     videos: videos ?? 0,
-    revenue: paidRows?.reduce((total, row) => total + row.price_paid_cad, 0) ?? 0
+    revenue: paidRows?.reduce((total, row) => total + row.price_paid_cad, 0) ?? 0,
+    currentCohortRevenue:
+      currentCohortPaidRows.reduce((total, row) => total + row.price_paid_cad, 0) ?? 0,
+    currentCohortRegistered: currentCohortRegistered ?? 0,
+    currentCohortPaid: currentCohortPaidRows.length,
+    newCount: currentCohortPaidRows.filter((row) => row.price_type === "regular").length,
+    returningCount: currentCohortPaidRows.filter((row) => row.price_type !== "regular").length,
+    activeSeason,
+    activeCohort,
+    nearLegacy: nearLegacy ?? [],
+    recentVideos: signedRecentVideos,
+    pendingActions: pendingActions ?? 0
   };
 });
 
@@ -88,6 +173,33 @@ export const getDancersForAdmin = cache(async () => {
     )
     .order("last_name", { ascending: true });
   return data ?? [];
+});
+
+export const getDancerForAdmin = cache(async (id: string) => {
+  if (!hasSupabaseEnv()) return null;
+  const supabase = createServerClient();
+  const { data } = await supabase
+    .from("dancers")
+    .select(
+      "*, profiles(email,language_pref,created_at), enrollments(*, cohorts(name,start_date,end_date)), dancer_rewards(*, seasons(name), discount_codes(code,status)), video_uploads(*, cohorts(name), cohort_sessions(session_number))"
+    )
+    .eq("id", id)
+    .maybeSingle();
+  if (!data) return null;
+
+  const { data: returningOverrides } = await supabase
+    .from("returning_price_overrides")
+    .select("*")
+    .eq("dancer_id", id)
+    .order("created_at", { ascending: false });
+
+  const signedVideos = await addSignedVideoUrls(supabase, (data as any).video_uploads ?? []);
+
+  return {
+    ...data,
+    video_uploads: signedVideos,
+    returning_price_overrides: returningOverrides ?? []
+  };
 });
 
 export const getEnrollmentsForAdmin = cache(async () => {
@@ -111,6 +223,44 @@ export const getAttendanceForAdmin = cache(async () => {
     .order("created_at", { ascending: false })
     .limit(200);
   return data ?? [];
+});
+
+export const getAttendanceCohortsForAdmin = cache(async () => {
+  if (!hasSupabaseEnv()) return [];
+  const supabase = createServerClient();
+  const { data } = await supabase
+    .from("cohorts")
+    .select("*, cohort_sessions(*), enrollments(id,payment_status,enrollment_status)")
+    .neq("status", "draft")
+    .order("start_date", { ascending: false });
+  return data ?? [];
+});
+
+export const getAttendanceForCohortAdmin = cache(async (cohortId: string) => {
+  if (!hasSupabaseEnv()) return null;
+  const supabase = createServerClient();
+  const { data: cohort } = await supabase
+    .from("cohorts")
+    .select("*, cohort_sessions(*)")
+    .eq("id", cohortId)
+    .maybeSingle();
+  if (!cohort) return null;
+
+  const { data: enrollments } = await supabase
+    .from("enrollments")
+    .select("*, dancers(first_name,last_name,profiles(email)), attendance(*)")
+    .eq("cohort_id", cohortId)
+    .eq("payment_status", "paid")
+    .in("enrollment_status", ["registered", "completed"])
+    .order("created_at", { ascending: true });
+
+  return {
+    cohort,
+    sessions: [...(cohort.cohort_sessions ?? [])].sort(
+      (a, b) => a.session_number - b.session_number
+    ),
+    enrollments: enrollments ?? []
+  };
 });
 
 export const getRewardsForAdmin = cache(async () => {
@@ -144,7 +294,7 @@ export const getVideosForAdmin = cache(async () => {
       "*, dancers(first_name,last_name,profiles(email)), cohorts(name), cohort_sessions(session_number)"
     )
     .order("created_at", { ascending: false });
-  return data ?? [];
+  return addSignedVideoUrls(supabase, data ?? []);
 });
 
 export const getStudentPortalData = cache(async () => {
@@ -203,13 +353,16 @@ export const getStudentPortalData = cache(async () => {
     paidEnrollments?.[0] ??
     null;
 
+  const signedVideos = await addSignedVideoUrls(supabase, videos ?? []);
+
   return {
     dancer,
     activeSeason,
     currentEnrollment,
     reward,
+    paidEnrollments: paidEnrollments ?? [],
     enrollments: enrollments ?? [],
-    videos: videos ?? [],
+    videos: signedVideos,
     nextCohort
   };
 });

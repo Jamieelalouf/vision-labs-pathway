@@ -4,6 +4,7 @@ import type Stripe from "stripe";
 import { sendEmail } from "@/lib/email";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getStripe } from "@/lib/stripe";
+import { getRewardSnapshot, sendRewardChangeEmail } from "@/server/rewards/automation";
 
 export const dynamic = "force-dynamic";
 
@@ -179,6 +180,17 @@ export async function POST(request: NextRequest) {
   }
 
   if (event.type === "charge.refunded" && object.payment_intent) {
+    const { data: refundedEnrollments } = await supabase
+      .from("enrollments")
+      .select("id,dancer_id,season_id")
+      .eq("stripe_payment_intent_id", object.payment_intent);
+    const beforeRewards = await Promise.all(
+      (refundedEnrollments ?? []).map(async (enrollment) => ({
+        enrollment,
+        reward: await getRewardSnapshot(supabase, enrollment.dancer_id, enrollment.season_id)
+      }))
+    );
+
     await supabase
       .from("enrollments")
       .update({
@@ -187,6 +199,17 @@ export async function POST(request: NextRequest) {
         amount_refunded_cad: object.amount_refunded ? Math.round(object.amount_refunded / 100) : 0
       })
       .eq("stripe_payment_intent_id", object.payment_intent);
+
+    await Promise.all(
+      beforeRewards.map(({ enrollment, reward }) =>
+        sendRewardChangeEmail({
+          supabase,
+          dancerId: enrollment.dancer_id,
+          seasonId: enrollment.season_id,
+          before: reward
+        })
+      )
+    );
   }
 
   await supabase

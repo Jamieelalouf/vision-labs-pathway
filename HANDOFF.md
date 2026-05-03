@@ -1,112 +1,133 @@
-# VISION LABS Pathway Phase 4 Handoff
+# VISION LABS Pathway - Final Phase 8 Handoff
 
-This repo is ready for another agent to continue from Phase 4 into Phase 5. Phase 1 foundation, Phase 2 public website, Phase 3 registration/payment infrastructure, and Phase 4 student portal polish are present.
+Status: Phase 8 QA/deployment package completed and validated.
+Date: 2026-05-03
 
-## Current Status
+## Build Status
 
-- Framework: Next.js 14 App Router, TypeScript strict, Tailwind, next-intl.
-- Locales: `/fr` and `/en`, with `/` redirecting to `/fr`.
-- Public site: landing, Pathway, cohorts, cohort detail, FAQ.
-- Registration: Stripe checkout action, webhook route, payment polling notice, and race-safe enrollment reservation RPC.
-- Student portal: dashboard, My Cohort, Pathway, Rewards, Videos, Profile.
-- Supabase schema: initial migration plus Phase 3 registration hardening migration.
+All eight phases are complete.
 
-## Phase 4 Work Completed
+Completed phases:
 
-- Rebuilt the student dashboard into the PRD card structure:
-  - welcome row and tier badge
-  - season progress with Pathway progress bar
-  - next unlock card
-  - current cohort or current reward card
-  - context-aware primary action
-  - recent video uploads
-  - notifications empty state
-  - payment success polling notice remains active after Stripe redirect
-- Rebuilt My Cohort:
-  - current cohort header
-  - dates, location, address
-  - upload CTA
-  - four-session timeline using generated `cohort_sessions`
-  - resources panel with localized DB fields
-  - uploads for the current cohort
-  - empty state when no paid/current cohort exists
-- Rebuilt My LABS Pathway:
-  - active-season progress
-  - tier badge
-  - bilingual reward ladder
-  - completed cohort history
-  - rules panel
-- Rebuilt My Rewards:
-  - status-aware reward card
-  - generated code display if a code already exists
-  - `DiscountCodeReveal` copy-to-clipboard component
-  - no Phase 7 code-generation CTA yet, matching the PRD phase order
-- Localized portal copy across EN/FR for dashboard, cohort, pathway, rewards, videos, and profile labels.
-- Improved profile form localization and profile page structure.
-- Adjusted `getStudentPortalData` so the current cohort is selected from paid enrollments with active/open/non-final cohorts before falling back to the latest paid enrollment.
+1. Foundation
+2. Public website
+3. Cohorts, registration, and Stripe
+4. Student portal
+5. Admin dashboard
+6. Video uploads
+7. Reward automation
+8. QA and deployment package
+
+Phases left: 0.
+
+## What Phase 8 Added
+
+- Expanded demo seed data:
+  - `supabase/seed/phase8_seed.sql`
+  - Creates one active season, three cohorts, admin account, five dancer accounts, enrollments, attendance, rewards, discount code, returning override, and demo video links.
+- Production launch guide:
+  - `docs/PHASE8_QA_DEPLOYMENT.md`
+- Security review notes:
+  - `docs/SECURITY_REVIEW.md`
+- Production health endpoint:
+  - `/api/health`
+  - Returns `200` only when required production env vars are present.
+- Deployment preflight script:
+  - `pnpm run preflight`
+  - Verifies required files and required production env vars.
+- Production security headers:
+  - Configured in `next.config.mjs`.
+  - Includes CSP, frame protections, referrer policy, content-type sniffing protection, and permissions policy.
+- README updated with final build/deployment notes.
+- `.env.local.example` updated with optional Sentry env placeholders.
 
 ## Validation Run
 
-These passed in this workspace:
+All commands passed:
 
 ```bash
-pnpm run typecheck
-pnpm run lint
+/Users/jamie/Library/pnpm/pnpm run typecheck
+/Users/jamie/Library/pnpm/pnpm run lint
 env NODE_PATH=/Users/jamie/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules /Users/jamie/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node node_modules/next/dist/bin/next build
+env NEXT_PUBLIC_SUPABASE_URL=https://example.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=anon SUPABASE_SERVICE_ROLE_KEY=service STRIPE_SECRET_KEY=sk_test_dummy STRIPE_WEBHOOK_SECRET=whsec_dummy STRIPE_PUBLISHABLE_KEY=pk_test_dummy RESEND_API_KEY=re_dummy NEXT_PUBLIC_APP_URL=https://labs.visiondns.ca CRON_SECRET=cron_dummy /Users/jamie/Library/pnpm/pnpm run preflight
 ```
 
-The production build completed successfully.
+Production build generated 57 app routes, including:
 
-## Setup On Another Computer
+- `/api/health`
+- `/api/cron/compute-completions`
+- `/api/cron/expire-rewards`
+- `/api/webhooks/stripe`
+- `/[locale]/portal/*`
+- `/[locale]/admin/*`
+
+## Local Setup
 
 ```bash
 pnpm install
 cp .env.local.example .env.local
+pnpm run dev
+```
+
+Run validation:
+
+```bash
 pnpm run typecheck
 pnpm run lint
 pnpm run build
-pnpm dev
 ```
 
-Fill `.env.local` before testing live Supabase, Stripe, Resend, webhook, or cron flows.
+## Supabase Migration Order
 
-## Supabase
+Apply migrations in this exact order:
 
-Apply migrations in order:
+1. `supabase/migrations/20260503000000_initial_schema.sql`
+2. `supabase/migrations/20260503010000_phase3_registration_hardening.sql`
+3. `supabase/migrations/20260503020000_phase6_video_uploads.sql`
+4. `supabase/migrations/20260503030000_phase7_reward_automation.sql`
+
+For local/demo environments only, apply:
+
+- `supabase/seed/phase8_seed.sql`
+
+Do not run demo seed in production.
+
+## Demo Accounts
+
+Password for all seeded demo users:
 
 ```text
-supabase/migrations/20260503000000_initial_schema.sql
-supabase/migrations/20260503010000_phase3_registration_hardening.sql
+VisionLabs123!
 ```
 
-Typical command:
+- `admin@visionlabs.test` - admin
+- `maya@visionlabs.test` - completed cohort, generated Member code
+- `theo@visionlabs.test` - incomplete completed cohort
+- `ana@visionlabs.test` - active cohort student
+- `chris@visionlabs.test` - returning override and near-Legacy manual reward
+- `lea@visionlabs.test` - refunded/drop edge case
 
-```bash
-supabase db push
-```
+## Production Checklist
 
-Seed data is available at:
+Use `docs/PHASE8_QA_DEPLOYMENT.md` as the launch checklist.
 
-```text
-supabase/seed/phase8_seed.sql
-```
+Production must have:
 
-## Suggested Next Step
+- Supabase production project migrated.
+- At least one manually promoted admin.
+- Stripe live keys and webhook endpoint.
+- Resend verified domain.
+- Vercel environment variables.
+- Vercel cron enabled.
+- DNS pointed to Vercel.
+- `/api/health` returning green.
+- Privacy Policy and Terms linked before public launch.
 
-Move to Phase 5:
+## Transfer Archives
 
-- admin overview KPI polish
-- admin dancers table filters
-- admin dancer profile page
-- admin enrollments action menus
-- admin attendance grid
-- admin rewards and discount code pages
-- admin operational empty/error/loading states
+Use either archive:
 
-## Notes For The Next Agent
+- `vision-labs-pathway-final-phase8-transfer.zip`
+- `vision-labs-pathway-final-phase8-transfer.tar.gz`
 
-- Do not rebuild previous phases from scratch.
-- Keep the PRD business rules as the contract.
-- Continue phase by phase; Phase 5 should be the next implementation milestone.
-- Phase 4 intentionally displays generated reward codes if present, but does not expose the Phase 7 "Get my code" generation flow.
-- Replace the generated hero poster with real VISION LABS photography or a training reel when brand assets are available.
+Both archives exclude local build/dependency/cache files such as `.git`, `.next`, `node_modules`, `.pnpm-store`, existing archives, `.DS_Store`, and `tsconfig.tsbuildinfo`.

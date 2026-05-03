@@ -14,6 +14,13 @@ import {
 } from "@/lib/validators/admin";
 import { rewardTierMeta } from "@/lib/domain/rewards";
 import { requireAdmin } from "@/server/queries/auth";
+import {
+  cancelStripePromotionForDiscountCode,
+  getRewardSnapshot,
+  rewardExpiresAt,
+  sendManualRewardEmail,
+  sendRewardChangeEmail
+} from "@/server/rewards/automation";
 
 function readString(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -223,6 +230,7 @@ export async function markAttendanceAction(formData: FormData) {
   const attendanceId = readString(formData, "attendance_id");
   const status = readString(formData, "status");
   const notes = readString(formData, "notes");
+  const cohortId = readString(formData, "cohort_id");
   const supabase = createServerClient();
   const {
     data: { user }
@@ -240,6 +248,47 @@ export async function markAttendanceAction(formData: FormData) {
 
   if (error) redirect(`/${locale}/admin/attendance?error=${encodeURIComponent(error.message)}`);
   revalidatePath(`/${locale}/admin/attendance`);
+  if (cohortId) revalidatePath(`/${locale}/admin/attendance/${cohortId}`);
+}
+
+export async function bulkMarkAttendanceAction(formData: FormData) {
+  const locale = actionLocale(formData);
+  await requireAdmin(locale);
+  const cohortId = readString(formData, "cohort_id");
+  const sessionId = readString(formData, "cohort_session_id");
+  const supabase = createServerClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  const entries = Array.from(formData.entries()).filter(([key]) => key.startsWith("status:"));
+  const updates = entries.map(([key, value]) => {
+    const attendanceId = key.replace("status:", "");
+    const notes = formData.get(`notes:${attendanceId}`);
+    return supabase
+      .from("attendance")
+      .update({
+        status: value as any,
+        notes: typeof notes === "string" ? nullable(notes) : null,
+        marked_by: user?.id ?? null,
+        marked_at: new Date().toISOString()
+      })
+      .eq("id", attendanceId);
+  });
+
+  const results = await Promise.all(updates);
+  const firstError = results.find((result) => result.error)?.error;
+  if (firstError) {
+    redirect(`/${locale}/admin/attendance?error=${encodeURIComponent(firstError.message)}`);
+  }
+
+  revalidatePath(`/${locale}/admin/attendance`);
+  if (cohortId) revalidatePath(`/${locale}/admin/attendance/${cohortId}`);
+  redirect(
+    cohortId
+      ? `/${locale}/admin/attendance/${cohortId}${sessionId ? `?session=${sessionId}` : ""}`
+      : `/${locale}/admin/attendance`
+  );
 }
 
 export async function overrideEnrollmentAction(formData: FormData) {
@@ -268,12 +317,29 @@ export async function overrideEnrollmentAction(formData: FormData) {
   if (parsed.data.payment_status) updates.payment_status = parsed.data.payment_status;
 
   const supabase = createServerClient();
+  const { data: existingEnrollment } = await supabase
+    .from("enrollments")
+    .select("id,dancer_id,season_id")
+    .eq("id", parsed.data.enrollment_id)
+    .maybeSingle();
+  const beforeReward = existingEnrollment
+    ? await getRewardSnapshot(supabase, existingEnrollment.dancer_id, existingEnrollment.season_id)
+    : null;
+
   const { error } = await supabase
     .from("enrollments")
     .update(updates as any)
     .eq("id", parsed.data.enrollment_id);
 
   if (error) redirect(`/${locale}/admin/enrollments?error=${encodeURIComponent(error.message)}`);
+  if (existingEnrollment) {
+    await sendRewardChangeEmail({
+      supabase,
+      dancerId: existingEnrollment.dancer_id,
+      seasonId: existingEnrollment.season_id,
+      before: beforeReward
+    });
+  }
   revalidatePath(`/${locale}/admin/enrollments`);
   redirect(`/${locale}/admin/enrollments`);
 }
@@ -296,6 +362,7 @@ export async function manuallyGrantReturningEligibilityAction(formData: FormData
 
   if (error) redirect(`/${locale}/admin/dancers?error=${encodeURIComponent(error.message)}`);
   revalidatePath(`/${locale}/admin/dancers`);
+  revalidatePath(`/${locale}/admin/dancers/${dancerId}`);
 }
 
 export async function manuallyGrantRewardAction(formData: FormData) {
@@ -312,6 +379,20 @@ export async function manuallyGrantRewardAction(formData: FormData) {
 
   const meta = rewardTierMeta[parsed.data.tier];
   const supabase = createServerClient();
+  const beforeReward = await getRewardSnapshot(
+    supabase,
+    parsed.data.dancer_id,
+    parsed.data.season_id
+  );
+  if (beforeReward?.status === "generated" && beforeReward.discount_code_id) {
+    await cancelStripePromotionForDiscountCode(supabase, beforeReward.discount_code_id);
+  }
+
+  const { data: season } = await supabase
+    .from("seasons")
+    .select("convention_end_date")
+    .eq("id", parsed.data.season_id)
+    .maybeSingle();
   const { error } = await supabase.from("dancer_rewards").upsert(
     {
       dancer_id: parsed.data.dancer_id,
@@ -320,6 +401,10 @@ export async function manuallyGrantRewardAction(formData: FormData) {
       status: "unlocked",
       cohorts_completed_count: meta.cohortsRequired,
       unlocked_at: new Date().toISOString(),
+      generated_at: null,
+      redeemed_at: null,
+      discount_code_id: null,
+      expires_at: rewardExpiresAt(season?.convention_end_date ?? null),
       manually_granted: true,
       admin_notes: nullable(parsed.data.admin_notes)
     },
@@ -327,6 +412,11 @@ export async function manuallyGrantRewardAction(formData: FormData) {
   );
 
   if (error) redirect(`/${locale}/admin/rewards?error=${encodeURIComponent(error.message)}`);
+  await sendManualRewardEmail({
+    supabase,
+    dancerId: parsed.data.dancer_id,
+    tier: parsed.data.tier
+  });
   revalidatePath(`/${locale}/admin/rewards`);
   redirect(`/${locale}/admin/rewards`);
 }
@@ -352,6 +442,8 @@ export async function markCodeRedeemedAction(formData: FormData) {
 
   if (error) redirect(`/${locale}/admin/discount-codes?error=${encodeURIComponent(error.message)}`);
   revalidatePath(`/${locale}/admin/discount-codes`);
+  revalidatePath(`/${locale}/admin/rewards`);
+  redirect(`/${locale}/admin/discount-codes`);
 }
 
 export async function updateSettingsAction(formData: FormData) {

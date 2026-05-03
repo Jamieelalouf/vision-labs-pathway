@@ -1,6 +1,6 @@
 # VISION LABS Pathway
 
-Bilingual Next.js 14 foundation for the VISION LABS cohort operations and reward engine.
+Bilingual Next.js 14 platform for VISION LABS cohort operations, student portal workflows, Stripe registration, video uploads, and LABS Pathway reward automation.
 
 ## Stack
 
@@ -30,12 +30,20 @@ Bilingual Next.js 14 foundation for the VISION LABS cohort operations and reward
 4. Run the app:
 
    ```bash
-   pnpm dev
+   pnpm run dev
+   ```
+
+5. Run local validation:
+
+   ```bash
+   pnpm run typecheck
+   pnpm run lint
+   pnpm run build
    ```
 
 ## Supabase
 
-Apply the initial migration:
+Apply migrations in order:
 
 ```bash
 supabase db push
@@ -52,6 +60,25 @@ The first migration creates:
 - RLS policies
 - storage buckets and storage policies
 
+For local/demo data, run the Phase 8 seed through Supabase local reset:
+
+```bash
+supabase db reset
+```
+
+Demo users are documented in [docs/PHASE8_QA_DEPLOYMENT.md](docs/PHASE8_QA_DEPLOYMENT.md).
+
+## Deployment
+
+Use [docs/PHASE8_QA_DEPLOYMENT.md](docs/PHASE8_QA_DEPLOYMENT.md) as the production launch checklist.
+
+Useful production checks:
+
+```bash
+pnpm run preflight
+curl https://labs.visiondns.ca/api/health
+```
+
 ## Current Scope
 
-V1 implementation scaffold is in place across the requested phases. Configure Supabase, Stripe, Resend, cron secrets, and DNS before production use.
+Phases 1 through 8 are implemented. Before production use, configure Supabase, Stripe, Resend, cron secrets, monitoring, DNS, Privacy Policy, and Terms of Service.
