@@ -1,0 +1,133 @@
+{
+  "common": {
+    "nav": {
+      "pathway": "Pathway",
+      "cohorts": "Cohortes",
+      "faq": "FAQ",
+      "login": "Connexion",
+      "register": "Inscription"
+    },
+    "footer": {
+      "tagline": "Un systeme de cohortes cible pour les danseurs qui avancent vers la convention annuelle VISION Dance.",
+      "pathway": "LABS Pathway",
+      "cohorts": "Cohortes a venir"
+    },
+    "portalNav": {
+      "dashboard": "Tableau de bord",
+      "cohort": "Ma cohorte",
+      "pathway": "Pathway",
+      "rewards": "Recompenses",
+      "videos": "Videos",
+      "profile": "Profil",
+      "signOut": "Deconnexion"
+    },
+    "adminNav": {
+      "overview": "Vue globale",
+      "dancers": "Danseurs",
+      "cohorts": "Cohortes",
+      "enrollments": "Inscriptions",
+      "attendance": "Presence",
+      "rewards": "Recompenses",
+      "discountCodes": "Codes rabais",
+      "videos": "Videos",
+      "seasons": "Saisons",
+      "settings": "Parametres",
+      "signOut": "Deconnexion"
+    },
+    "actions": {
+      "registerNext": "S'inscrire a la prochaine cohorte",
+      "viewPathway": "Voir le LABS Pathway",
+      "saveProfile": "Enregistrer le profil",
+      "continue": "Continuer"
+    }
+  },
+  "landing": {
+    "eyebrow": "VISION LABS · Saison 2027",
+    "headline": "Une experience d'entrainement de 4 semaines pour les danseurs prets a grandir avec intention.",
+    "subhead": "Entraine-toi, reflechis, filme et evolue dans une cohorte ciblee pour les danseurs qui prennent leur croissance au serieux.",
+    "whatTitle": "C'est quoi VISION LABS?",
+    "whatBody": "VISION LABS est un cadre d'entrainement de quatre semaines pour les danseurs qui veulent de la structure, de l'imputabilite et du momentum.",
+    "points": {
+      "intention": "S'entrainer avec intention",
+      "structure": "Suivre un rythme clair de 4 semaines",
+      "momentum": "Avancer vers les recompenses de convention"
+    },
+    "howTitle": "Comment fonctionne la cohorte de 4 semaines",
+    "getsTitle": "Ce que les danseurs recoivent",
+    "pathwayTitle": "Plus tu completes, plus tu debloques",
+    "cohortTitle": "Prochaine cohorte",
+    "faqTitle": "Des questions avant de commencer?",
+    "finalTitle": "Mets l'intention en action. Joins la prochaine cohorte."
+  },
+  "pathway": {
+    "title": "Le LABS Pathway",
+    "intro": "Complete des cohortes dans une saison et debloque des recompenses vers la convention annuelle VISION Dance.",
+    "rulesTitle": "Les regles du systeme",
+    "rules": [
+      "Les recompenses s'appliquent seulement a la prochaine convention annuelle VISION.",
+      "Les recompenses montent de niveau et ne se combinent jamais.",
+      "Les danseurs qui reviennent gardent le prix de 247 $ pour la cohorte immediate suivante.",
+      "Legacy donne un Pass week-end gratuit et recommence a chaque saison."
+    ]
+  },
+  "cohorts": {
+    "title": "Cohortes a venir",
+    "intro": "Les cohortes VISION LABS ouvertes et actives apparaitront ici lorsqu'un admin les publie.",
+    "emptyTitle": "Aucune cohorte ouverte pour le moment",
+    "emptyDescription": "Cree une cohorte dans l'espace admin, ouvre les inscriptions, et elle apparaitra ici automatiquement."
+  },
+  "faq": {
+    "title": "FAQ",
+    "items": [
+      {
+        "q": "Combien de temps dure une cohorte LABS?",
+        "a": "Chaque cohorte comprend exactement quatre sessions hebdomadaires."
+      },
+      {
+        "q": "Qu'est-ce qui compte comme une completion?",
+        "a": "Une inscription payee et au moins trois presences ou absences excusees, sauf si un admin accorde une exception."
+      },
+      {
+        "q": "Est-ce que les recompenses se combinent?",
+        "a": "Non. La recompense devient simplement le plus haut niveau debloque."
+      },
+      {
+        "q": "Le prix de retour recommence-t-il par saison?",
+        "a": "Non. Le prix de retour depend de la participation consecutive entre cohortes, meme entre saisons."
+      }
+    ]
+  },
+  "auth": {
+    "loginTitle": "Bon retour",
+    "signupTitle": "Cree ton compte LABS",
+    "forgotTitle": "Reinitialiser ton mot de passe",
+    "email": "Courriel",
+    "password": "Mot de passe",
+    "submitLogin": "Se connecter",
+    "submitSignup": "Creer le compte",
+    "sendReset": "Envoyer le lien",
+    "forgotLink": "Mot de passe oublie?",
+    "profileTitle": "Complete ton profil danseur",
+    "profileIntro": "Ces informations donnent a l'equipe l'essentiel pour l'inscription, la securite et la preference de langue."
+  },
+  "portal": {
+    "dashboard": {
+      "welcome": "Bon retour",
+      "emptyTitle": "Ton tableau de bord est pret",
+      "emptyDescription": "Quand tu t'inscris a une cohorte, tes sessions, ton progres, tes videos et tes recompenses apparaitront ici."
+    },
+    "profile": {
+      "title": "Profil",
+      "personal": "Personnel",
+      "emergency": "Contact d'urgence",
+      "guardian": "Information parent/tuteur"
+    }
+  },
+  "admin": {
+    "overview": {
+      "title": "Vue globale admin",
+      "intro": "Centre d'operations pour les saisons, cohortes, danseurs, presences, recompenses et paiements.",
+      "empty": "Les indicateurs reels apparaitront quand Supabase sera configure et que les donnees seront ajoutees."
+    }
+  }
+}

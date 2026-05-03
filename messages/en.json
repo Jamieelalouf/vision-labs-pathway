@@ -1,0 +1,133 @@
+{
+  "common": {
+    "nav": {
+      "pathway": "Pathway",
+      "cohorts": "Cohorts",
+      "faq": "FAQ",
+      "login": "Login",
+      "register": "Register"
+    },
+    "footer": {
+      "tagline": "A focused cohort system for dancers building toward the annual VISION Dance Convention.",
+      "pathway": "LABS Pathway",
+      "cohorts": "Upcoming cohorts"
+    },
+    "portalNav": {
+      "dashboard": "Dashboard",
+      "cohort": "My Cohort",
+      "pathway": "Pathway",
+      "rewards": "Rewards",
+      "videos": "Videos",
+      "profile": "Profile",
+      "signOut": "Sign out"
+    },
+    "adminNav": {
+      "overview": "Overview",
+      "dancers": "Dancers",
+      "cohorts": "Cohorts",
+      "enrollments": "Enrollments",
+      "attendance": "Attendance",
+      "rewards": "Rewards",
+      "discountCodes": "Discount codes",
+      "videos": "Videos",
+      "seasons": "Seasons",
+      "settings": "Settings",
+      "signOut": "Sign out"
+    },
+    "actions": {
+      "registerNext": "Register for Next Cohort",
+      "viewPathway": "View LABS Pathway",
+      "saveProfile": "Save profile",
+      "continue": "Continue"
+    }
+  },
+  "landing": {
+    "eyebrow": "VISION LABS · Season 2027",
+    "headline": "A 4-week training experience for dancers ready to grow with intention.",
+    "subhead": "Train, reflect, film, and develop through a focused cohort built for dancers who want to take their growth seriously.",
+    "whatTitle": "What is VISION LABS?",
+    "whatBody": "VISION LABS is a four-week training container for dancers who want structure, accountability, and momentum without turning growth into noise.",
+    "points": {
+      "intention": "Train with clear intention",
+      "structure": "Follow a tight 4-week rhythm",
+      "momentum": "Build toward convention rewards"
+    },
+    "howTitle": "How the 4-week cohort works",
+    "getsTitle": "What dancers get",
+    "pathwayTitle": "The more you complete, the more you unlock",
+    "cohortTitle": "Upcoming cohort",
+    "faqTitle": "Questions before you step in?",
+    "finalTitle": "Apply intention. Join the next cohort."
+  },
+  "pathway": {
+    "title": "The LABS Pathway",
+    "intro": "Complete cohorts in a season and unlock upgraded rewards toward the annual VISION Dance Convention.",
+    "rulesTitle": "Rules that keep it clean",
+    "rules": [
+      "Rewards apply to the next annual VISION Convention only.",
+      "Rewards upgrade and never stack.",
+      "Returning dancers keep the $247 price for the immediate next cohort.",
+      "Legacy is a free Weekend Pass and resets each season."
+    ]
+  },
+  "cohorts": {
+    "title": "Upcoming Cohorts",
+    "intro": "Open and active VISION LABS cohorts will appear here once an admin publishes them.",
+    "emptyTitle": "No cohorts are open yet",
+    "emptyDescription": "Create a cohort in the admin area, set it open, and it will show up here automatically."
+  },
+  "faq": {
+    "title": "FAQ",
+    "items": [
+      {
+        "q": "How long is a LABS cohort?",
+        "a": "Every cohort is exactly four weekly sessions."
+      },
+      {
+        "q": "What counts as completion?",
+        "a": "A paid enrollment plus at least three present or excused sessions, unless an admin grants an override."
+      },
+      {
+        "q": "Can rewards stack?",
+        "a": "No. Rewards upgrade to the highest unlocked tier."
+      },
+      {
+        "q": "Does returning pricing reset by season?",
+        "a": "No. Returning pricing is based on consecutive participation across cohorts, even across seasons."
+      }
+    ]
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "signupTitle": "Create your LABS account",
+    "forgotTitle": "Reset your password",
+    "email": "Email",
+    "password": "Password",
+    "submitLogin": "Log in",
+    "submitSignup": "Create account",
+    "sendReset": "Send reset link",
+    "forgotLink": "Forgot password?",
+    "profileTitle": "Complete your dancer profile",
+    "profileIntro": "This gives the team the essentials needed for registration, safety, and language preference."
+  },
+  "portal": {
+    "dashboard": {
+      "welcome": "Welcome back",
+      "emptyTitle": "Your dashboard is ready",
+      "emptyDescription": "Once you register for a cohort, your sessions, progress, uploads, and rewards will appear here."
+    },
+    "profile": {
+      "title": "Profile",
+      "personal": "Personal",
+      "emergency": "Emergency contact",
+      "guardian": "Guardian information"
+    }
+  },
+  "admin": {
+    "overview": {
+      "title": "Admin Overview",
+      "intro": "Operational command center for seasons, cohorts, dancers, attendance, rewards, and payments.",
+      "empty": "Live KPIs will populate after Supabase is configured and data is seeded."
+    }
+  }
+}
