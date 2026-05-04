@@ -13,6 +13,7 @@ const adminNav = [
   ["cohorts", "/cohorts"],
   ["enrollments", "/enrollments"],
   ["attendance", "/attendance"],
+  ["community", "/community"],
   ["rewards", "/rewards"],
   ["discountCodes", "/discount-codes"],
   ["videos", "/videos"],

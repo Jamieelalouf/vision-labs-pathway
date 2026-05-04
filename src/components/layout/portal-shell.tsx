@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import type { Locale } from "@/i18n/routing";
 import { signOutAction } from "@/server/actions/auth";
 
-const portalNav = ["dashboard", "cohort", "pathway", "rewards", "videos", "profile"] as const;
+const portalNav = ["dashboard", "cohort", "community", "pathway", "rewards", "videos", "profile"] as const;
 
 export async function PortalShell({
   locale,

@@ -366,3 +366,88 @@ export const getStudentPortalData = cache(async () => {
     nextCohort
   };
 });
+
+export const getEligibleCommunityCohorts = cache(async () => {
+  if (!hasSupabaseEnv()) return [];
+  const dancer = await getCurrentDancer();
+  if (!dancer) return [];
+  const supabase = createServerClient() as any;
+
+  const { data } = await supabase
+    .from("enrollments")
+    .select("cohort_id, cohorts(id,name,start_date,end_date,status)")
+    .eq("dancer_id", dancer.id)
+    .eq("payment_status", "paid")
+    .in("enrollment_status", ["registered", "completed"])
+    .order("created_at", { ascending: false });
+
+  const map = new Map<string, any>();
+  for (const row of data ?? []) {
+    const cohort = Array.isArray((row as any).cohorts) ? (row as any).cohorts[0] : (row as any).cohorts;
+    if (cohort?.id && !map.has(cohort.id)) {
+      map.set(cohort.id, cohort);
+    }
+  }
+  return Array.from(map.values());
+});
+
+export const getCohortMessages = cache(async (cohortId: string, limit = 80) => {
+  if (!hasSupabaseEnv()) return [];
+  const supabase = createServerClient() as any;
+  const { data } = await supabase
+    .from("cohort_messages")
+    .select("*, dancers(first_name,last_name)")
+    .eq("cohort_id", cohortId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  return (data ?? []).reverse();
+});
+
+export const getCommunityFeed = cache(async (cohortId?: string) => {
+  if (!hasSupabaseEnv()) return [];
+  const supabase = createServerClient() as any;
+  let query = supabase
+    .from("community_posts")
+    .select(
+      "*, dancers(first_name,last_name), cohorts(name), video_uploads(id,title,source,external_url,storage_path), community_comments(*, dancers(first_name,last_name)), community_reactions(id,dancer_id)"
+    )
+    .order("created_at", { ascending: false })
+    .limit(80);
+  if (cohortId) query = query.eq("cohort_id", cohortId);
+  const { data } = await query;
+
+  return data ?? [];
+});
+
+export const getAdminCommunityData = cache(async () => {
+  if (!hasSupabaseEnv()) {
+    return { messages: [], posts: [], moderationEvents: [] };
+  }
+  const supabase = createServerClient() as any;
+  const [{ data: messages }, { data: posts }, { data: moderationEvents }] = await Promise.all([
+    supabase
+      .from("cohort_messages")
+      .select("*, cohorts(name), dancers(first_name,last_name)")
+      .order("created_at", { ascending: false })
+      .limit(200),
+    supabase
+      .from("community_posts")
+      .select(
+        "*, cohorts(name), dancers(first_name,last_name), video_uploads(id,title,external_url), community_comments(*, dancers(first_name,last_name)), community_reactions(id)"
+      )
+      .order("created_at", { ascending: false })
+      .limit(120),
+    supabase
+      .from("community_moderation_events")
+      .select("*, profiles(email)")
+      .order("created_at", { ascending: false })
+      .limit(200)
+  ]);
+
+  return {
+    messages: messages ?? [],
+    posts: posts ?? [],
+    moderationEvents: moderationEvents ?? []
+  };
+});

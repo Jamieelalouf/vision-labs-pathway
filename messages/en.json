@@ -15,6 +15,7 @@
     "portalNav": {
       "dashboard": "Dashboard",
       "cohort": "My Cohort",
+      "community": "Community",
       "pathway": "Pathway",
       "rewards": "Rewards",
       "videos": "Videos",
@@ -27,6 +28,7 @@
       "cohorts": "Cohorts",
       "enrollments": "Enrollments",
       "attendance": "Attendance",
+      "community": "Community",
       "rewards": "Rewards",
       "discountCodes": "Discount codes",
       "videos": "Videos",
@@ -355,6 +357,41 @@
       "unsupportedFormat": "Use an MP4 or MOV file.",
       "fileTooLarge": "This video is larger than the allowed limit."
     },
+    "community": {
+      "eyebrow": "Community",
+      "title": "VISION Community",
+      "emptyTitle": "No paid cohorts yet",
+      "emptyDescription": "Join a paid cohort to access cohort chat and the VISION Wall.",
+      "switchCohort": "Switch",
+      "tabs": {
+        "chat": "Cohort Chat",
+        "feed": "VISION Wall"
+      },
+      "chat": {
+        "title": "Private cohort chat",
+        "placeholder": "Share an update with your cohort...",
+        "post": "Send message",
+        "emptyTitle": "No chat messages yet",
+        "emptyDescription": "Start the conversation with your cohort."
+      },
+      "feed": {
+        "createTitle": "Create a post",
+        "captionPlaceholder": "Write a caption...",
+        "noVideo": "No linked video",
+        "visibilityCohort": "Cohort only",
+        "visibilityLabs": "All LABS students",
+        "publish": "Publish post",
+        "emptyTitle": "No posts yet",
+        "emptyDescription": "Share your first update on the VISION Wall.",
+        "openVideo": "Open linked video",
+        "like": "Like",
+        "unlike": "Unlike",
+        "deletePost": "Delete post",
+        "deleteComment": "Delete comment",
+        "commentPlaceholder": "Add a comment...",
+        "comment": "Comment"
+      }
+    },
     "profile": {
       "title": "Profile",
       "personal": "Personal",
@@ -380,6 +417,17 @@
       "title": "Admin Overview",
       "intro": "Operational command center for seasons, cohorts, dancers, attendance, rewards, and payments.",
       "empty": "Live KPIs will populate after Supabase is configured and data is seeded."
+    },
+    "community": {
+      "title": "Community Moderation",
+      "postsTitle": "Feed posts",
+      "messagesTitle": "Cohort chat messages",
+      "emptyTitle": "No community content yet",
+      "emptyDescription": "Posts, comments, and messages will appear here.",
+      "hidden": "Hidden",
+      "visible": "Visible",
+      "reactions": "Reactions",
+      "comments": "Comments"
     }
   }
 }

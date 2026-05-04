@@ -15,6 +15,7 @@
     "portalNav": {
       "dashboard": "Tableau de bord",
       "cohort": "Ma cohorte",
+      "community": "Communaute",
       "pathway": "Pathway",
       "rewards": "Recompenses",
       "videos": "Videos",
@@ -27,6 +28,7 @@
       "cohorts": "Cohortes",
       "enrollments": "Inscriptions",
       "attendance": "Presence",
+      "community": "Communaute",
       "rewards": "Recompenses",
       "discountCodes": "Codes rabais",
       "videos": "Videos",
@@ -355,6 +357,41 @@
       "unsupportedFormat": "Utilise un fichier MP4 ou MOV.",
       "fileTooLarge": "Cette video depasse la limite permise."
     },
+    "community": {
+      "eyebrow": "Communaute",
+      "title": "Communaute VISION",
+      "emptyTitle": "Aucune cohorte payee",
+      "emptyDescription": "Inscris-toi a une cohorte payee pour acceder au chat et au VISION Wall.",
+      "switchCohort": "Changer",
+      "tabs": {
+        "chat": "Chat de cohorte",
+        "feed": "VISION Wall"
+      },
+      "chat": {
+        "title": "Chat prive de cohorte",
+        "placeholder": "Partage une mise a jour avec ta cohorte...",
+        "post": "Envoyer",
+        "emptyTitle": "Aucun message",
+        "emptyDescription": "Commence la conversation avec ta cohorte."
+      },
+      "feed": {
+        "createTitle": "Creer une publication",
+        "captionPlaceholder": "Ecris une legende...",
+        "noVideo": "Aucune video liee",
+        "visibilityCohort": "Seulement la cohorte",
+        "visibilityLabs": "Tous les etudiants LABS",
+        "publish": "Publier",
+        "emptyTitle": "Aucune publication",
+        "emptyDescription": "Partage ta premiere publication sur le VISION Wall.",
+        "openVideo": "Ouvrir la video",
+        "like": "J'aime",
+        "unlike": "Je n'aime plus",
+        "deletePost": "Supprimer publication",
+        "deleteComment": "Supprimer commentaire",
+        "commentPlaceholder": "Ajouter un commentaire...",
+        "comment": "Commenter"
+      }
+    },
     "profile": {
       "title": "Profil",
       "personal": "Personnel",
@@ -380,6 +417,17 @@
       "title": "Vue globale admin",
       "intro": "Centre d'operations pour les saisons, cohortes, danseurs, presences, recompenses et paiements.",
       "empty": "Les indicateurs reels apparaitront quand Supabase sera configure et que les donnees seront ajoutees."
+    },
+    "community": {
+      "title": "Moderation communaute",
+      "postsTitle": "Publications",
+      "messagesTitle": "Messages de chat de cohorte",
+      "emptyTitle": "Aucun contenu communautaire",
+      "emptyDescription": "Les publications, commentaires et messages apparaitront ici.",
+      "hidden": "Cache",
+      "visible": "Visible",
+      "reactions": "Reactions",
+      "comments": "Commentaires"
     }
   }
 }
