@@ -89,7 +89,9 @@ export async function signInAction(formData: FormData) {
     .maybeSingle();
 
   const targetLocale = profile?.language_pref ?? resolvedLocale;
-  const next = parsed.data.next?.startsWith(`/${targetLocale}`) ? parsed.data.next : null;
+  const nextValue = parsed.data.next;
+  const localeRoot = `/${targetLocale}`;
+  const next = nextValue === localeRoot || nextValue?.startsWith(`${localeRoot}/`) ? nextValue : null;
 
   if (next) {
     redirect(next);
@@ -132,11 +134,16 @@ export async function updateLanguagePrefAction(locale: Locale) {
   revalidatePath("/", "layout");
 }
 
-export async function updateDancerProfileAction(formData: FormData) {
+export async function updateDancerProfileAction(
+  _prevState: { ok: boolean; message: string },
+  formData: FormData
+) {
+  const actionState = {
+    ok: false,
+    message: ""
+  };
   const localeValue = formValue(formData, "language_pref");
   const locale = isLocale(localeValue) ? localeValue : defaultLocale;
-  const cohortId = formValue(formData, "cohort");
-  const cohortQuery = cohortId ? `?cohort=${encodeURIComponent(cohortId)}` : "";
   const parsed = profileSchema.safeParse({
     first_name: formValue(formData, "first_name"),
     last_name: formValue(formData, "last_name"),
@@ -152,8 +159,7 @@ export async function updateDancerProfileAction(formData: FormData) {
   });
 
   if (!parsed.success) {
-    const separator = cohortQuery ? "&" : "?";
-    redirect(`/${locale}/portal/profile/complete${cohortQuery}${separator}error=invalid`);
+    return { ...actionState, message: "Please check your profile details and try again." };
   }
 
   const supabase = createServerClient();
@@ -162,7 +168,7 @@ export async function updateDancerProfileAction(formData: FormData) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/${locale}/login`);
+    return { ...actionState, message: "Your session expired. Please sign in again." };
   }
 
   await supabase.from("profiles").update({ language_pref: parsed.data.language_pref }).eq("id", user.id);
@@ -173,23 +179,46 @@ export async function updateDancerProfileAction(formData: FormData) {
     last_name: parsed.data.last_name,
     phone: cleanOptional(parsed.data.phone),
     instagram_handle: cleanOptional(parsed.data.instagram_handle),
-    date_of_birth: cleanOptional(parsed.data.date_of_birth),
-    emergency_contact_name: cleanOptional(parsed.data.emergency_contact_name),
-    emergency_contact_phone: cleanOptional(parsed.data.emergency_contact_phone),
-    guardian_name: cleanOptional(parsed.data.guardian_name),
-    guardian_email: cleanOptional(parsed.data.guardian_email),
-    guardian_phone: cleanOptional(parsed.data.guardian_phone)
+    date_of_birth: cleanOptional(parsed.data.date_of_birth)
   };
+
+  // `formData.has(...)` preserves existing legacy values when edit mode omits hidden fields.
+  if (formData.has("emergency_contact_name")) {
+    Object.assign(payload, {
+      emergency_contact_name: cleanOptional(parsed.data.emergency_contact_name)
+    });
+  }
+  if (formData.has("emergency_contact_phone")) {
+    Object.assign(payload, {
+      emergency_contact_phone: cleanOptional(parsed.data.emergency_contact_phone)
+    });
+  }
+  if (formData.has("guardian_name")) {
+    Object.assign(payload, {
+      guardian_name: cleanOptional(parsed.data.guardian_name)
+    });
+  }
+  if (formData.has("guardian_email")) {
+    Object.assign(payload, {
+      guardian_email: cleanOptional(parsed.data.guardian_email)
+    });
+  }
+  if (formData.has("guardian_phone")) {
+    Object.assign(payload, {
+      guardian_phone: cleanOptional(parsed.data.guardian_phone)
+    });
+  }
 
   const { error } = await supabase.from("dancers").upsert(payload, { onConflict: "profile_id" });
 
   if (error) {
-    const separator = cohortQuery ? "&" : "?";
-    redirect(
-      `/${locale}/portal/profile/complete${cohortQuery}${separator}error=${encodeURIComponent(error.message)}`
-    );
+    console.error("dancers upsert failed:", error.message);
+    return { ...actionState, message: "Could not save profile right now. Please try again." };
   }
 
   revalidatePath(`/${locale}/portal`, "layout");
-  redirect(`/${locale}/portal/dashboard${cohortQuery}`);
+  return {
+    ok: true,
+    message: "Profile saved."
+  };
 }

@@ -33,6 +33,7 @@
   html {
     color-scheme: dark;
     scroll-behavior: smooth;
+    scroll-padding-bottom: 7rem;
   }
 
   body {

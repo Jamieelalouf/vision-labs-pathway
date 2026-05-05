@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState, useTransition, type FormEvent } from "react";
 import { AlertCircle, FileVideo, LinkIcon, UploadCloud } from "lucide-react";
+import { isRedirectError } from "next/dist/client/components/redirect";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +39,7 @@ type VideoUploaderCopy = {
   saveUpload: string;
   saveLink: string;
   urlLabel: string;
+  requiredFields: string;
   noEligibleCohorts: string;
   maxFileHint: string;
   uploading: string;
@@ -51,6 +53,7 @@ export function VideoUploader({
   defaultCohortId,
   acceptedFormats,
   maxVideoSizeMb,
+  returnTo = "videos",
   copy
 }: {
   locale: Locale;
@@ -58,6 +61,7 @@ export function VideoUploader({
   defaultCohortId?: string | null;
   acceptedFormats: string[];
   maxVideoSizeMb: number;
+  returnTo?: "community" | "videos";
   copy: VideoUploaderCopy;
 }) {
   const [mode, setMode] = useState<"upload" | "link">("upload");
@@ -112,9 +116,6 @@ export function VideoUploader({
   async function uploadViaSignedUrl(signedUrl: string, uploadFile: File) {
     await new Promise<void>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      const formData = new FormData();
-      formData.append("cacheControl", "3600");
-      formData.append("", uploadFile);
 
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
@@ -131,8 +132,9 @@ export function VideoUploader({
       };
       xhr.onerror = () => reject(new Error("Upload failed."));
       xhr.open("PUT", signedUrl);
+      xhr.setRequestHeader("Content-Type", uploadFile.type || "application/octet-stream");
       xhr.setRequestHeader("x-upsert", "false");
-      xhr.send(formData);
+      xhr.send(uploadFile);
     });
   }
 
@@ -144,7 +146,7 @@ export function VideoUploader({
     const formData = new FormData(form);
     const title = String(formData.get("title") ?? "").trim();
     if (!title || !file || !selectedCohortId) {
-      setError(copy.noEligibleCohorts);
+      setError(copy.requiredFields);
       return;
     }
 
@@ -190,9 +192,19 @@ export function VideoUploader({
       record.set("storage_path", payload.path);
       record.set("file_size_bytes", String(file.size));
       record.set("mime_type", file.type);
+      record.set("return_to", returnTo);
 
-      startTransition(() => {
-        void createUploadedVideoRecordAction(record);
+      startTransition(async () => {
+        try {
+          await createUploadedVideoRecordAction(record);
+        } catch (recordError) {
+          if (isRedirectError(recordError)) {
+            throw recordError;
+          }
+          setError(recordError instanceof Error ? recordError.message : "Upload failed.");
+          setIsUploading(false);
+          setProgress(0);
+        }
       });
     } catch (uploadError) {
       setError(uploadError instanceof Error ? uploadError.message : "Upload failed.");
@@ -239,6 +251,7 @@ export function VideoUploader({
       {mode === "upload" ? (
         <form onSubmit={handleUpload} className="grid gap-4 md:grid-cols-2">
           <input type="hidden" name="locale" value={locale} />
+          <input type="hidden" name="return_to" value={returnTo} />
           <FieldSelects
             copy={copy}
             cohorts={cohorts}
@@ -315,6 +328,7 @@ export function VideoUploader({
       ) : (
         <form action={addExternalVideoLinkAction} className="grid gap-4 md:grid-cols-2">
           <input type="hidden" name="locale" value={locale} />
+          <input type="hidden" name="return_to" value={returnTo} />
           <FieldSelects
             copy={copy}
             cohorts={cohorts}

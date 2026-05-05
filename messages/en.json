@@ -16,11 +16,14 @@
       "dashboard": "Dashboard",
       "cohort": "My Cohort",
       "community": "Community",
+      "post": "Post",
       "pathway": "Pathway",
       "rewards": "Rewards",
       "videos": "Videos",
       "profile": "Profile",
-      "signOut": "Sign out"
+      "more": "More",
+      "signOut": "Sign out",
+      "demoPreview": "Demo preview"
     },
     "adminNav": {
       "overview": "Overview",
@@ -34,7 +37,10 @@
       "videos": "Videos",
       "seasons": "Seasons",
       "settings": "Settings",
-      "signOut": "Sign out"
+      "signOut": "Sign out",
+      "demoAdminPreview": "Demo admin preview",
+      "demoStudentPreview": "Demo student preview",
+      "ops": "VISION LABS Ops"
     },
     "actions": {
       "registerNext": "Register for Next Cohort",
@@ -43,7 +49,8 @@
       "copy": "Copy",
       "copied": "Copied",
       "saveProfile": "Save profile",
-      "continue": "Continue"
+      "continue": "Continue",
+      "goToDashboard": "Go to dashboard"
     }
   },
   "landing": {
@@ -268,7 +275,19 @@
       "emptyDescription": "Once you register for a cohort, your sessions, progress, uploads, and rewards will appear here.",
       "paymentProcessingTitle": "Processing your payment",
       "paymentProcessingDescription": "Stripe confirmed your checkout. The portal may take up to a minute to show the paid cohort while the webhook finishes.",
-      "paymentConfirmedTitle": "Registration confirmed"
+      "paymentConfirmedTitle": "Registration confirmed",
+      "weeklyPrompt": "Weekly ritual",
+      "weeklyPromptText": "Drop one training clip this week and one line about what you are refining.",
+      "cohortActivity": "{count} posts in your cohort feed",
+      "postClip": "Post my clip",
+      "communityPromptTitle": "Community momentum",
+      "communityPromptBody": "Share a win or ask for feedback to keep your training rhythm visible.",
+      "openCommunity": "Open community",
+      "lockedInHeading": "{name}, stay locked in.",
+      "statCohorts": "Cohorts",
+      "statActivity": "Activity",
+      "statUploads": "Uploads",
+      "statReward": "Reward"
     },
     "cohort": {
       "title": "My Cohort",
@@ -342,6 +361,7 @@
       "dropHint": "Drop a file here or click to choose.",
       "saveUpload": "Upload video",
       "urlLabel": "URL",
+      "requiredFields": "Add a title, choose a file, and select a cohort.",
       "descriptionLabel": "Description",
       "saveLink": "Save link",
       "allCohorts": "All cohorts",
@@ -355,42 +375,62 @@
       "maxFileHint": "Max {size}MB.",
       "uploading": "Uploading",
       "unsupportedFormat": "Use an MP4 or MOV file.",
-      "fileTooLarge": "This video is larger than the allowed limit."
+      "fileTooLarge": "This video is larger than the allowed limit.",
+      "uploadPrompt": "Upload after class or rehearsal to keep your progression visible."
     },
     "community": {
       "eyebrow": "Community",
       "title": "VISION Community",
+      "cohortLabel": "Select cohort",
+      "cohortFallback": "Cohort",
       "emptyTitle": "No paid cohorts yet",
       "emptyDescription": "Join a paid cohort to access cohort chat and the VISION Wall.",
       "switchCohort": "Switch",
       "tabs": {
         "chat": "Cohort Chat",
-        "feed": "VISION Wall"
+        "feed": "Feed"
+      },
+      "stats": {
+        "cohorts": "{count} cohorts",
+        "feedPosts": "{count, plural, one {# feed post} other {# feed posts}}",
+        "messages": "{count} messages",
+        "videos": "{count, plural, one {# video} other {# videos}}",
+        "activeCohort": "Active cohort: {name}",
+        "activity": "{postsText} / {videosText}"
       },
       "chat": {
         "title": "Private cohort chat",
-        "placeholder": "Share an update with your cohort...",
-        "post": "Send message",
+        "placeholder": "Share a win, a clip, or a question…",
+        "post": "Send",
         "emptyTitle": "No chat messages yet",
         "emptyDescription": "Start the conversation with your cohort."
       },
       "feed": {
         "createTitle": "Create a post",
-        "captionPlaceholder": "Write a caption...",
-        "noVideo": "No linked video",
+        "captionPlaceholder": "Share a win, a clip, or a question…",
+        "videoPicker": "Attach a video",
+        "uploadSummary": "Upload or link a video",
+        "uploadExpand": "Expand",
+        "uploadCollapse": "Collapse",
         "visibilityCohort": "Cohort only",
         "visibilityLabs": "All LABS students",
-        "publish": "Publish post",
+        "publish": "Post",
         "emptyTitle": "No posts yet",
         "emptyDescription": "Share your first update on the VISION Wall.",
         "openVideo": "Open linked video",
         "like": "Like",
-        "unlike": "Unlike",
+        "likesCount": "{count, plural, =0 {No likes} one {# like} other {# likes}}",
+        "unlike": "Liked",
+        "more": "More options",
+        "save": "Save post",
         "deletePost": "Delete post",
         "deleteComment": "Delete comment",
         "commentPlaceholder": "Add a comment...",
-        "comment": "Comment"
-      }
+        "comment": "Comment",
+        "commentsCount": "{count, plural, one {# comment} other {# comments}}",
+        "viewComments": "Comments ({count})"
+      },
+      "quickActions": "Quick actions"
     },
     "profile": {
       "title": "Profile",
@@ -404,19 +444,77 @@
       "phone": "Phone",
       "instagram": "Instagram",
       "dateOfBirth": "Date of birth",
-      "emergencyName": "Emergency contact name",
-      "emergencyPhone": "Emergency contact phone",
+      "emergencyContactName": "Emergency contact name",
+      "emergencyContactPhone": "Emergency contact phone",
       "guardianName": "Guardian name",
       "guardianEmail": "Guardian email",
       "guardianPhone": "Guardian phone",
-      "language": "Language"
+      "language": "Language",
+      "savePending": "Saving profile...",
+      "saveSuccess": "Profile saved.",
+      "saveErrorPrefix": "Could not save profile:",
+      "profileVibeTitle": "Profile photo and social vibe",
+      "instagramHint": "Use Instagram so your cohort can recognize your style faster."
     }
   },
   "admin": {
     "overview": {
-      "title": "Admin Overview",
-      "intro": "Operational command center for seasons, cohorts, dancers, attendance, rewards, and payments.",
-      "empty": "Live KPIs will populate after Supabase is configured and data is seeded."
+      "badge": "Command Center",
+      "title": "Admin Command Center",
+      "intro": "Run cohorts, enrollments, attendance, moderation, uploads, rewards, and season operations from one control room.",
+      "empty": "Live KPIs will populate after Supabase is configured and data is seeded.",
+      "emptyCohort": "No open or active cohort is available yet.",
+      "noSeason": "No active season",
+      "actions": {
+        "manageCohorts": "Manage cohorts",
+        "markAttendance": "Mark attendance",
+        "reviewEnrollments": "Review enrollments",
+        "moderateCommunity": "Moderate community",
+        "manageCohort": "Manage cohort",
+        "openAttendance": "Open attendance",
+        "reviewUploads": "Review uploads",
+        "manageSeasons": "Manage seasons"
+      },
+      "kpi": {
+        "cohortRegistered": "Registered",
+        "cohortPaid": "Paid",
+        "cohortRevenue": "Revenue",
+        "pending": "Pending actions",
+        "uploads": "Uploads",
+        "currentCohort": "Current cohort",
+        "needsReview": "Needs review",
+        "lifetime": "Lifetime"
+      },
+      "cohortHealth": {
+        "title": "Current Cohort Health",
+        "mixNew": "New",
+        "mixReturning": "Returning",
+        "collectionRate": "Collection"
+      },
+      "queue": {
+        "title": "Operations Queue",
+        "pendingCount": "{count} enrollment/payment records need manual review.",
+        "clear": "No payment or enrollment edge cases are currently flagged.",
+        "communitySignals": "{count} recent upload/community signals to review.",
+        "rewardSignals": "{count} dancers are close to Legacy threshold.",
+        "reviewNow": "Review queue"
+      },
+      "season": {
+        "title": "Active Season"
+      },
+      "rightRail": {
+        "nearLegacyTitle": "Near Legacy",
+        "nearLegacyEmpty": "No dancers are at 4/5 yet.",
+        "recentUploadsTitle": "Recent Uploads",
+        "recentUploadsEmpty": "No uploads yet."
+      },
+      "lifetime": {
+        "title": "Lifetime Performance",
+        "enrollments": "Enrollments",
+        "paid": "Paid",
+        "revenue": "Revenue",
+        "rewards": "Rewards"
+      }
     },
     "community": {
       "title": "Community Moderation",

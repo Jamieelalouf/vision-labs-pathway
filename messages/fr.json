@@ -16,11 +16,14 @@
       "dashboard": "Tableau de bord",
       "cohort": "Ma cohorte",
       "community": "Communaute",
+      "post": "Publier",
       "pathway": "Pathway",
       "rewards": "Recompenses",
       "videos": "Videos",
       "profile": "Profil",
-      "signOut": "Deconnexion"
+      "more": "Plus",
+      "signOut": "Deconnexion",
+      "demoPreview": "Apercu demo"
     },
     "adminNav": {
       "overview": "Vue globale",
@@ -34,7 +37,10 @@
       "videos": "Videos",
       "seasons": "Saisons",
       "settings": "Parametres",
-      "signOut": "Deconnexion"
+      "signOut": "Deconnexion",
+      "demoAdminPreview": "Apercu demo admin",
+      "demoStudentPreview": "Apercu demo etudiant",
+      "ops": "Operations VISION LABS"
     },
     "actions": {
       "registerNext": "S'inscrire a la prochaine cohorte",
@@ -43,7 +49,8 @@
       "copy": "Copier",
       "copied": "Copie",
       "saveProfile": "Enregistrer le profil",
-      "continue": "Continuer"
+      "continue": "Continuer",
+      "goToDashboard": "Aller au tableau de bord"
     }
   },
   "landing": {
@@ -268,7 +275,19 @@
       "emptyDescription": "Quand tu t'inscris a une cohorte, tes sessions, ton progres, tes videos et tes recompenses apparaitront ici.",
       "paymentProcessingTitle": "Traitement de ton paiement",
       "paymentProcessingDescription": "Stripe a confirme ton paiement. Le portail peut prendre jusqu'a une minute avant d'afficher la cohorte payee pendant que le webhook se termine.",
-      "paymentConfirmedTitle": "Inscription confirmee"
+      "paymentConfirmedTitle": "Inscription confirmee",
+      "weeklyPrompt": "Rituel de la semaine",
+      "weeklyPromptText": "Publie un clip d'entrainement cette semaine et une ligne sur ce que tu raffines.",
+      "cohortActivity": "{count} publications dans ton feed de cohorte",
+      "postClip": "Publier mon clip",
+      "communityPromptTitle": "Momentum communaute",
+      "communityPromptBody": "Partage un progres ou demande un retour pour garder ton rythme visible.",
+      "openCommunity": "Ouvrir la communaute",
+      "lockedInHeading": "{name}, reste concentre.",
+      "statCohorts": "Cohortes",
+      "statActivity": "Activite",
+      "statUploads": "Videos",
+      "statReward": "Recompense"
     },
     "cohort": {
       "title": "Ma cohorte",
@@ -342,6 +361,7 @@
       "dropHint": "Depose un fichier ici ou clique pour choisir.",
       "saveUpload": "Televerser la video",
       "urlLabel": "URL",
+      "requiredFields": "Ajoute un titre, choisis un fichier et selectionne une cohorte.",
       "descriptionLabel": "Description",
       "saveLink": "Enregistrer le lien",
       "allCohorts": "Toutes les cohortes",
@@ -355,29 +375,43 @@
       "maxFileHint": "Max {size} Mo.",
       "uploading": "Televersement",
       "unsupportedFormat": "Utilise un fichier MP4 ou MOV.",
-      "fileTooLarge": "Cette video depasse la limite permise."
+      "fileTooLarge": "Cette video depasse la limite permise.",
+      "uploadPrompt": "Televerse apres un cours ou une repetition pour rendre ta progression visible."
     },
     "community": {
       "eyebrow": "Communaute",
       "title": "Communaute VISION",
+      "cohortLabel": "Choisir la cohorte",
+      "cohortFallback": "Cohorte",
       "emptyTitle": "Aucune cohorte payee",
       "emptyDescription": "Inscris-toi a une cohorte payee pour acceder au chat et au VISION Wall.",
       "switchCohort": "Changer",
       "tabs": {
         "chat": "Chat de cohorte",
-        "feed": "VISION Wall"
+        "feed": "Fil"
+      },
+      "stats": {
+        "cohorts": "{count} cohortes",
+        "feedPosts": "{count, plural, one {# publication} other {# publications}}",
+        "messages": "{count} messages",
+        "videos": "{count, plural, one {# video} other {# videos}}",
+        "activeCohort": "Cohorte active : {name}",
+        "activity": "{postsText} / {videosText}"
       },
       "chat": {
         "title": "Chat prive de cohorte",
-        "placeholder": "Partage une mise a jour avec ta cohorte...",
+        "placeholder": "Partage une victoire, un clip ou une question…",
         "post": "Envoyer",
         "emptyTitle": "Aucun message",
         "emptyDescription": "Commence la conversation avec ta cohorte."
       },
       "feed": {
         "createTitle": "Creer une publication",
-        "captionPlaceholder": "Ecris une legende...",
-        "noVideo": "Aucune video liee",
+        "captionPlaceholder": "Partage une victoire, un clip ou une question…",
+        "videoPicker": "Ajouter une video",
+        "uploadSummary": "Televerser ou lier une video",
+        "uploadExpand": "Ouvrir",
+        "uploadCollapse": "Reduire",
         "visibilityCohort": "Seulement la cohorte",
         "visibilityLabs": "Tous les etudiants LABS",
         "publish": "Publier",
@@ -385,12 +419,18 @@
         "emptyDescription": "Partage ta premiere publication sur le VISION Wall.",
         "openVideo": "Ouvrir la video",
         "like": "J'aime",
-        "unlike": "Je n'aime plus",
+        "likesCount": "{count, plural, =0 {Aucun j'aime} one {# j'aime} other {# j'aime}}",
+        "unlike": "Aime",
+        "more": "Plus d'options",
+        "save": "Enregistrer la publication",
         "deletePost": "Supprimer publication",
         "deleteComment": "Supprimer commentaire",
         "commentPlaceholder": "Ajouter un commentaire...",
-        "comment": "Commenter"
-      }
+        "comment": "Commenter",
+        "commentsCount": "{count, plural, one {# commentaire} other {# commentaires}}",
+        "viewComments": "Commentaires ({count})"
+      },
+      "quickActions": "Actions rapides"
     },
     "profile": {
       "title": "Profil",
@@ -404,19 +444,77 @@
       "phone": "Telephone",
       "instagram": "Instagram",
       "dateOfBirth": "Date de naissance",
-      "emergencyName": "Nom du contact d'urgence",
-      "emergencyPhone": "Telephone du contact d'urgence",
+      "emergencyContactName": "Nom du contact d'urgence",
+      "emergencyContactPhone": "Telephone du contact d'urgence",
       "guardianName": "Nom du parent/tuteur",
-      "guardianEmail": "Courriel parent/tuteur",
-      "guardianPhone": "Telephone parent/tuteur",
-      "language": "Langue"
+      "guardianEmail": "Courriel du parent/tuteur",
+      "guardianPhone": "Telephone du parent/tuteur",
+      "language": "Langue",
+      "savePending": "Enregistrement du profil...",
+      "saveSuccess": "Profil enregistre.",
+      "saveErrorPrefix": "Impossible d'enregistrer le profil :",
+      "profileVibeTitle": "Photo de profil et vibe sociale",
+      "instagramHint": "Ajoute Instagram pour que ta cohorte reconnaisse ton style plus vite."
     }
   },
   "admin": {
     "overview": {
-      "title": "Vue globale admin",
-      "intro": "Centre d'operations pour les saisons, cohortes, danseurs, presences, recompenses et paiements.",
-      "empty": "Les indicateurs reels apparaitront quand Supabase sera configure et que les donnees seront ajoutees."
+      "badge": "Centre de commande",
+      "title": "Centre de commande admin",
+      "intro": "Pilote les cohortes, inscriptions, presences, moderation, televersements, recompenses et operations de saison.",
+      "empty": "Les indicateurs reels apparaitront quand Supabase sera configure et que les donnees seront ajoutees.",
+      "emptyCohort": "Aucune cohorte ouverte ou active pour le moment.",
+      "noSeason": "Aucune saison active",
+      "actions": {
+        "manageCohorts": "Gerer les cohortes",
+        "markAttendance": "Marquer les presences",
+        "reviewEnrollments": "Revoir les inscriptions",
+        "moderateCommunity": "Moderer la communaute",
+        "manageCohort": "Gerer la cohorte",
+        "openAttendance": "Ouvrir les presences",
+        "reviewUploads": "Revoir les televersements",
+        "manageSeasons": "Gerer les saisons"
+      },
+      "kpi": {
+        "cohortRegistered": "Inscrits",
+        "cohortPaid": "Payes",
+        "cohortRevenue": "Revenus",
+        "pending": "Actions en attente",
+        "uploads": "Televersements",
+        "currentCohort": "Cohorte actuelle",
+        "needsReview": "A verifier",
+        "lifetime": "A vie"
+      },
+      "cohortHealth": {
+        "title": "Sante de la cohorte actuelle",
+        "mixNew": "Nouveaux",
+        "mixReturning": "Retours",
+        "collectionRate": "Collecte"
+      },
+      "queue": {
+        "title": "File d'operations",
+        "pendingCount": "{count} dossiers inscription/paiement demandent une revue manuelle.",
+        "clear": "Aucun cas paiement ou inscription n'est signale en ce moment.",
+        "communitySignals": "{count} signaux recents televersement/communaute a verifier.",
+        "rewardSignals": "{count} danseurs proches du seuil Legacy.",
+        "reviewNow": "Revoir la file"
+      },
+      "season": {
+        "title": "Saison active"
+      },
+      "rightRail": {
+        "nearLegacyTitle": "Proches Legacy",
+        "nearLegacyEmpty": "Aucun danseur n'est a 4/5 pour le moment.",
+        "recentUploadsTitle": "Televersements recents",
+        "recentUploadsEmpty": "Aucun televersement."
+      },
+      "lifetime": {
+        "title": "Performance a vie",
+        "enrollments": "Inscriptions",
+        "paid": "Payes",
+        "revenue": "Revenus",
+        "rewards": "Recompenses"
+      }
     },
     "community": {
       "title": "Moderation communaute",

@@ -24,18 +24,22 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
   const rules = t.raw("rulesItems") as string[];
 
   return (
-    <section className="space-y-8">
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-            {t("eyebrow")}
-          </p>
-          <h1 className="mt-2 font-display text-4xl font-bold">{t("title")}</h1>
-        </div>
-        <TierBadge tier={portal?.reward?.tier} />
-      </div>
+    <section className="space-y-6 pb-36 md:space-y-8 md:pb-8">
+      <Card className="relative overflow-hidden rounded-3xl border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)]">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/25 blur-3xl" aria-hidden="true" />
+        <CardContent className="relative flex flex-col gap-4 p-5 md:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">{t("eyebrow")}</p>
+              <h1 className="mt-2 font-display text-3xl font-bold text-white md:text-5xl">{t("title")}</h1>
+            </div>
+            <TierBadge tier={portal?.reward?.tier} />
+          </div>
+          <p className="text-sm text-white/75">{t("progressTitle", { completed, season: seasonSuffix })}</p>
+        </CardContent>
+      </Card>
 
-      <Card>
+      <Card className="rounded-2xl border-border/70 bg-secondary/15">
         <CardHeader>
           <CardTitle>{t("progressTitle", { completed, season: seasonSuffix })}</CardTitle>
         </CardHeader>
@@ -64,6 +68,7 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
                     : t("requiredPlural", { count: meta.cohortsRequired })
                 }
                 status={status}
+                className="rounded-2xl border-border/70 bg-secondary/15"
               />
             );
           })}
@@ -71,7 +76,7 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
       </section>
 
       <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
-        <Card>
+        <Card className="rounded-2xl border-border/70 bg-secondary/15">
           <CardHeader>
             <CardTitle>{t("completedCohorts")}</CardTitle>
           </CardHeader>
@@ -84,7 +89,7 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
                 return (
                   <div
                     key={enrollment.id}
-                    className="flex flex-col justify-between gap-3 rounded-md border border-border p-4 sm:flex-row sm:items-center"
+                    className="flex flex-col justify-between gap-3 rounded-xl border border-border/80 bg-background/40 p-4 sm:flex-row sm:items-center"
                   >
                     <div>
                       <p className="font-medium">{cohort?.name ?? "Cohort"}</p>
@@ -92,7 +97,7 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
                         {cohort?.end_date ? formatDate(cohort.end_date, params.locale) : ""}
                       </p>
                     </div>
-                    <Badge variant="outline" className="w-fit">
+                    <Badge variant="outline" className="w-fit rounded-full">
                       <CheckCircle2 className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
                       {t("completionStatus")}
                     </Badge>
@@ -105,7 +110,7 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-2xl border-border/70 bg-secondary/15">
           <CardHeader>
             <CardTitle>{t("rules")}</CardTitle>
           </CardHeader>

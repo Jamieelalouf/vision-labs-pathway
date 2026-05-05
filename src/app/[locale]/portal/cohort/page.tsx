@@ -2,6 +2,7 @@ import Link from "next/link";
 import { CalendarDays, ExternalLink, FileVideo, MapPin, Upload } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CohortTimeline, type CohortTimelineItem } from "@/components/vision/cohort-timeline";
@@ -42,18 +43,28 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
   });
 
   return (
-    <section className="space-y-8">
-      <div>
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-          {t("eyebrow")}
-        </p>
-        <h1 className="mt-2 font-display text-4xl font-bold">{t("title")}</h1>
-      </div>
+    <section className="space-y-6 pb-36 md:space-y-8 md:pb-8">
+      <Card className="relative overflow-hidden rounded-3xl border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)]">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/25 blur-3xl" aria-hidden="true" />
+        <CardContent className="relative flex flex-col gap-4 p-5 md:p-8">
+          <Badge className="w-fit rounded-full bg-primary/20 text-xs uppercase tracking-[0.14em] text-primary hover:bg-primary/20">
+            {t("eyebrow")}
+          </Badge>
+          <h1 className="font-display text-3xl font-bold text-white md:text-5xl">{t("title")}</h1>
+          <p className="text-sm text-white/75">{cohort?.name ?? t("emptyDescription")}</p>
+          <Button asChild className="w-fit rounded-full">
+            <Link href={`/${params.locale}/portal/community#post`}>
+              <Upload className="h-4 w-4" aria-hidden="true" />
+              {t("uploadCta")}
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
 
       {cohort ? (
         <>
-          <Card>
-            <CardContent className="grid gap-8 p-6 lg:grid-cols-[1fr_0.42fr]">
+          <Card className="rounded-2xl border-border/70 bg-secondary/15">
+            <CardContent className="grid gap-8 p-5 md:p-6 lg:grid-cols-[1fr_0.42fr]">
               <div>
                 <h2 className="font-display text-3xl font-bold">{cohort.name}</h2>
                 <div className="mt-6 grid gap-3 text-sm text-muted-foreground">
@@ -62,16 +73,20 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
                     {t("dates")}: {formatDate(cohort.start_date, params.locale)} -{" "}
                     {formatDate(cohort.end_date, params.locale)}
                   </p>
-                  <p className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-primary" aria-hidden="true" />
-                    {t("location")}: {cohort.location_name}
-                  </p>
-                  <p className="text-sm text-muted-foreground">{cohort.location_address}</p>
+                  {cohort.location_name ? (
+                    <p className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-primary" aria-hidden="true" />
+                      {t("location")}: {cohort.location_name}
+                    </p>
+                  ) : null}
+                  {cohort.location_address ? (
+                    <p className="text-sm text-muted-foreground">{cohort.location_address}</p>
+                  ) : null}
                 </div>
               </div>
               <div className="flex items-end">
-                <Button asChild className="w-full">
-                  <Link href={`/${params.locale}/portal/videos`}>
+                <Button asChild className="w-full rounded-full">
+                  <Link href={`/${params.locale}/portal/community#post`}>
                     <Upload className="h-4 w-4" aria-hidden="true" />
                     {t("uploadCta")}
                   </Link>
@@ -83,14 +98,18 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
           <section className="space-y-5">
             <h2 className="font-display text-3xl font-bold">{t("timeline")}</h2>
             {timelineItems.length ? (
-              <CohortTimeline items={timelineItems} />
+              <Card className="rounded-2xl border-border/70 bg-secondary/15">
+                <CardContent className="p-4 md:p-6">
+                  <CohortTimeline items={timelineItems} />
+                </CardContent>
+              </Card>
             ) : (
               <EmptyState title={t("timeline")} description={t("sessionFallback")} />
             )}
           </section>
 
           <div className="grid gap-5 lg:grid-cols-2">
-            <Card>
+            <Card className="rounded-2xl border-border/70 bg-secondary/15">
               <CardHeader>
                 <CardTitle>{t("resources")}</CardTitle>
               </CardHeader>
@@ -100,7 +119,7 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
                     <a
                       key={resource.id}
                       href={resource.url}
-                      className="block rounded-md border border-border p-4 text-sm transition-colors hover:border-primary/40 hover:text-primary"
+                      className="block rounded-xl border border-border/80 bg-background/40 p-4 text-sm transition-colors hover:border-primary/40 hover:text-primary"
                     >
                       <span className="font-medium">
                         {String(localizedField(resource, "title", params.locale) ?? resource.url)}
@@ -118,23 +137,23 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="rounded-2xl border-border/70 bg-secondary/15">
               <CardHeader>
                 <CardTitle>{t("myUploads")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {cohortVideos.length ? (
                   cohortVideos.map((video) => (
-                    <div key={video.id} className="rounded-md border border-border p-4">
+                    <div key={video.id} className="rounded-xl border border-border/80 bg-background/40 p-4">
                       {video.source === "upload" && (video as any).signed_url ? (
                         <video
                           src={(video as any).signed_url}
                           controls
                           preload="metadata"
-                          className="mb-4 aspect-video w-full rounded-md bg-black object-cover"
+                          className="mb-4 aspect-video w-full rounded-xl bg-black object-cover"
                         />
                       ) : (
-                        <div className="mb-4 flex aspect-video w-full items-center justify-center rounded-md border border-border bg-secondary">
+                        <div className="mb-4 flex aspect-video w-full items-center justify-center rounded-xl border border-border bg-secondary">
                           <FileVideo className="h-7 w-7 text-primary" aria-hidden="true" />
                         </div>
                       )}
@@ -142,10 +161,10 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
                         <p className="font-medium">{video.title}</p>
                         {video.external_url ? (
                           <Button asChild variant="link">
-                            <Link href={video.external_url} target="_blank" rel="noreferrer">
+                            <a href={video.external_url} target="_blank" rel="noreferrer">
                               <ExternalLink className="h-4 w-4" aria-hidden="true" />
                               {t("openVideo")}
-                            </Link>
+                            </a>
                           </Button>
                         ) : null}
                       </div>

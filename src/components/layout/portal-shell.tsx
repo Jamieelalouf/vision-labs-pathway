@@ -1,13 +1,15 @@
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { Logo } from "@/components/layout/logo";
+import { PortalDesktopNav } from "@/components/layout/portal-desktop-nav";
+import { PortalMobileNav } from "@/components/layout/portal-mobile-nav";
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/i18n/routing";
+import { isDemoBypassEnabled } from "@/lib/demo-bypass";
 import { signOutAction } from "@/server/actions/auth";
 
-const portalNav = ["dashboard", "cohort", "community", "pathway", "rewards", "videos", "profile"] as const;
+const portalNav = ["dashboard", "cohort", "community", "pathway", "profile"] as const;
 
 export async function PortalShell({
   locale,
@@ -17,6 +19,7 @@ export async function PortalShell({
   children: React.ReactNode;
 }) {
   const t = await getTranslations({ locale, namespace: "common.portalNav" });
+  const isDemoMode = isDemoBypassEnabled();
 
   return (
     <div className="min-h-screen bg-background">
@@ -24,6 +27,11 @@ export async function PortalShell({
         <div className="page-shell flex h-16 items-center justify-between gap-4">
           <Logo locale={locale} />
           <div className="flex items-center gap-2">
+            {isDemoMode ? (
+              <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
+                {t("demoPreview")}
+              </span>
+            ) : null}
             <LanguageSwitcher locale={locale} />
             <form action={signOutAction}>
               <Button variant="secondary" size="sm">
@@ -33,22 +41,34 @@ export async function PortalShell({
           </div>
         </div>
       </header>
-      <div className="page-shell grid gap-8 py-8 md:grid-cols-[220px_1fr]">
-        <aside className="md:sticky md:top-24 md:h-fit">
-          <nav className="flex gap-2 overflow-x-auto md:flex-col md:overflow-visible">
-            {portalNav.map((item) => (
-              <Link
-                key={item}
-                href={`/${locale}/portal/${item}`}
-                className="focus-ring whitespace-nowrap rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              >
-                {t(item)}
-              </Link>
-            ))}
-          </nav>
+      <div className="page-shell grid gap-6 py-6 pb-[calc(6rem+env(safe-area-inset-bottom))] md:grid-cols-[220px_1fr] md:gap-8 md:py-8 md:pb-8">
+        <aside className="hidden md:sticky md:top-24 md:block md:h-fit">
+          <PortalDesktopNav
+            locale={locale}
+            items={portalNav}
+            labels={{
+              dashboard: t("dashboard"),
+              cohort: t("cohort"),
+              community: t("community"),
+              pathway: t("pathway"),
+              profile: t("profile")
+            }}
+          />
         </aside>
         <main>{children}</main>
       </div>
+      <PortalMobileNav
+        locale={locale}
+        labels={{
+          dashboard: t("dashboard"),
+          cohort: t("cohort"),
+          community: t("community"),
+          post: t("post"),
+          pathway: t("pathway"),
+          profile: t("profile"),
+          more: t("more")
+        }}
+      />
     </div>
   );
 }
