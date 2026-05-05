@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { ExternalLink, FileVideo, Filter, Trash2, Upload } from "lucide-react";
+import { ExternalLink, FileVideo, Filter, Upload } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+import { DeleteVideoButton } from "@/components/portal/delete-video-button";
 import { VideoUploader } from "@/components/portal/video-uploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/vision/empty-state";
 import type { Locale } from "@/i18n/routing";
 import { formatDate } from "@/lib/utils";
-import { deleteVideoAction } from "@/server/actions/videos";
 import { requireCompleteDancerProfile } from "@/server/queries/auth";
 import { getSettings, getStudentPortalData } from "@/server/queries/data";
 
@@ -102,7 +102,14 @@ export default async function VideosPage({
           {videos.length ? (
             <div className="grid gap-4 md:grid-cols-2">
               {videos.map((video: any) => (
-                <StudentVideoCard key={video.id} video={video} locale={params.locale} deleteLabel={t("delete")} openLabel={t("open")} />
+                <StudentVideoCard
+                  key={video.id}
+                  video={video}
+                  locale={params.locale}
+                  deleteLabel={t("delete")}
+                  openLabel={t("open")}
+                  confirmDeleteLabel={t("confirmDelete")}
+                />
               ))}
             </div>
           ) : (
@@ -158,12 +165,14 @@ function StudentVideoCard({
   video,
   locale,
   deleteLabel,
-  openLabel
+  openLabel,
+  confirmDeleteLabel
 }: {
   video: any;
   locale: Locale;
   deleteLabel: string;
   openLabel: string;
+  confirmDeleteLabel: string;
 }) {
   const cohort = Array.isArray(video.cohorts) ? video.cohorts[0] : video.cohorts;
   const session = Array.isArray(video.cohort_sessions) ? video.cohort_sessions[0] : video.cohort_sessions;
@@ -195,14 +204,12 @@ function StudentVideoCard({
         <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
           {cohort?.name ?? "Cohort"} / {session ? `Week ${session.session_number}` : "General"} / {formatDate(video.created_at, locale)}
         </p>
-        <form action={deleteVideoAction}>
-          <input type="hidden" name="locale" value={locale} />
-          <input type="hidden" name="video_id" value={video.id} />
-          <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive">
-            <Trash2 className="h-4 w-4" aria-hidden="true" />
-            {deleteLabel}
-          </Button>
-        </form>
+        <DeleteVideoButton
+          locale={locale}
+          videoId={video.id}
+          label={deleteLabel}
+          confirmMessage={confirmDeleteLabel}
+        />
       </div>
     </div>
   );

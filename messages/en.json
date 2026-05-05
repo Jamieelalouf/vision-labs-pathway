@@ -369,6 +369,7 @@
       "filter": "Filter",
       "open": "Open",
       "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this video?",
       "noVideos": "No videos yet.",
       "noVideosDescription": "Upload a rehearsal file or paste a video link when you are ready.",
       "noEligibleCohorts": "Video uploads are available after you have a paid cohort enrollment.",

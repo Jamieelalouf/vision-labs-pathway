@@ -369,6 +369,7 @@
       "filter": "Filtrer",
       "open": "Ouvrir",
       "delete": "Supprimer",
+      "confirmDelete": "Es-tu sur de vouloir supprimer cette video?",
       "noVideos": "Aucune video pour le moment.",
       "noVideosDescription": "Televerse un fichier de repetition ou colle un lien video quand tu es pret.",
       "noEligibleCohorts": "Les videos sont disponibles apres une inscription payee a une cohorte.",

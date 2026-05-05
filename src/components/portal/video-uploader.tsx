@@ -1,8 +1,7 @@
 "use client";
 
-import { useMemo, useRef, useState, useTransition, type FormEvent } from "react";
+import { useMemo, useRef, useState, type FormEvent } from "react";
 import { AlertCircle, FileVideo, LinkIcon, UploadCloud } from "lucide-react";
-import { isRedirectError } from "next/dist/client/components/redirect";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +13,12 @@ import {
   addExternalVideoLinkAction,
   createUploadedVideoRecordAction
 } from "@/server/actions/videos";
+
+function isNextRedirect(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const digest = (error as { digest?: unknown }).digest;
+  return typeof digest === "string" && digest.startsWith("NEXT_REDIRECT");
+}
 
 type VideoCohortOption = {
   id: string;
@@ -71,7 +76,6 @@ export function VideoUploader({
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [isPending, startTransition] = useTransition();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const selectedCohort = useMemo(
@@ -84,7 +88,7 @@ export function VideoUploader({
       format === "mov" ? [".mov", "video/quicktime"] : [`.${format}`, `video/${format}`]
     )
     .join(",");
-  const disabled = cohorts.length === 0 || isUploading || isPending;
+  const disabled = cohorts.length === 0 || isUploading;
 
   function validateFile(nextFile: File) {
     const extension = nextFile.name.split(".").pop()?.toLowerCase() ?? "";
@@ -194,19 +198,11 @@ export function VideoUploader({
       record.set("mime_type", file.type);
       record.set("return_to", returnTo);
 
-      startTransition(async () => {
-        try {
-          await createUploadedVideoRecordAction(record);
-        } catch (recordError) {
-          if (isRedirectError(recordError)) {
-            throw recordError;
-          }
-          setError(recordError instanceof Error ? recordError.message : "Upload failed.");
-          setIsUploading(false);
-          setProgress(0);
-        }
-      });
+      await createUploadedVideoRecordAction(record);
     } catch (uploadError) {
+      if (isNextRedirect(uploadError)) {
+        throw uploadError;
+      }
       setError(uploadError instanceof Error ? uploadError.message : "Upload failed.");
       setIsUploading(false);
       setProgress(0);
