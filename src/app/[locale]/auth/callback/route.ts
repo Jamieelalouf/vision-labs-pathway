@@ -11,6 +11,8 @@ export async function GET(request: NextRequest, { params }: { params: { locale: 
   const locale = isLocale(params.locale) ? params.locale : defaultLocale;
   const code = request.nextUrl.searchParams.get("code");
   const tokenHash = request.nextUrl.searchParams.get("token_hash");
+  const accessToken =
+    request.nextUrl.searchParams.get("access_token") ?? request.nextUrl.searchParams.get("sb");
   const refreshToken = request.nextUrl.searchParams.get("refresh_token");
   const type = request.nextUrl.searchParams.get("type");
   const next = request.nextUrl.searchParams.get("next");
@@ -22,7 +24,11 @@ export async function GET(request: NextRequest, { params }: { params: { locale: 
   const cookieCarrier = NextResponse.next();
 
   let authError: string | null = null;
-  if (code || (tokenHash && otpType) || (type === "recovery" && refreshToken)) {
+  if (
+    code ||
+    (tokenHash && otpType) ||
+    (type === "recovery" && ((accessToken && refreshToken) || refreshToken))
+  ) {
     const supabase = createServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -47,9 +53,14 @@ export async function GET(request: NextRequest, { params }: { params: { locale: 
             token_hash: tokenHash,
             type: otpType
           })
-        : await supabase.auth.refreshSession({
-            refresh_token: refreshToken!
-          });
+        : type === "recovery" && accessToken && refreshToken
+          ? await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken
+            })
+          : await supabase.auth.refreshSession({
+              refresh_token: refreshToken!
+            });
 
     if (error) {
       authError = error.message;
