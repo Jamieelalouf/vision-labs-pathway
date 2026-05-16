@@ -10,6 +10,7 @@ export async function GET(request: NextRequest, { params }: { params: { locale: 
   const locale = isLocale(params.locale) ? params.locale : defaultLocale;
   const code = request.nextUrl.searchParams.get("code");
   const tokenHash = request.nextUrl.searchParams.get("token_hash");
+  const refreshToken = request.nextUrl.searchParams.get("refresh_token");
   const type = request.nextUrl.searchParams.get("type");
   const next = request.nextUrl.searchParams.get("next");
   const fallback = `/${locale}/reset-password`;
@@ -18,14 +19,18 @@ export async function GET(request: NextRequest, { params }: { params: { locale: 
 
   const otpType = type && otpTypes.includes(type as EmailOtpType) ? (type as EmailOtpType) : null;
 
-  if (code || (tokenHash && otpType)) {
+  if (code || (tokenHash && otpType) || (type === "recovery" && refreshToken)) {
     const supabase = createServerClient();
     const { error } = code
       ? await supabase.auth.exchangeCodeForSession(code)
-      : await supabase.auth.verifyOtp({
-          token_hash: tokenHash!,
-          type: otpType!
-        });
+      : tokenHash && otpType
+        ? await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: otpType
+          })
+        : await supabase.auth.refreshSession({
+            refresh_token: refreshToken!
+          });
 
     if (error) {
       return NextResponse.redirect(
