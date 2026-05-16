@@ -20,8 +20,12 @@ const protectedPortal = /^\/(en|fr)\/portal(\/|$)/;
 const protectedAdmin = /^\/(en|fr)\/admin(\/|$)/;
 
 export async function middleware(request: NextRequest) {
-  let response = intlMiddleware(request);
   const pathname = request.nextUrl.pathname;
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL(`/${defaultLocale}`, request.url));
+  }
+
+  let response = intlMiddleware(request);
 
   if (!protectedPortal.test(pathname) && !protectedAdmin.test(pathname)) {
     return response;

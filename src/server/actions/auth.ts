@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 import { defaultLocale, isLocale, type Locale } from "@/i18n/routing";
 import { createServerClient } from "@/lib/supabase/server";
-import { profileSchema, signInSchema, signUpSchema } from "@/lib/validators/auth";
+import { profileSchema, resetPasswordSchema, signInSchema, signUpSchema } from "@/lib/validators/auth";
 
 function cleanOptional(value?: string | null) {
   const trimmed = value?.trim();
@@ -114,10 +114,34 @@ export async function requestPasswordResetAction(formData: FormData) {
   const supabase = createServerClient();
 
   await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/${resolvedLocale}/portal/profile`
+    redirectTo: `${origin}/${resolvedLocale}/auth/callback?next=/${resolvedLocale}/reset-password`
   });
 
   redirect(`/${resolvedLocale}/forgot-password?sent=1`);
+}
+
+export async function updatePasswordAction(formData: FormData) {
+  const locale = formValue(formData, "locale");
+  const resolvedLocale = isLocale(locale) ? locale : defaultLocale;
+  const parsed = resetPasswordSchema.safeParse({
+    password: formValue(formData, "password"),
+    confirmPassword: formValue(formData, "confirmPassword")
+  });
+
+  if (!parsed.success) {
+    const message = parsed.error.issues[0]?.message ?? "Invalid password input.";
+    redirect(`/${resolvedLocale}/reset-password?error=${encodeURIComponent(message)}`);
+  }
+
+  const supabase = createServerClient();
+  const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
+
+  if (error) {
+    redirect(`/${resolvedLocale}/reset-password?error=${encodeURIComponent(error.message)}`);
+  }
+
+  await supabase.auth.signOut();
+  redirect(`/${resolvedLocale}/login?reset=1`);
 }
 
 export async function updateLanguagePrefAction(locale: Locale) {

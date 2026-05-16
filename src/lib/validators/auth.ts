@@ -12,6 +12,16 @@ export const signInSchema = z.object({
   next: z.string().optional()
 });
 
+export const resetPasswordSchema = z
+  .object({
+    password: z.string().min(10, "Password must be at least 10 characters."),
+    confirmPassword: z.string().min(1)
+  })
+  .refine((value) => value.password === value.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"]
+  });
+
 export const profileSchema = z.object({
   first_name: z.string().trim().min(1),
   last_name: z.string().trim().min(1),

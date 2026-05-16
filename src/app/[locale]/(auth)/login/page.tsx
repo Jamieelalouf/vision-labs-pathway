@@ -13,7 +13,7 @@ export default async function LoginPage({
   searchParams
 }: {
   params: { locale: Locale };
-  searchParams: { next?: string; error?: string };
+  searchParams: { next?: string; error?: string; reset?: string };
 }) {
   const t = await getTranslations({ locale: params.locale, namespace: "auth" });
 
@@ -38,6 +38,11 @@ export default async function LoginPage({
             {searchParams.error ? (
               <p className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive-foreground">
                 {decodeURIComponent(searchParams.error)}
+              </p>
+            ) : null}
+            {searchParams.reset ? (
+              <p className="rounded-md border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm text-emerald-200">
+                {t("resetSuccess")}
               </p>
             ) : null}
             <Button className="w-full">{t("submitLogin")}</Button>
