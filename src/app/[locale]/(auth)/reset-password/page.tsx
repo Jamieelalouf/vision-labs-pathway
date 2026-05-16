@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
+import { RecoverySessionBridge } from "@/components/auth/recovery-session-bridge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,7 @@ export default async function ResetPasswordPage({
           <CardTitle className="text-3xl">{t("resetTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
+          <RecoverySessionBridge />
           <form action={updatePasswordAction} className="space-y-5">
             <input type="hidden" name="locale" value={params.locale} />
             <div className="space-y-2">
