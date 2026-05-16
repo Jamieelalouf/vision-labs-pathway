@@ -13,7 +13,7 @@ import type { RewardTier } from "@/lib/supabase/database.types";
 type RewardCopy = {
   tier: RewardTier;
   title: string;
-  reward: string;
+  categories?: Array<{ title: string; items: string[] }>;
   required: string;
 };
 
@@ -79,7 +79,7 @@ export default async function PathwayPage({ params }: { params: { locale: Locale
                 key={reward.tier}
                 tier={reward.tier}
                 title={reward.title}
-                reward={reward.reward}
+                categories={reward.categories}
                 required={Number(reward.required.match(/\d+/)?.[0] ?? 0)}
                 requiredLabel={reward.required}
               />

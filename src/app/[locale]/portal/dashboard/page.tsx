@@ -2,12 +2,9 @@ import Link from "next/link";
 import {
   ArrowRight,
   CalendarDays,
-  Flame,
-  PlayCircle,
-  Sparkles,
   Trophy,
   Upload,
-  Users
+  Sparkles
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
@@ -22,15 +19,6 @@ import { getTierLabel, nextTierForCompletedCount, rewardTierMeta } from "@/lib/d
 import { formatDate } from "@/lib/utils";
 import { getCurrentDancer, requireCompleteDancerProfile } from "@/server/queries/auth";
 import { getCommunityFeedCount, getStudentPortalData } from "@/server/queries/data";
-
-type RecentVideo = {
-  id: string;
-  title: string;
-  created_at: string;
-  source?: string | null;
-  signed_url?: string | null;
-  cohorts?: { name?: string } | { name?: string }[] | null;
-};
 
 export default async function DashboardPage({
   params,
@@ -50,7 +38,6 @@ export default async function DashboardPage({
       ? portal.currentEnrollment.cohorts[0]
       : portal.currentEnrollment.cohorts
     : null;
-  const recentVideos = (portal?.videos.slice(0, 4) ?? []) as RecentVideo[];
   const cohortActivityCount = currentCohort ? await getCommunityFeedCount(currentCohort.id) : 0;
   const seasonSuffix = portal?.activeSeason?.name ? ` in ${portal.activeSeason.name}` : "";
   const primaryAction =
@@ -167,47 +154,6 @@ export default async function DashboardPage({
 
           <Card className="rounded-2xl border-border/70 bg-secondary/15">
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg">{t("recentUploads")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {recentVideos.length ? (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {recentVideos.map((video) => {
-                    const cohort = Array.isArray(video.cohorts) ? video.cohorts[0] : video.cohorts;
-                    return (
-                      <div
-                        key={video.id}
-                        className="overflow-hidden rounded-2xl border border-border/70 bg-black/20 transition hover:border-primary/50"
-                      >
-                        {video.source === "upload" && video.signed_url ? (
-                          <video
-                            src={video.signed_url}
-                            preload="metadata"
-                            muted
-                            playsInline
-                            className="aspect-video w-full bg-black object-cover"
-                          />
-                        ) : (
-                          <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-secondary/40 to-secondary/10">
-                            <PlayCircle className="h-7 w-7 text-primary" aria-hidden="true" />
-                          </div>
-                        )}
-                        <div className="space-y-1 p-3">
-                          <p className="truncate text-sm font-semibold">{video.title}</p>
-                          <p className="text-xs text-muted-foreground">{cohort?.name ?? formatDate(video.created_at, params.locale)}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">{t("noUploads")}</p>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl border-border/70 bg-secondary/15">
-            <CardHeader className="pb-3">
               <CardTitle className="text-lg">{t("seasonProgress")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">
@@ -237,7 +183,7 @@ export default async function DashboardPage({
             <Card className="rounded-2xl border-border/70 bg-secondary/20">
               <CardContent className="space-y-1 p-4">
                 <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">{t("statUploads")}</p>
-                <p className="font-display text-2xl font-bold">{recentVideos.length}</p>
+                <p className="font-display text-2xl font-bold">{portal?.videos.length ?? 0}</p>
               </CardContent>
             </Card>
             <Card className="rounded-2xl border-border/70 bg-secondary/20">
@@ -249,24 +195,6 @@ export default async function DashboardPage({
               </CardContent>
             </Card>
           </div>
-
-          <Card className="rounded-2xl border-border/70 bg-secondary/15">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg">{t("communityPromptTitle")}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Users className="h-4 w-4 text-primary" aria-hidden="true" />
-                {t("communityPromptBody")}
-              </p>
-              <Badge variant="secondary" className="rounded-full">
-                {t("cohortActivity", { count: cohortActivityCount })}
-              </Badge>
-              <Button asChild variant="secondary" size="sm" className="w-full rounded-full">
-                <Link href={`/${params.locale}/portal/community`}>{t("openCommunity")}</Link>
-              </Button>
-            </CardContent>
-          </Card>
 
           <Card className="rounded-2xl border-primary/30 bg-gradient-to-br from-primary/10 to-secondary/20">
             <CardHeader className="pb-3">
@@ -294,20 +222,6 @@ export default async function DashboardPage({
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-border/70 bg-secondary/15">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg">{t("primaryAction")}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Flame className="h-4 w-4 text-primary" aria-hidden="true" />
-                {t("weeklyPrompt")}
-              </p>
-              <Button asChild variant="secondary" className="w-full rounded-full">
-                <Link href={primaryAction.href}>{primaryAction.label}</Link>
-              </Button>
-            </CardContent>
-          </Card>
         </aside>
       </div>
     </section>

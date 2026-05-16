@@ -121,26 +121,156 @@
       {
         "tier": "member",
         "title": "LABS Member",
-        "reward": "$25 off VISION Convention",
-        "required": "1 cohort completed"
+        "required": "1 cohort completed",
+        "categories": [
+          {
+            "title": "Savings",
+            "items": [
+              "Returning member rate: $247 instead of $300"
+            ]
+          },
+          {
+            "title": "Access",
+            "items": [
+              "Digital LABS workbook archive"
+            ]
+          },
+          {
+            "title": "Community",
+            "items": [
+              "Official LABS Member status"
+            ]
+          },
+          {
+            "title": "Development",
+            "items": [
+              "Continued access to LABS training resources"
+            ]
+          },
+          {
+            "title": "Status",
+            "items": [
+              "LABS Member badge",
+              "Founding Member badge, for early members only"
+            ]
+          }
+        ]
       },
       {
         "tier": "alumni",
         "title": "LABS Alumni",
-        "reward": "$50 off VISION Convention",
-        "required": "2 cohorts completed"
+        "required": "2 cohorts completed",
+        "categories": [
+          {
+            "title": "Savings",
+            "items": [
+              "$50 off VISION Convention",
+              "Locked-in alumni price for future cohorts"
+            ]
+          },
+          {
+            "title": "Access",
+            "items": [
+              "Priority registration for future LABS cohorts"
+            ]
+          },
+          {
+            "title": "Community",
+            "items": [
+              "LABS Alumni status"
+            ]
+          },
+          {
+            "title": "Development",
+            "items": [
+              "Performance mindset workshop"
+            ]
+          },
+          {
+            "title": "Status",
+            "items": [
+              "LABS Alumni badge"
+            ]
+          }
+        ]
       },
       {
         "tier": "elite",
         "title": "LABS Elite",
-        "reward": "$100 off VISION Convention",
-        "required": "3 cohorts completed"
+        "required": "3 cohorts completed",
+        "categories": [
+          {
+            "title": "Savings",
+            "items": [
+              "$100 off VISION Convention"
+            ]
+          },
+          {
+            "title": "Access",
+            "items": [
+              "Elite opportunities announced seasonally"
+            ]
+          },
+          {
+            "title": "Community",
+            "items": [
+              "LABS Elite status"
+            ]
+          },
+          {
+            "title": "Development",
+            "items": [
+              "Group goal-setting call with Jamie",
+              "Group next-step training direction"
+            ]
+          },
+          {
+            "title": "Status",
+            "items": [
+              "LABS Elite badge"
+            ]
+          }
+        ]
       },
       {
         "tier": "legacy",
         "title": "LABS Legacy",
-        "reward": "Free Weekend Pass",
-        "required": "5 cohorts completed"
+        "required": "5 cohorts completed",
+        "categories": [
+          {
+            "title": "Savings",
+            "items": [
+              "$200 off VISION Convention"
+            ]
+          },
+          {
+            "title": "Access",
+            "items": [
+              "First access to future LABS opportunities"
+            ]
+          },
+          {
+            "title": "Community",
+            "items": [
+              "Private LABS alumni group chat",
+              "LABS alumni meet-up at VISION Convention"
+            ]
+          },
+          {
+            "title": "Development",
+            "items": [
+              "Legacy group call with Jamie",
+              "Group next-step training direction"
+            ]
+          },
+          {
+            "title": "Status",
+            "items": [
+              "LABS Legacy badge",
+              "Permanent Legacy recognition"
+            ]
+          }
+        ]
       }
     ],
     "progressLabels": {
@@ -186,7 +316,12 @@
     ],
     "seasonTitle": "How a season moves",
     "seasonEyebrow": "Season",
-    "seasonSteps": ["Cohort", "Cohort", "Cohort", "Convention"],
+    "seasonSteps": [
+      "Cohort",
+      "Cohort",
+      "Cohort",
+      "Convention"
+    ],
     "seasonBody": "Each LABS completion updates your season progress. At convention time, you claim the best reward you earned."
   },
   "cohorts": {
@@ -460,7 +595,7 @@
       "saveSuccess": "Profile saved.",
       "saveErrorPrefix": "Could not save profile:",
       "profileVibeTitle": "Profile photo and social vibe",
-      "instagramHint": "Use Instagram so your cohort can recognize your style faster."
+      "instagramHint": "Use Instagram"
     }
   },
   "admin": {

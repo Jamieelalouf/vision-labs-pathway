@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { Logo } from "@/components/layout/logo";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import type { Locale } from "@/i18n/routing";
 
 export async function PublicHeader({ locale }: { locale: Locale }) {
@@ -26,6 +27,7 @@ export async function PublicHeader({ locale }: { locale: Locale }) {
         </nav>
         <div className="flex items-center gap-2">
           <LanguageSwitcher locale={locale} />
+          <ThemeToggle />
           <Button asChild variant="secondary" size="sm" className="hidden sm:inline-flex">
             <Link href={`/${locale}/login`}>{t("login")}</Link>
           </Button>

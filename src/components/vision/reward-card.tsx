@@ -9,6 +9,7 @@ export function RewardCard({
   tier,
   title,
   reward,
+  categories,
   required,
   requiredLabel,
   status = "locked",
@@ -16,13 +17,15 @@ export function RewardCard({
 }: {
   tier: RewardTier;
   title: string;
-  reward: string;
+  reward?: string;
+  categories?: Array<{ title: string; items: string[] }>;
   required: number;
   requiredLabel?: string;
   status?: RewardStatus;
   className?: string;
 }) {
   const locked = status === "locked";
+  const visibleCategories = (categories ?? []).filter((category) => category.items.length);
 
   return (
     <Card className={cn("overflow-hidden", locked ? "opacity-60" : "border-primary/40", className)}>
@@ -38,7 +41,24 @@ export function RewardCard({
         <CardTitle className="pt-4">{title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">{reward}</p>
+        {visibleCategories.length ? (
+          <div className="grid gap-3">
+            {visibleCategories.map((category) => (
+              <div key={category.title} className="rounded-xl border border-border/80 bg-background/40 p-3">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">{category.title}</p>
+                <ul className="mt-2 space-y-1.5">
+                  {category.items.map((item) => (
+                    <li key={item} className="text-sm text-muted-foreground">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ) : reward ? (
+          <p className="text-sm text-muted-foreground">{reward}</p>
+        ) : null}
         <p className="border-t border-border pt-4 text-xs uppercase tracking-[0.16em] text-muted-foreground">
           {requiredLabel ?? `${required} ${required === 1 ? "cohort" : "cohorts"} completed`}
         </p>

@@ -91,10 +91,12 @@ export function ProfileForm({
             <Label htmlFor="last_name">{labels.lastName}</Label>
             <Input id="last_name" name="last_name" defaultValue={defaults?.last_name ?? ""} required />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone">{labels.phone}</Label>
-            <Input id="phone" name="phone" type="tel" defaultValue={defaults?.phone ?? ""} />
-          </div>
+          {mode === "full" ? (
+            <div className="space-y-2">
+              <Label htmlFor="phone">{labels.phone}</Label>
+              <Input id="phone" name="phone" type="tel" defaultValue={defaults?.phone ?? ""} />
+            </div>
+          ) : null}
           <div className="space-y-2">
             <Label htmlFor="instagram_handle">{labels.instagram}</Label>
             <Input id="instagram_handle" name="instagram_handle" defaultValue={defaults?.instagram_handle ?? ""} placeholder="@yourhandle" />

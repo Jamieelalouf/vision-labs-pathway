@@ -25,8 +25,8 @@ export const rewardTierMeta: Record<
     cohortsRequired: 1,
     labelEn: "LABS Member",
     labelFr: "Membre LABS",
-    rewardEn: "$25 off VISION Convention",
-    rewardFr: "25 $ de rabais sur la convention VISION",
+    rewardEn: "Returning member rate: $247 instead of $300",
+    rewardFr: "Tarif membre de retour: 247 $ au lieu de 300 $",
     amountCad: 25,
     isFreePass: false
   },
@@ -52,10 +52,10 @@ export const rewardTierMeta: Record<
     cohortsRequired: 5,
     labelEn: "LABS Legacy",
     labelFr: "LABS Legacy",
-    rewardEn: "LABS Legacy Pass - Free Weekend Pass",
-    rewardFr: "Laissez-passer LABS Legacy - Pass week-end gratuit",
-    amountCad: null,
-    isFreePass: true
+    rewardEn: "$200 off VISION Convention",
+    rewardFr: "200 $ de rabais sur la convention VISION",
+    amountCad: 200,
+    isFreePass: false
   }
 };
 

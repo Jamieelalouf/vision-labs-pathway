@@ -121,26 +121,156 @@
       {
         "tier": "member",
         "title": "Membre LABS",
-        "reward": "25 $ de rabais sur la convention VISION",
-        "required": "1 cohorte completee"
+        "required": "1 cohorte completee",
+        "categories": [
+          {
+            "title": "Economies",
+            "items": [
+              "Tarif membre de retour: 247 $ au lieu de 300 $"
+            ]
+          },
+          {
+            "title": "Acces",
+            "items": [
+              "Archive numerique des workbooks LABS"
+            ]
+          },
+          {
+            "title": "Communaute",
+            "items": [
+              "Statut officiel Membre LABS"
+            ]
+          },
+          {
+            "title": "Developpement",
+            "items": [
+              "Acces continu aux ressources de formation LABS"
+            ]
+          },
+          {
+            "title": "Statut",
+            "items": [
+              "Badge Membre LABS",
+              "Badge Founding Member, reserve aux premiers membres"
+            ]
+          }
+        ]
       },
       {
         "tier": "alumni",
-        "title": "Ancien LABS",
-        "reward": "50 $ de rabais sur la convention VISION",
-        "required": "2 cohortes completees"
+        "title": "Alumni LABS",
+        "required": "2 cohortes completees",
+        "categories": [
+          {
+            "title": "Economies",
+            "items": [
+              "50 $ de rabais sur la convention VISION",
+              "Tarif alumni bloque pour les cohortes futures"
+            ]
+          },
+          {
+            "title": "Acces",
+            "items": [
+              "Inscription prioritaire aux futures cohortes LABS"
+            ]
+          },
+          {
+            "title": "Communaute",
+            "items": [
+              "Statut LABS Alumni"
+            ]
+          },
+          {
+            "title": "Developpement",
+            "items": [
+              "Atelier mindset de performance"
+            ]
+          },
+          {
+            "title": "Statut",
+            "items": [
+              "Badge LABS Alumni"
+            ]
+          }
+        ]
       },
       {
         "tier": "elite",
         "title": "LABS Elite",
-        "reward": "100 $ de rabais sur la convention VISION",
-        "required": "3 cohortes completees"
+        "required": "3 cohortes completees",
+        "categories": [
+          {
+            "title": "Economies",
+            "items": [
+              "100 $ de rabais sur la convention VISION"
+            ]
+          },
+          {
+            "title": "Acces",
+            "items": [
+              "Opportunites Elite annoncees selon la saison"
+            ]
+          },
+          {
+            "title": "Communaute",
+            "items": [
+              "Statut LABS Elite"
+            ]
+          },
+          {
+            "title": "Developpement",
+            "items": [
+              "Appel de fixation d objectifs de groupe avec Jamie",
+              "Direction de formation pour les prochaines etapes du groupe"
+            ]
+          },
+          {
+            "title": "Statut",
+            "items": [
+              "Badge LABS Elite"
+            ]
+          }
+        ]
       },
       {
         "tier": "legacy",
         "title": "LABS Legacy",
-        "reward": "Pass week-end gratuit",
-        "required": "5 cohortes completees"
+        "required": "5 cohortes completees",
+        "categories": [
+          {
+            "title": "Economies",
+            "items": [
+              "200 $ de rabais sur la convention VISION"
+            ]
+          },
+          {
+            "title": "Acces",
+            "items": [
+              "Acces prioritaire aux futures opportunites LABS"
+            ]
+          },
+          {
+            "title": "Communaute",
+            "items": [
+              "Groupe prive de clavardage alumni LABS",
+              "Rencontre alumni LABS a la convention VISION"
+            ]
+          },
+          {
+            "title": "Developpement",
+            "items": [
+              "Appel de groupe Legacy avec Jamie",
+              "Direction de formation pour les prochaines etapes du groupe"
+            ]
+          },
+          {
+            "title": "Statut",
+            "items": [
+              "Badge LABS Legacy",
+              "Reconnaissance Legacy permanente"
+            ]
+          }
+        ]
       }
     ],
     "progressLabels": {
@@ -186,7 +316,12 @@
     ],
     "seasonTitle": "Comment avance une saison",
     "seasonEyebrow": "Saison",
-    "seasonSteps": ["Cohorte", "Cohorte", "Cohorte", "Convention"],
+    "seasonSteps": [
+      "Cohorte",
+      "Cohorte",
+      "Cohorte",
+      "Convention"
+    ],
     "seasonBody": "Chaque completion LABS met a jour ton progres de saison. Au moment de la convention, tu reclames la meilleure recompense gagnee."
   },
   "cohorts": {
@@ -460,7 +595,7 @@
       "saveSuccess": "Profil enregistre.",
       "saveErrorPrefix": "Impossible d'enregistrer le profil :",
       "profileVibeTitle": "Photo de profil et vibe sociale",
-      "instagramHint": "Ajoute Instagram pour que ta cohorte reconnaisse ton style plus vite."
+      "instagramHint": "Utilise Instagram."
     }
   },
   "admin": {

@@ -4,6 +4,7 @@ import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { Logo } from "@/components/layout/logo";
 import { PortalDesktopNav } from "@/components/layout/portal-desktop-nav";
 import { PortalMobileNav } from "@/components/layout/portal-mobile-nav";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/i18n/routing";
 import { isDemoBypassEnabled } from "@/lib/demo-bypass";
@@ -33,6 +34,7 @@ export async function PortalShell({
               </span>
             ) : null}
             <LanguageSwitcher locale={locale} />
+            <ThemeToggle />
             <form action={signOutAction}>
               <Button variant="secondary" size="sm">
                 {t("signOut")}

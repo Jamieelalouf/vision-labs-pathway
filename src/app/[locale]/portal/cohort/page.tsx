@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, ExternalLink, FileVideo, MapPin, Upload } from "lucide-react";
+import { CalendarDays, MapPin } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { Badge } from "@/components/ui/badge";
@@ -25,8 +25,6 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
     (a: any, b: any) => a.session_number - b.session_number
   );
   const resources = cohort?.resources ?? [];
-  const cohortVideos =
-    portal?.videos.filter((video) => !cohort || video.cohort_id === cohort.id).slice(0, 6) ?? [];
   const timelineItems: CohortTimelineItem[] = sessions.map((session: any) => {
     const theme = localizedField(session, "theme", params.locale);
     const notes = localizedField(session, "notes", params.locale);
@@ -52,12 +50,6 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
           </Badge>
           <h1 className="font-display text-3xl font-bold text-white md:text-5xl">{t("title")}</h1>
           <p className="text-sm text-white/75">{cohort?.name ?? t("emptyDescription")}</p>
-          <Button asChild className="w-fit rounded-full">
-            <Link href={`/${params.locale}/portal/community#post`}>
-              <Upload className="h-4 w-4" aria-hidden="true" />
-              {t("uploadCta")}
-            </Link>
-          </Button>
         </CardContent>
       </Card>
 
@@ -84,14 +76,6 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
                   ) : null}
                 </div>
               </div>
-              <div className="flex items-end">
-                <Button asChild className="w-full rounded-full">
-                  <Link href={`/${params.locale}/portal/community#post`}>
-                    <Upload className="h-4 w-4" aria-hidden="true" />
-                    {t("uploadCta")}
-                  </Link>
-                </Button>
-              </div>
             </CardContent>
           </Card>
 
@@ -108,74 +92,33 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
             )}
           </section>
 
-          <div className="grid gap-5 lg:grid-cols-2">
-            <Card className="rounded-2xl border-border/70 bg-secondary/15">
-              <CardHeader>
-                <CardTitle>{t("resources")}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {resources.length ? (
-                  resources.map((resource: any) => (
-                    <a
-                      key={resource.id}
-                      href={resource.url}
-                      className="block rounded-xl border border-border/80 bg-background/40 p-4 text-sm transition-colors hover:border-primary/40 hover:text-primary"
-                    >
-                      <span className="font-medium">
-                        {String(localizedField(resource, "title", params.locale) ?? resource.url)}
+          <Card className="rounded-2xl border-border/70 bg-secondary/15">
+            <CardHeader>
+              <CardTitle>{t("resources")}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {resources.length ? (
+                resources.map((resource: any) => (
+                  <a
+                    key={resource.id}
+                    href={resource.url}
+                    className="block rounded-xl border border-border/80 bg-background/40 p-4 text-sm transition-colors hover:border-primary/40 hover:text-primary"
+                  >
+                    <span className="font-medium">
+                      {String(localizedField(resource, "title", params.locale) ?? resource.url)}
+                    </span>
+                    {localizedField(resource, "description", params.locale) ? (
+                      <span className="mt-1 block text-muted-foreground">
+                        {String(localizedField(resource, "description", params.locale))}
                       </span>
-                      {localizedField(resource, "description", params.locale) ? (
-                        <span className="mt-1 block text-muted-foreground">
-                          {String(localizedField(resource, "description", params.locale))}
-                        </span>
-                      ) : null}
-                    </a>
-                  ))
-                ) : (
-                  <p className="text-sm text-muted-foreground">{t("noResources")}</p>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card className="rounded-2xl border-border/70 bg-secondary/15">
-              <CardHeader>
-                <CardTitle>{t("myUploads")}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {cohortVideos.length ? (
-                  cohortVideos.map((video) => (
-                    <div key={video.id} className="rounded-xl border border-border/80 bg-background/40 p-4">
-                      {video.source === "upload" && (video as any).signed_url ? (
-                        <video
-                          src={(video as any).signed_url}
-                          controls
-                          preload="metadata"
-                          className="mb-4 aspect-video w-full rounded-xl bg-black object-cover"
-                        />
-                      ) : (
-                        <div className="mb-4 flex aspect-video w-full items-center justify-center rounded-xl border border-border bg-secondary">
-                          <FileVideo className="h-7 w-7 text-primary" aria-hidden="true" />
-                        </div>
-                      )}
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="font-medium">{video.title}</p>
-                        {video.external_url ? (
-                          <Button asChild variant="link">
-                            <a href={video.external_url} target="_blank" rel="noreferrer">
-                              <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                              {t("openVideo")}
-                            </a>
-                          </Button>
-                        ) : null}
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-sm text-muted-foreground">{t("noUploads")}</p>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                    ) : null}
+                  </a>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">{t("noResources")}</p>
+              )}
+            </CardContent>
+          </Card>
         </>
       ) : (
         <EmptyState
