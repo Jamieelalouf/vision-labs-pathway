@@ -7,11 +7,18 @@ import { PathwayProgress } from "@/components/vision/pathway-progress";
 import { RewardCard } from "@/components/vision/reward-card";
 import { TierBadge } from "@/components/vision/tier-badge";
 import type { Locale } from "@/i18n/routing";
-import { getRewardLabel, getTierLabel, rewardTiers, rewardTierMeta } from "@/lib/domain/rewards";
-import type { RewardStatus } from "@/lib/supabase/database.types";
+import { rewardTierMeta } from "@/lib/domain/rewards";
+import type { RewardStatus, RewardTier } from "@/lib/supabase/database.types";
 import { formatDate } from "@/lib/utils";
 import { requireCompleteDancerProfile } from "@/server/queries/auth";
 import { getStudentPortalData } from "@/server/queries/data";
+
+type RewardCopy = {
+  tier: RewardTier;
+  title: string;
+  categories?: Array<{ title: string; items: string[] }>;
+  required: string;
+};
 
 export default async function PortalPathwayPage({ params }: { params: { locale: Locale } }) {
   await requireCompleteDancerProfile(params.locale);
@@ -22,6 +29,8 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
   const completedEnrollments =
     portal?.enrollments.filter((enrollment) => enrollment.completion_status === "completed") ?? [];
   const rules = t.raw("rulesItems") as string[];
+  const pathway = await getTranslations({ locale: params.locale, namespace: "pathway" });
+  const rewardCards = pathway.raw("rewardCards") as RewardCopy[];
 
   return (
     <section className="space-y-6 pb-36 md:space-y-8 md:pb-8">
@@ -51,7 +60,8 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
       <section className="space-y-5">
         <h2 className="font-display text-3xl font-bold">{t("rewardLadder")}</h2>
         <div className="grid gap-4 md:grid-cols-2">
-          {rewardTiers.map((tier) => {
+          {rewardCards.map((reward) => {
+            const tier = reward.tier;
             const meta = rewardTierMeta[tier];
             const status: RewardStatus =
               completed >= meta.cohortsRequired ? (portal?.reward?.status ?? "unlocked") : "locked";
@@ -59,14 +69,10 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
               <RewardCard
                 key={tier}
                 tier={tier}
-                title={getTierLabel(tier, params.locale)}
-                reward={getRewardLabel(tier, params.locale)}
+                title={reward.title}
+                categories={reward.categories}
                 required={meta.cohortsRequired}
-                requiredLabel={
-                  meta.cohortsRequired === 1
-                    ? t("requiredSingle")
-                    : t("requiredPlural", { count: meta.cohortsRequired })
-                }
+                requiredLabel={reward.required}
                 status={status}
                 className="rounded-2xl border-border/70 bg-secondary/15"
               />

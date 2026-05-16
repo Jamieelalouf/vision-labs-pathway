@@ -126,7 +126,7 @@
           {
             "title": "Savings",
             "items": [
-              "Returning member rate: $247 instead of $300"
+              "Returning member discounted rate"
             ]
           },
           {
@@ -311,8 +311,8 @@
     "rules": [
       "Rewards apply to the next annual VISION Convention only.",
       "Rewards upgrade and never stack.",
-      "Returning dancers keep the $247 price for the immediate next cohort.",
-      "Legacy is a free Weekend Pass and resets each season."
+      "Returning dancers keep the returning member discounted rate for the immediate next cohort.",
+      "Legacy gives $200 off the annual VISION Convention and resets each season."
     ],
     "seasonTitle": "How a season moves",
     "seasonEyebrow": "Season",
@@ -322,7 +322,163 @@
       "Cohort",
       "Convention"
     ],
-    "seasonBody": "Each LABS completion updates your season progress. At convention time, you claim the best reward you earned."
+    "seasonBody": "Each LABS completion updates your season progress. At convention time, you claim the best reward you earned.",
+    "rewardCards": [
+      {
+        "tier": "member",
+        "title": "LABS Member",
+        "required": "1 cohort completed",
+        "categories": [
+          {
+            "title": "Savings",
+            "items": [
+              "Returning member discounted rate"
+            ]
+          },
+          {
+            "title": "Access",
+            "items": [
+              "Digital LABS workbook archive"
+            ]
+          },
+          {
+            "title": "Community",
+            "items": [
+              "Official LABS Member status"
+            ]
+          },
+          {
+            "title": "Development",
+            "items": [
+              "Continued access to LABS training resources"
+            ]
+          },
+          {
+            "title": "Status",
+            "items": [
+              "LABS Member badge",
+              "Founding Member badge, for early members only"
+            ]
+          }
+        ]
+      },
+      {
+        "tier": "alumni",
+        "title": "LABS Alumni",
+        "required": "2 cohorts completed",
+        "categories": [
+          {
+            "title": "Savings",
+            "items": [
+              "$50 off VISION Convention",
+              "Locked-in alumni price for future cohorts"
+            ]
+          },
+          {
+            "title": "Access",
+            "items": [
+              "Priority registration for future LABS cohorts"
+            ]
+          },
+          {
+            "title": "Community",
+            "items": [
+              "LABS Alumni status"
+            ]
+          },
+          {
+            "title": "Development",
+            "items": [
+              "Performance mindset workshop"
+            ]
+          },
+          {
+            "title": "Status",
+            "items": [
+              "LABS Alumni badge"
+            ]
+          }
+        ]
+      },
+      {
+        "tier": "elite",
+        "title": "LABS Elite",
+        "required": "3 cohorts completed",
+        "categories": [
+          {
+            "title": "Savings",
+            "items": [
+              "$100 off VISION Convention"
+            ]
+          },
+          {
+            "title": "Access",
+            "items": [
+              "Elite opportunities announced seasonally"
+            ]
+          },
+          {
+            "title": "Community",
+            "items": [
+              "LABS Elite status"
+            ]
+          },
+          {
+            "title": "Development",
+            "items": [
+              "Group goal-setting call with Jamie",
+              "Group next-step training direction"
+            ]
+          },
+          {
+            "title": "Status",
+            "items": [
+              "LABS Elite badge"
+            ]
+          }
+        ]
+      },
+      {
+        "tier": "legacy",
+        "title": "LABS Legacy",
+        "required": "5 cohorts completed",
+        "categories": [
+          {
+            "title": "Savings",
+            "items": [
+              "$200 off VISION Convention"
+            ]
+          },
+          {
+            "title": "Access",
+            "items": [
+              "First access to future LABS opportunities"
+            ]
+          },
+          {
+            "title": "Community",
+            "items": [
+              "Private LABS alumni group chat",
+              "LABS alumni meet-up at VISION Convention"
+            ]
+          },
+          {
+            "title": "Development",
+            "items": [
+              "Legacy group call with Jamie",
+              "Group next-step training direction"
+            ]
+          },
+          {
+            "title": "Status",
+            "items": [
+              "LABS Legacy badge",
+              "Permanent Legacy recognition"
+            ]
+          }
+        ]
+      }
+    ]
   },
   "cohorts": {
     "title": "Upcoming Cohorts",
@@ -472,7 +628,7 @@
       "rewardCode": "Reward code",
       "expires": "Expires",
       "claimCode": "Get my code",
-      "claimLegacyPass": "Get Legacy Pass",
+      "claimLegacyPass": "Claim Legacy Discount",
       "unlockedNote": "Your reward is unlocked. Generate your one-time code when you are ready to use it.",
       "generatedNote": "Your code is ready to use at convention registration.",
       "redeemedNote": "This reward has been marked redeemed.",
@@ -482,7 +638,7 @@
       "rulesItems": [
         "Rewards upgrade and never stack.",
         "Codes are tied to the active season and expire after convention grace.",
-        "LABS Legacy is a free Weekend Pass entitlement."
+        "LABS Legacy is a $200 VISION Convention discount."
       ]
     },
     "videos": {

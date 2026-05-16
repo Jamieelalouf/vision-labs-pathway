@@ -296,7 +296,7 @@ insert into public.reward_levels values
   ('member', 1, 'LABS Member', 'Membre LABS', '$25 off VISION Convention', '25 $ de rabais sur la convention VISION', 25, false),
   ('alumni', 2, 'LABS Alumni', 'Ancien LABS', '$50 off VISION Convention', '50 $ de rabais sur la convention VISION', 50, false),
   ('elite', 3, 'LABS Elite', 'LABS Elite', '$100 off VISION Convention', '100 $ de rabais sur la convention VISION', 100, false),
-  ('legacy', 5, 'LABS Legacy', 'LABS Legacy', 'LABS Legacy Pass - Free Weekend Pass', 'Laissez-passer LABS Legacy - Pass week-end gratuit', null, true);
+  ('legacy', 5, 'LABS Legacy', 'LABS Legacy', '$200 off VISION Convention', '200 $ de rabais sur la convention VISION', 200, false);
 
 insert into public.system_settings (id) values (1);
 

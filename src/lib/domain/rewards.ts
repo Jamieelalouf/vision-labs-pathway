@@ -25,8 +25,8 @@ export const rewardTierMeta: Record<
     cohortsRequired: 1,
     labelEn: "LABS Member",
     labelFr: "Membre LABS",
-    rewardEn: "Returning member rate: $247 instead of $300",
-    rewardFr: "Tarif membre de retour: 247 $ au lieu de 300 $",
+    rewardEn: "Returning member discounted rate",
+    rewardFr: "Tarif membre de retour réduit",
     amountCad: 25,
     isFreePass: false
   },

@@ -126,7 +126,7 @@
           {
             "title": "Economies",
             "items": [
-              "Tarif membre de retour: 247 $ au lieu de 300 $"
+              "Tarif membre de retour réduit"
             ]
           },
           {
@@ -311,8 +311,8 @@
     "rules": [
       "Les recompenses s'appliquent seulement a la prochaine convention annuelle VISION.",
       "Les recompenses montent de niveau et ne se combinent jamais.",
-      "Les danseurs qui reviennent gardent le prix de 247 $ pour la cohorte immediate suivante.",
-      "Legacy donne un Pass week-end gratuit et recommence a chaque saison."
+      "Les danseurs qui reviennent gardent le tarif reduit membre de retour pour la cohorte immediate suivante.",
+      "Legacy donne 200 $ de reduction sur la convention annuelle VISION et recommence a chaque saison."
     ],
     "seasonTitle": "Comment avance une saison",
     "seasonEyebrow": "Saison",
@@ -322,7 +322,163 @@
       "Cohorte",
       "Convention"
     ],
-    "seasonBody": "Chaque completion LABS met a jour ton progres de saison. Au moment de la convention, tu reclames la meilleure recompense gagnee."
+    "seasonBody": "Chaque completion LABS met a jour ton progres de saison. Au moment de la convention, tu reclames la meilleure recompense gagnee.",
+    "rewardCards": [
+      {
+        "tier": "member",
+        "title": "Membre LABS",
+        "required": "1 cohorte completee",
+        "categories": [
+          {
+            "title": "Economies",
+            "items": [
+              "Tarif membre de retour réduit"
+            ]
+          },
+          {
+            "title": "Acces",
+            "items": [
+              "Archive numerique des workbooks LABS"
+            ]
+          },
+          {
+            "title": "Communaute",
+            "items": [
+              "Statut officiel Membre LABS"
+            ]
+          },
+          {
+            "title": "Developpement",
+            "items": [
+              "Acces continu aux ressources de formation LABS"
+            ]
+          },
+          {
+            "title": "Statut",
+            "items": [
+              "Badge Membre LABS",
+              "Badge Founding Member, reserve aux premiers membres"
+            ]
+          }
+        ]
+      },
+      {
+        "tier": "alumni",
+        "title": "Alumni LABS",
+        "required": "2 cohortes completees",
+        "categories": [
+          {
+            "title": "Economies",
+            "items": [
+              "50 $ de rabais sur la convention VISION",
+              "Tarif alumni bloque pour les cohortes futures"
+            ]
+          },
+          {
+            "title": "Acces",
+            "items": [
+              "Inscription prioritaire aux futures cohortes LABS"
+            ]
+          },
+          {
+            "title": "Communaute",
+            "items": [
+              "Statut LABS Alumni"
+            ]
+          },
+          {
+            "title": "Developpement",
+            "items": [
+              "Atelier mindset de performance"
+            ]
+          },
+          {
+            "title": "Statut",
+            "items": [
+              "Badge LABS Alumni"
+            ]
+          }
+        ]
+      },
+      {
+        "tier": "elite",
+        "title": "LABS Elite",
+        "required": "3 cohortes completees",
+        "categories": [
+          {
+            "title": "Economies",
+            "items": [
+              "100 $ de rabais sur la convention VISION"
+            ]
+          },
+          {
+            "title": "Acces",
+            "items": [
+              "Opportunites Elite annoncees selon la saison"
+            ]
+          },
+          {
+            "title": "Communaute",
+            "items": [
+              "Statut LABS Elite"
+            ]
+          },
+          {
+            "title": "Developpement",
+            "items": [
+              "Appel de fixation d objectifs de groupe avec Jamie",
+              "Direction de formation pour les prochaines etapes du groupe"
+            ]
+          },
+          {
+            "title": "Statut",
+            "items": [
+              "Badge LABS Elite"
+            ]
+          }
+        ]
+      },
+      {
+        "tier": "legacy",
+        "title": "LABS Legacy",
+        "required": "5 cohortes completees",
+        "categories": [
+          {
+            "title": "Economies",
+            "items": [
+              "200 $ de rabais sur la convention VISION"
+            ]
+          },
+          {
+            "title": "Acces",
+            "items": [
+              "Acces prioritaire aux futures opportunites LABS"
+            ]
+          },
+          {
+            "title": "Communaute",
+            "items": [
+              "Groupe prive de clavardage alumni LABS",
+              "Rencontre alumni LABS a la convention VISION"
+            ]
+          },
+          {
+            "title": "Developpement",
+            "items": [
+              "Appel de groupe Legacy avec Jamie",
+              "Direction de formation pour les prochaines etapes du groupe"
+            ]
+          },
+          {
+            "title": "Statut",
+            "items": [
+              "Badge LABS Legacy",
+              "Reconnaissance Legacy permanente"
+            ]
+          }
+        ]
+      }
+    ]
   },
   "cohorts": {
     "title": "Cohortes a venir",
@@ -472,7 +628,7 @@
       "rewardCode": "Code recompense",
       "expires": "Expire le",
       "claimCode": "Obtenir mon code",
-      "claimLegacyPass": "Obtenir le Pass Legacy",
+      "claimLegacyPass": "Reclamer la reduction Legacy",
       "unlockedNote": "Ta recompense est debloquee. Genere ton code a usage unique quand tu es pret a l'utiliser.",
       "generatedNote": "Ton code est pret pour l'inscription a la convention.",
       "redeemedNote": "Cette recompense est marquee comme utilisee.",
@@ -482,7 +638,7 @@
       "rulesItems": [
         "Les recompenses montent de niveau et ne se combinent jamais.",
         "Les codes sont lies a la saison active et expirent apres le grace de convention.",
-        "LABS Legacy est un droit a un Pass week-end gratuit."
+        "LABS Legacy donne 200 $ de reduction sur la convention VISION."
       ]
     },
     "videos": {

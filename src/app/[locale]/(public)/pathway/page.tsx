@@ -46,7 +46,7 @@ export default async function PathwayPage({ params }: { params: { locale: Locale
   const landing = await getTranslations({ locale: params.locale, namespace: "landing" });
   const actions = await getTranslations({ locale: params.locale, namespace: "common.actions" });
   const rules = t.raw("rules") as string[];
-  const rewardCards = landing.raw("rewardCards") as RewardCopy[];
+  const rewardCards = t.raw("rewardCards") as RewardCopy[];
   const progressLabels = landing.raw("progressLabels") as Record<RewardTier, string>;
   const seasonSteps = t.raw("seasonSteps") as string[];
 
