@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 import type { EmailOtpType } from "@supabase/supabase-js";
 
 import { defaultLocale, isLocale } from "@/i18n/routing";
-import { createServerClient } from "@/lib/supabase/server";
+import type { Database } from "@/lib/supabase/database.types";
 
 const otpTypes: EmailOtpType[] = ["signup", "invite", "magiclink", "recovery", "email_change"];
 
@@ -18,9 +19,27 @@ export async function GET(request: NextRequest, { params }: { params: { locale: 
     next && (next === `/${locale}` || next.startsWith(`/${locale}/`)) ? next : fallback;
 
   const otpType = type && otpTypes.includes(type as EmailOtpType) ? (type as EmailOtpType) : null;
+  const cookieCarrier = NextResponse.next();
 
+  let authError: string | null = null;
   if (code || (tokenHash && otpType) || (type === "recovery" && refreshToken)) {
-    const supabase = createServerClient();
+    const supabase = createServerClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieCarrier.cookies.set(name, value, options);
+            });
+          }
+        }
+      }
+    );
+
     const { error } = code
       ? await supabase.auth.exchangeCodeForSession(code)
       : tokenHash && otpType
@@ -33,11 +52,18 @@ export async function GET(request: NextRequest, { params }: { params: { locale: 
           });
 
     if (error) {
-      return NextResponse.redirect(
-        new URL(`/${locale}/forgot-password?error=${encodeURIComponent(error.message)}`, request.url)
-      );
+      authError = error.message;
     }
   }
 
-  return NextResponse.redirect(new URL(safeNext, request.url));
+  const redirectPath = authError
+    ? `/${locale}/forgot-password?error=${encodeURIComponent(authError)}`
+    : safeNext;
+  const response = NextResponse.redirect(new URL(redirectPath, request.url));
+
+  for (const cookie of cookieCarrier.cookies.getAll()) {
+    response.cookies.set(cookie);
+  }
+
+  return response;
 }
