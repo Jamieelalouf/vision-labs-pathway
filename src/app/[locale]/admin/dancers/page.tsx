@@ -13,7 +13,6 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { EmptyState } from "@/components/vision/empty-state";
-import { TierBadge } from "@/components/vision/tier-badge";
 import type { Locale } from "@/i18n/routing";
 import { formatCad } from "@/lib/utils";
 import { manuallyGrantReturningEligibilityAction } from "@/server/actions/admin";
@@ -29,7 +28,7 @@ export default async function AdminDancersPage({ params }: { params: { locale: L
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Phase 5</p>
           <h1 className="mt-2 font-display text-4xl font-bold">Dancers</h1>
           <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-            Scan enrollment health, rewards, returning-price eligibility, and dancer profiles.
+            Scan dancer profiles, enrollment health, payments, and returning-price eligibility.
           </p>
         </div>
       </div>
@@ -53,7 +52,6 @@ export default async function AdminDancersPage({ params }: { params: { locale: L
                   <TableHead>IG</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Completions</TableHead>
-                  <TableHead>Reward</TableHead>
                   <TableHead>Total paid</TableHead>
                   <TableHead>Returning override</TableHead>
                 </TableRow>
@@ -64,7 +62,6 @@ export default async function AdminDancersPage({ params }: { params: { locale: L
                     ? dancer.profiles[0]
                     : dancer.profiles;
                   const enrollments = dancer.enrollments ?? [];
-                  const rewards = dancer.dancer_rewards ?? [];
                   const completions = enrollments.filter(
                     (enrollment: any) => enrollment.completion_status === "completed"
                   ).length;
@@ -75,7 +72,6 @@ export default async function AdminDancersPage({ params }: { params: { locale: L
                     (sum: number, enrollment: any) => sum + enrollment.price_paid_cad,
                     0
                   );
-                  const currentReward = rewards[0];
 
                   return (
                     <TableRow key={dancer.id}>
@@ -95,9 +91,6 @@ export default async function AdminDancersPage({ params }: { params: { locale: L
                         </Badge>
                       </TableCell>
                       <TableCell>{completions}</TableCell>
-                      <TableCell>
-                        <TierBadge tier={currentReward?.tier ?? null} />
-                      </TableCell>
                       <TableCell>{formatCad(totalPaid, params.locale)}</TableCell>
                       <TableCell>
                         <form

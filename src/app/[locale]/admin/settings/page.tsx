@@ -81,7 +81,7 @@ export default async function AdminSettingsPage({ params }: { params: { locale: 
                 name="legacy_pass_uses_stripe"
                 defaultChecked={settings?.legacy_pass_uses_stripe ?? false}
               />
-              Generate Stripe promotion codes for Legacy passes
+              Generate Stripe promotion codes for eligible convention discounts
             </label>
             <div className="md:col-span-2">
               <Button>Save settings</Button>

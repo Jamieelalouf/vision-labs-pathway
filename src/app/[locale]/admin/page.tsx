@@ -2,12 +2,9 @@ import Link from "next/link";
 import {
   AlertTriangle,
   ArrowRight,
-  CalendarDays,
   CheckCircle2,
   Clock3,
-  Film,
-  ShieldAlert,
-  Users
+  ShieldAlert
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
@@ -25,13 +22,6 @@ export default async function AdminPage({ params }: { params: { locale: Locale }
   const t = await getTranslations({ locale: params.locale, namespace: "admin.overview" });
   const stats = await getAdminDashboard();
   const activeSeason = stats.activeSeason as any;
-  const activeCohort = stats.activeCohort as any;
-  const nearLegacy = stats.nearLegacy as any[];
-  const recentVideos = stats.recentVideos as any[];
-  const collectionRate =
-    stats.currentCohortRegistered > 0
-      ? Math.round((stats.currentCohortPaid / stats.currentCohortRegistered) * 100)
-      : 0;
 
   return (
     <section className="space-y-6 pb-8 md:space-y-8">
@@ -58,9 +48,6 @@ export default async function AdminPage({ params }: { params: { locale: Locale }
               <Link href={`/${params.locale}/admin/cohorts`}>{t("actions.manageCohorts")}</Link>
             </Button>
             <Button asChild variant="secondary" className="rounded-full">
-              <Link href={`/${params.locale}/admin/attendance`}>{t("actions.markAttendance")}</Link>
-            </Button>
-            <Button asChild variant="secondary" className="rounded-full">
               <Link href={`/${params.locale}/admin/enrollments`}>{t("actions.reviewEnrollments")}</Link>
             </Button>
             <Button asChild variant="secondary" className="rounded-full">
@@ -75,56 +62,11 @@ export default async function AdminPage({ params }: { params: { locale: Locale }
         <KPIStat label={t("kpi.cohortPaid")} value={stats.currentCohortPaid} sublabel={t("kpi.currentCohort")} />
         <KPIStat label={t("kpi.cohortRevenue")} value={formatCad(stats.currentCohortRevenue, params.locale)} sublabel={t("kpi.currentCohort")} />
         <KPIStat label={t("kpi.pending")} value={stats.pendingActions} sublabel={t("kpi.needsReview")} />
-        <KPIStat label={t("kpi.uploads")} value={stats.videos} sublabel={t("kpi.lifetime")} />
+        <KPIStat label={t("kpi.paid")} value={stats.paid} sublabel={t("kpi.lifetime")} />
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(300px,0.85fr)]">
         <div className="space-y-5">
-          <Card className="rounded-2xl border-border/70 bg-secondary/15">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg">{t("cohortHealth.title")}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              {activeCohort ? (
-                <>
-                  <div className="space-y-2">
-                    <p className="font-display text-3xl font-bold">{activeCohort.name}</p>
-                    <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <CalendarDays className="h-4 w-4 text-primary" aria-hidden="true" />
-                      {formatDate(activeCohort.start_date, params.locale)} - {formatDate(activeCohort.end_date, params.locale)}
-                    </p>
-                  </div>
-                  <div className="grid gap-3 sm:grid-cols-3">
-                    <p className="rounded-xl border border-border/70 bg-black/20 p-3 text-sm">
-                      {t("cohortHealth.mixNew")} <span className="font-semibold text-foreground">{stats.newCount}</span>
-                    </p>
-                    <p className="rounded-xl border border-border/70 bg-black/20 p-3 text-sm">
-                      {t("cohortHealth.mixReturning")}{" "}
-                      <span className="font-semibold text-foreground">{stats.returningCount}</span>
-                    </p>
-                    <p className="rounded-xl border border-border/70 bg-black/20 p-3 text-sm">
-                      {t("cohortHealth.collectionRate")}{" "}
-                      <span className="font-semibold text-foreground">{collectionRate}%</span>
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Button asChild variant="secondary" className="rounded-full">
-                      <Link href={`/${params.locale}/admin/cohorts/${activeCohort.id}`}>{t("actions.manageCohort")}</Link>
-                    </Button>
-                    <Button asChild variant="secondary" className="rounded-full">
-                      <Link href={`/${params.locale}/admin/attendance/${activeCohort.id}`}>{t("actions.openAttendance")}</Link>
-                    </Button>
-                    <Button asChild variant="secondary" className="rounded-full">
-                      <Link href={`/${params.locale}/admin/videos`}>{t("actions.reviewUploads")}</Link>
-                    </Button>
-                  </div>
-                </>
-              ) : (
-                <p className="text-sm text-muted-foreground">{t("emptyCohort")}</p>
-              )}
-            </CardContent>
-          </Card>
-
           <Card className={stats.pendingActions > 0 ? "rounded-2xl border-primary/40 bg-secondary/15" : "rounded-2xl border-border/70 bg-secondary/15"}>
             <CardHeader className="pb-3">
               <CardTitle className="text-lg">{t("queue.title")}</CardTitle>
@@ -145,14 +87,12 @@ export default async function AdminPage({ params }: { params: { locale: Locale }
               <div className="flex items-start gap-2 text-sm">
                 <ShieldAlert className="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
                 <p className="text-muted-foreground">
-                  {t("queue.communitySignals", { count: Math.min(recentVideos.length, 5) })}
+                  {t("queue.communitySignals")}
                 </p>
               </div>
               <div className="flex items-start gap-2 text-sm">
                 <Clock3 className="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
-                <p className="text-muted-foreground">
-                  {t("queue.rewardSignals", { count: nearLegacy.length })}
-                </p>
+                <p className="text-muted-foreground">{t("queue.reviewNow")}</p>
               </div>
               <Button asChild variant="secondary" className="w-full rounded-full">
                 <Link href={`/${params.locale}/admin/enrollments`}>
@@ -188,64 +128,6 @@ export default async function AdminPage({ params }: { params: { locale: Locale }
 
           <Card className="rounded-2xl border-border/70 bg-secondary/15">
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg">{t("rightRail.nearLegacyTitle")}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {nearLegacy.length ? (
-                nearLegacy.slice(0, 5).map((reward) => {
-                  const dancer = Array.isArray(reward.dancers) ? reward.dancers[0] : reward.dancers;
-                  return (
-                    <Link
-                      key={reward.id}
-                      href={`/${params.locale}/admin/dancers/${reward.dancer_id}`}
-                      className="flex items-center justify-between rounded-xl border border-border/70 bg-black/20 p-3 transition-colors hover:border-primary/40"
-                    >
-                      <span className="text-sm font-medium">
-                        {dancer?.first_name} {dancer?.last_name}
-                      </span>
-                      <span className="text-xs text-primary">4 / 5</span>
-                    </Link>
-                  );
-                })
-              ) : (
-                <p className="text-sm text-muted-foreground">{t("rightRail.nearLegacyEmpty")}</p>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl border-border/70 bg-secondary/15">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg">{t("rightRail.recentUploadsTitle")}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {recentVideos.length ? (
-                recentVideos.slice(0, 4).map((video) => {
-                  const dancer = Array.isArray(video.dancers) ? video.dancers[0] : video.dancers;
-                  const cohort = Array.isArray(video.cohorts) ? video.cohorts[0] : video.cohorts;
-                  return (
-                    <div key={video.id} className="rounded-xl border border-border/70 bg-black/20 p-3">
-                      <p className="flex items-start gap-2 text-sm font-medium">
-                        <Film className="mt-0.5 h-4 w-4 flex-none text-primary" aria-hidden="true" />
-                        {video.title}
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {dancer?.first_name} {dancer?.last_name}
-                        {cohort?.name ? ` / ${cohort.name}` : ""}
-                      </p>
-                    </div>
-                  );
-                })
-              ) : (
-                <p className="text-sm text-muted-foreground">{t("rightRail.recentUploadsEmpty")}</p>
-              )}
-              <Button asChild variant="secondary" size="sm" className="w-full rounded-full">
-                <Link href={`/${params.locale}/admin/videos`}>{t("actions.reviewUploads")}</Link>
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl border-border/70 bg-secondary/15">
-            <CardHeader className="pb-3">
               <CardTitle className="text-lg">{t("lifetime.title")}</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-3">
@@ -260,13 +142,6 @@ export default async function AdminPage({ params }: { params: { locale: Locale }
               <div className="rounded-xl border border-border/70 bg-black/20 p-3">
                 <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">{t("lifetime.revenue")}</p>
                 <p className="font-display text-xl font-bold">{formatCad(stats.revenue, params.locale)}</p>
-              </div>
-              <div className="rounded-xl border border-border/70 bg-black/20 p-3">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">{t("lifetime.rewards")}</p>
-                <p className="flex items-center gap-1 font-display text-2xl font-bold">
-                  <Users className="h-4 w-4 text-primary" aria-hidden="true" />
-                  {stats.rewards}
-                </p>
               </div>
             </CardContent>
           </Card>

@@ -758,18 +758,14 @@
     "overview": {
       "badge": "Centre de commande",
       "title": "Centre de commande admin",
-      "intro": "Pilote les cohortes, inscriptions, presences, moderation, televersements, recompenses et operations de saison.",
+      "intro": "Gere les cohortes, inscriptions, communaute, saisons et performance a vie depuis un seul centre de commande.",
       "empty": "Les indicateurs reels apparaitront quand Supabase sera configure et que les donnees seront ajoutees.",
       "emptyCohort": "Aucune cohorte ouverte ou active pour le moment.",
       "noSeason": "Aucune saison active",
       "actions": {
         "manageCohorts": "Gerer les cohortes",
-        "markAttendance": "Marquer les presences",
         "reviewEnrollments": "Revoir les inscriptions",
         "moderateCommunity": "Moderer la communaute",
-        "manageCohort": "Gerer la cohorte",
-        "openAttendance": "Ouvrir les presences",
-        "reviewUploads": "Revoir les televersements",
         "manageSeasons": "Gerer les saisons"
       },
       "kpi": {
@@ -777,7 +773,7 @@
         "cohortPaid": "Payes",
         "cohortRevenue": "Revenus",
         "pending": "Actions en attente",
-        "uploads": "Televersements",
+        "paid": "Inscriptions payees",
         "currentCohort": "Cohorte actuelle",
         "needsReview": "A verifier",
         "lifetime": "A vie"
@@ -792,7 +788,7 @@
         "title": "File d'operations",
         "pendingCount": "{count} dossiers inscription/paiement demandent une revue manuelle.",
         "clear": "Aucun cas paiement ou inscription n'est signale en ce moment.",
-        "communitySignals": "{count} signaux recents televersement/communaute a verifier.",
+        "communitySignals": "Revois l'activite recente de la communaute pour la moderation.",
         "rewardSignals": "{count} danseurs proches du seuil Legacy.",
         "reviewNow": "Revoir la file"
       },
@@ -814,15 +810,16 @@
       }
     },
     "community": {
-      "title": "Moderation communaute",
+      "title": "Fil communaute",
       "postsTitle": "Publications",
-      "messagesTitle": "Messages de chat de cohorte",
+      "adminOnlyDelete": "La vue admin reprend le style etudiant. Les publications peuvent etre supprimees ici.",
       "emptyTitle": "Aucun contenu communautaire",
-      "emptyDescription": "Les publications, commentaires et messages apparaitront ici.",
-      "hidden": "Cache",
-      "visible": "Visible",
+      "emptyDescription": "Les publications et commentaires apparaitront ici.",
       "reactions": "Reactions",
-      "comments": "Commentaires"
+      "comments": "Commentaires",
+      "viewComments": "Voir les commentaires ({count})",
+      "noComments": "Aucun commentaire pour le moment.",
+      "deletePost": "Supprimer la publication"
     }
   }
 }

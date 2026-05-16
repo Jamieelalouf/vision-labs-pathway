@@ -12,7 +12,6 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
-import { Textarea } from "@/components/ui/textarea";
 import type { Locale } from "@/i18n/routing";
 import { createServerClient } from "@/lib/supabase/server";
 import { updateCohortAction } from "@/server/actions/admin";
@@ -178,15 +177,11 @@ export default async function AdminCohortDetailPage({
                 required
               />
             </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="location_address">Address</Label>
-              <Input
-                id="location_address"
-                name="location_address"
-                defaultValue={cohort.location_address}
-                required
-              />
-            </div>
+            <input
+              type="hidden"
+              name="location_address"
+              value={cohort.location_address ?? cohort.location_name ?? "TBD"}
+            />
             <div className="space-y-2">
               <Label htmlFor="regular_price_cad">Regular</Label>
               <Input
@@ -220,22 +215,8 @@ export default async function AdminCohortDetailPage({
                 ))}
               </select>
             </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="description_en">Description EN</Label>
-              <Textarea
-                id="description_en"
-                name="description_en"
-                defaultValue={cohort.description_en ?? ""}
-              />
-            </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="description_fr">Description FR</Label>
-              <Textarea
-                id="description_fr"
-                name="description_fr"
-                defaultValue={cohort.description_fr ?? ""}
-              />
-            </div>
+            <input type="hidden" name="description_en" value={cohort.description_en ?? ""} />
+            <input type="hidden" name="description_fr" value={cohort.description_fr ?? ""} />
             <div className="md:col-span-4">
               <Button>Save cohort</Button>
             </div>

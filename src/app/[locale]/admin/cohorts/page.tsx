@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Table,
   TableBody,
@@ -107,10 +106,7 @@ export default async function AdminCohortsPage({ params }: { params: { locale: L
               <Label htmlFor="location_name">Location</Label>
               <Input id="location_name" name="location_name" required />
             </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="location_address">Address</Label>
-              <Input id="location_address" name="location_address" required />
-            </div>
+            <input type="hidden" name="location_address" value="TBD" />
             <div className="space-y-2">
               <Label htmlFor="regular_price_cad">Regular</Label>
               <Input
@@ -144,14 +140,8 @@ export default async function AdminCohortsPage({ params }: { params: { locale: L
                 ))}
               </select>
             </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="description_en">Description EN</Label>
-              <Textarea id="description_en" name="description_en" />
-            </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="description_fr">Description FR</Label>
-              <Textarea id="description_fr" name="description_fr" />
-            </div>
+            <input type="hidden" name="description_en" value="" />
+            <input type="hidden" name="description_fr" value="" />
             <div className="md:col-span-4">
               <Button>Create cohort</Button>
             </div>

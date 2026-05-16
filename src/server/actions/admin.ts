@@ -137,6 +137,9 @@ export async function createCohortAction(formData: FormData) {
   const locale = actionLocale(formData);
   await requireAdmin(locale);
 
+  const locationName = readString(formData, "location_name");
+  const locationAddressRaw = readString(formData, "location_address");
+  const locationAddress = locationAddressRaw || locationName || "TBD";
   const parsed = cohortSchema.safeParse({
     season_id: readString(formData, "season_id"),
     name: readString(formData, "name"),
@@ -146,8 +149,8 @@ export async function createCohortAction(formData: FormData) {
     day_of_week: readString(formData, "day_of_week") || undefined,
     start_time: readString(formData, "start_time"),
     end_time: readString(formData, "end_time"),
-    location_name: readString(formData, "location_name"),
-    location_address: readString(formData, "location_address"),
+    location_name: locationName,
+    location_address: locationAddress,
     capacity: readString(formData, "capacity"),
     registration_status: readString(formData, "registration_status") || "closed",
     status: readString(formData, "status") || "draft",
@@ -181,6 +184,11 @@ export async function updateCohortAction(formData: FormData) {
   const { data: existing } = await supabase.from("cohorts").select("*").eq("id", id).maybeSingle();
   if (!existing) redirect(`/${locale}/admin/cohorts?error=not-found`);
 
+  const locationName = formValue(formData, "location_name", existing.location_name);
+  const locationAddressInput = formData.has("location_address")
+    ? readString(formData, "location_address")
+    : existing.location_address;
+  const locationAddress = locationAddressInput || locationName || "TBD";
   const parsed = cohortSchema.safeParse({
     season_id: formValue(formData, "season_id", existing.season_id),
     name: formValue(formData, "name", existing.name),
@@ -192,8 +200,8 @@ export async function updateCohortAction(formData: FormData) {
       : (existing.day_of_week ?? undefined),
     start_time: formValue(formData, "start_time", existing.start_time),
     end_time: formValue(formData, "end_time", existing.end_time),
-    location_name: formValue(formData, "location_name", existing.location_name),
-    location_address: formValue(formData, "location_address", existing.location_address),
+    location_name: locationName,
+    location_address: locationAddress,
     capacity: formValue(formData, "capacity", String(existing.capacity)),
     registration_status: formValue(formData, "registration_status", existing.registration_status),
     status: formValue(formData, "status", existing.status),

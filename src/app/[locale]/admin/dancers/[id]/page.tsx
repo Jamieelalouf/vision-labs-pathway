@@ -16,8 +16,6 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { EmptyState } from "@/components/vision/empty-state";
-import { PathwayProgress } from "@/components/vision/pathway-progress";
-import { TierBadge } from "@/components/vision/tier-badge";
 import type { Locale } from "@/i18n/routing";
 import { formatCad, formatDate } from "@/lib/utils";
 import { manuallyGrantReturningEligibilityAction } from "@/server/actions/admin";
@@ -37,7 +35,6 @@ export default async function AdminDancerDetailPage({
 
   const profile = Array.isArray(dancer.profiles) ? dancer.profiles[0] : dancer.profiles;
   const enrollments = dancer.enrollments ?? [];
-  const rewards = dancer.dancer_rewards ?? [];
   const videos = dancer.video_uploads ?? [];
   const overrides = dancer.returning_price_overrides ?? [];
   const completedCount = enrollments.filter(
@@ -49,9 +46,6 @@ export default async function AdminDancerDetailPage({
   const totalPaid = enrollments
     .filter((enrollment: any) => enrollment.payment_status === "paid")
     .reduce((total: number, enrollment: any) => total + enrollment.price_paid_cad, 0);
-  const currentReward = [...rewards].sort((a: any, b: any) =>
-    String(b.unlocked_at ?? b.updated_at).localeCompare(String(a.unlocked_at ?? a.updated_at))
-  )[0];
 
   return (
     <section className="space-y-8">
@@ -72,7 +66,6 @@ export default async function AdminDancerDetailPage({
             </h1>
             <p className="mt-3 text-sm text-muted-foreground">{profile?.email ?? "No email"}</p>
           </div>
-          <TierBadge tier={currentReward?.tier ?? null} />
         </div>
       </div>
 
@@ -133,19 +126,16 @@ export default async function AdminDancerDetailPage({
 
         <Card>
           <CardHeader>
-            <CardTitle>Pathway control</CardTitle>
+            <CardTitle>Returning price control</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
-            <PathwayProgress completed={currentReward?.cohorts_completed_count ?? 0} />
             <div className="rounded-md border border-border bg-secondary p-4">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
-                <p className="font-medium">Current reward</p>
+                <p className="font-medium">Manual override</p>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                {currentReward
-                  ? `${currentReward.tier} · ${currentReward.status} · ${currentReward.cohorts_completed_count}/5`
-                  : "No season reward has been unlocked yet."}
+                Grant a one-time returning price override for this dancer.
               </p>
             </div>
             <form action={manuallyGrantReturningEligibilityAction} className="space-y-3">
@@ -222,44 +212,6 @@ export default async function AdminDancerDetailPage({
                   <TableCell>{enrollment.enrollment_status}</TableCell>
                   <TableCell>{enrollment.completion_status ?? "-"}</TableCell>
                   <TableCell>{formatDate(enrollment.created_at, params.locale)}</TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </AdminDancerTable>
-
-      <AdminDancerTable
-        title="Rewards"
-        emptyTitle="No rewards yet"
-        emptyDescription="Rewards appear after the dancer completes cohorts in a season."
-        isEmpty={rewards.length === 0}
-      >
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Season</TableHead>
-              <TableHead>Tier</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Count</TableHead>
-              <TableHead>Code</TableHead>
-              <TableHead>Unlocked</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rewards.map((reward: any) => {
-              const season = Array.isArray(reward.seasons) ? reward.seasons[0] : reward.seasons;
-              const code = Array.isArray(reward.discount_codes)
-                ? reward.discount_codes[0]
-                : reward.discount_codes;
-              return (
-                <TableRow key={reward.id}>
-                  <TableCell className="font-medium">{season?.name ?? "-"}</TableCell>
-                  <TableCell>{reward.tier}</TableCell>
-                  <TableCell>{reward.status}</TableCell>
-                  <TableCell>{reward.cohorts_completed_count}</TableCell>
-                  <TableCell className="font-mono">{code?.code ?? "-"}</TableCell>
-                  <TableCell>{formatDate(reward.unlocked_at, params.locale)}</TableCell>
                 </TableRow>
               );
             })}

@@ -758,18 +758,14 @@
     "overview": {
       "badge": "Command Center",
       "title": "Admin Command Center",
-      "intro": "Run cohorts, enrollments, attendance, moderation, uploads, rewards, and season operations from one control room.",
+      "intro": "Manage cohorts, enrollments, community, seasons, and lifetime performance from one control room.",
       "empty": "Live KPIs will populate after Supabase is configured and data is seeded.",
       "emptyCohort": "No open or active cohort is available yet.",
       "noSeason": "No active season",
       "actions": {
         "manageCohorts": "Manage cohorts",
-        "markAttendance": "Mark attendance",
         "reviewEnrollments": "Review enrollments",
         "moderateCommunity": "Moderate community",
-        "manageCohort": "Manage cohort",
-        "openAttendance": "Open attendance",
-        "reviewUploads": "Review uploads",
         "manageSeasons": "Manage seasons"
       },
       "kpi": {
@@ -777,7 +773,7 @@
         "cohortPaid": "Paid",
         "cohortRevenue": "Revenue",
         "pending": "Pending actions",
-        "uploads": "Uploads",
+        "paid": "Paid enrollments",
         "currentCohort": "Current cohort",
         "needsReview": "Needs review",
         "lifetime": "Lifetime"
@@ -792,7 +788,7 @@
         "title": "Operations Queue",
         "pendingCount": "{count} enrollment/payment records need manual review.",
         "clear": "No payment or enrollment edge cases are currently flagged.",
-        "communitySignals": "{count} recent upload/community signals to review.",
+        "communitySignals": "Review recent community activity for moderation needs.",
         "rewardSignals": "{count} dancers are close to Legacy threshold.",
         "reviewNow": "Review queue"
       },
@@ -814,15 +810,16 @@
       }
     },
     "community": {
-      "title": "Community Moderation",
+      "title": "Community Feed",
       "postsTitle": "Feed posts",
-      "messagesTitle": "Cohort chat messages",
+      "adminOnlyDelete": "Admin view mirrors the student feed. Posts can be removed here.",
       "emptyTitle": "No community content yet",
-      "emptyDescription": "Posts, comments, and messages will appear here.",
-      "hidden": "Hidden",
-      "visible": "Visible",
+      "emptyDescription": "Posts and comments will appear here.",
       "reactions": "Reactions",
-      "comments": "Comments"
+      "comments": "Comments",
+      "viewComments": "View comments ({count})",
+      "noComments": "No comments yet.",
+      "deletePost": "Delete post"
     }
   }
 }

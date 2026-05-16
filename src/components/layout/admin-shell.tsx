@@ -13,10 +13,7 @@ const adminNav = [
   ["dancers", "/dancers"],
   ["cohorts", "/cohorts"],
   ["enrollments", "/enrollments"],
-  ["attendance", "/attendance"],
   ["community", "/community"],
-  ["rewards", "/rewards"],
-  ["discountCodes", "/discount-codes"],
   ["videos", "/videos"],
   ["seasons", "/seasons"],
   ["settings", "/settings"]
@@ -69,10 +66,7 @@ export async function AdminShell({
                 dancers: t("dancers"),
                 cohorts: t("cohorts"),
                 enrollments: t("enrollments"),
-                attendance: t("attendance"),
                 community: t("community"),
-                rewards: t("rewards"),
-                discountCodes: t("discountCodes"),
                 videos: t("videos"),
                 seasons: t("seasons"),
                 settings: t("settings")

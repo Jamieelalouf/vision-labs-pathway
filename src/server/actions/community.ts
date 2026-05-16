@@ -165,6 +165,23 @@ export async function deleteOwnCommunityPostAction(formData: FormData) {
   revalidatePath(path(locale));
 }
 
+export async function adminDeleteCommunityPostAction(formData: FormData) {
+  const locale = actionLocale(formData);
+  await requireAdmin(locale);
+  const parsed = deleteCommunityPostSchema.safeParse({
+    post_id: readString(formData, "post_id")
+  });
+
+  if (!parsed.success) safeAdminErrorRedirect(locale, "invalid");
+
+  const supabase = createServerClient() as any;
+  const { error } = await supabase.from("community_posts").delete().eq("id", parsed.data.post_id);
+
+  if (error) safeAdminErrorRedirect(locale, "delete-post-failed");
+  revalidatePath(path(locale));
+  revalidatePath(adminPath(locale));
+}
+
 export async function deleteOwnCommunityCommentAction(formData: FormData) {
   const locale = actionLocale(formData);
   const dancer = await requireCompleteDancerProfile(locale);
