@@ -57,6 +57,7 @@ export type Database = {
           guardian_name: string | null;
           guardian_email: string | null;
           guardian_phone: string | null;
+          avatar_storage_path: string | null;
           internal_notes: string | null;
           created_at: string;
           updated_at: string;
@@ -74,6 +75,7 @@ export type Database = {
           guardian_name?: string | null;
           guardian_email?: string | null;
           guardian_phone?: string | null;
+          avatar_storage_path?: string | null;
           internal_notes?: string | null;
           created_at?: string;
           updated_at?: string;

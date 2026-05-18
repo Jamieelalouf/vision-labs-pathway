@@ -37,6 +37,7 @@ const demoDancer: Database["public"]["Tables"]["dancers"]["Row"] = {
   guardian_name: null,
   guardian_email: null,
   guardian_phone: null,
+  avatar_storage_path: null,
   internal_notes: null,
   created_at: "2026-01-01T00:00:00.000Z",
   updated_at: "2026-01-01T00:00:00.000Z"

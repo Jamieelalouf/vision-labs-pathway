@@ -25,8 +25,8 @@ export const rewardTierMeta: Record<
     cohortsRequired: 1,
     labelEn: "LABS Member",
     labelFr: "Membre LABS",
-    rewardEn: "Returning member discounted rate",
-    rewardFr: "Tarif membre de retour réduit",
+    rewardEn: "LABS Member Digital Badge",
+    rewardFr: "Badge numerique Membre LABS",
     amountCad: 25,
     isFreePass: false
   },
@@ -34,8 +34,8 @@ export const rewardTierMeta: Record<
     cohortsRequired: 2,
     labelEn: "LABS Alumni",
     labelFr: "Ancien LABS",
-    rewardEn: "$50 off VISION Convention",
-    rewardFr: "50 $ de rabais sur la convention VISION",
+    rewardEn: "LABS Alumni Digital Badge",
+    rewardFr: "Badge numerique LABS Alumni",
     amountCad: 50,
     isFreePass: false
   },
@@ -43,8 +43,8 @@ export const rewardTierMeta: Record<
     cohortsRequired: 3,
     labelEn: "LABS Elite",
     labelFr: "LABS Elite",
-    rewardEn: "$100 off VISION Convention",
-    rewardFr: "100 $ de rabais sur la convention VISION",
+    rewardEn: "LABS Elite Digital Badge",
+    rewardFr: "Badge numerique LABS Elite",
     amountCad: 100,
     isFreePass: false
   },
@@ -52,8 +52,8 @@ export const rewardTierMeta: Record<
     cohortsRequired: 5,
     labelEn: "LABS Legacy",
     labelFr: "LABS Legacy",
-    rewardEn: "$200 off VISION Convention",
-    rewardFr: "200 $ de rabais sur la convention VISION",
+    rewardEn: "LABS Legacy Digital Badge",
+    rewardFr: "Badge numerique LABS Legacy",
     amountCad: 200,
     isFreePass: false
   }

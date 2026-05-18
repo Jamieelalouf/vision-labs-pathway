@@ -1,11 +1,12 @@
 import { getTranslations } from "next-intl/server";
-import { Camera, Instagram } from "lucide-react";
 
 import type { Locale } from "@/i18n/routing";
 import { getCurrentDancer, requireUser } from "@/server/queries/auth";
 import { ProfileForm, type ProfileFormDefaults } from "@/components/portal/profile-form";
+import { ProfilePhotoUploader } from "@/components/portal/profile-photo-uploader";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { createServerClient } from "@/lib/supabase/server";
 
 export default async function ProfilePage({ params }: { params: { locale: Locale } }) {
   await requireUser(params.locale);
@@ -21,6 +22,11 @@ export default async function ProfilePage({ params }: { params: { locale: Locale
     : undefined;
   const t = await getTranslations({ locale: params.locale, namespace: "portal.profile" });
   const actions = await getTranslations({ locale: params.locale, namespace: "common.actions" });
+  const supabase = createServerClient();
+  const avatarSignedUrl = dancer?.avatar_storage_path
+    ? (await supabase.storage.from("profile-photos").createSignedUrl(dancer.avatar_storage_path, 60 * 10))
+        .data?.signedUrl ?? null
+    : null;
 
   return (
     <section className="max-w-4xl space-y-6 pb-36 md:space-y-8 md:pb-8">
@@ -31,18 +37,19 @@ export default async function ProfilePage({ params }: { params: { locale: Locale
             {t("account")}
           </Badge>
           <h1 className="font-display text-3xl font-bold text-white md:text-5xl">{t("title")}</h1>
-          <div className="flex items-center gap-3 rounded-2xl border border-white/15 bg-white/5 p-3 md:p-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/30 md:h-14 md:w-14">
-              <Camera className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-white">{t("profileVibeTitle")}</p>
-              <p className="mt-1 flex items-center gap-1.5 text-xs text-white/75">
-                <Instagram className="h-3.5 w-3.5" aria-hidden="true" />
-                {t("instagramHint")}
-              </p>
-            </div>
-          </div>
+          <ProfilePhotoUploader
+            locale={params.locale}
+            initialImageUrl={avatarSignedUrl}
+            copy={{
+              title: t("profileVibeTitle"),
+              subtitle: t("photoUploadHint"),
+              uploading: t("photoUploading"),
+              success: t("photoUploadSuccess"),
+              uploadErrorPrefix: t("photoUploadErrorPrefix"),
+              invalidType: t("photoInvalidType"),
+              fileTooLarge: t("photoFileTooLarge")
+            }}
+          />
         </CardContent>
       </Card>
 

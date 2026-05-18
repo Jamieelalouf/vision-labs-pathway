@@ -150,7 +150,7 @@
           {
             "title": "Statut",
             "items": [
-              "Badge Membre LABS",
+              "Badge numerique Membre LABS",
               "Badge Founding Member, reserve aux premiers membres"
             ]
           }
@@ -189,7 +189,7 @@
           {
             "title": "Statut",
             "items": [
-              "Badge LABS Alumni"
+              "Badge numerique LABS Alumni"
             ]
           }
         ]
@@ -227,7 +227,7 @@
           {
             "title": "Statut",
             "items": [
-              "Badge LABS Elite"
+              "Badge numerique LABS Elite"
             ]
           }
         ]
@@ -266,7 +266,7 @@
           {
             "title": "Statut",
             "items": [
-              "Badge LABS Legacy",
+              "Badge numerique LABS Legacy",
               "Reconnaissance Legacy permanente"
             ]
           }
@@ -356,7 +356,7 @@
           {
             "title": "Statut",
             "items": [
-              "Badge Membre LABS",
+              "Badge numerique Membre LABS",
               "Badge Founding Member, reserve aux premiers membres"
             ]
           }
@@ -395,7 +395,7 @@
           {
             "title": "Statut",
             "items": [
-              "Badge LABS Alumni"
+              "Badge numerique LABS Alumni"
             ]
           }
         ]
@@ -433,7 +433,7 @@
           {
             "title": "Statut",
             "items": [
-              "Badge LABS Elite"
+              "Badge numerique LABS Elite"
             ]
           }
         ]
@@ -472,7 +472,7 @@
           {
             "title": "Statut",
             "items": [
-              "Badge LABS Legacy",
+              "Badge numerique LABS Legacy",
               "Reconnaissance Legacy permanente"
             ]
           }
@@ -751,7 +751,13 @@
       "saveSuccess": "Profil enregistre.",
       "saveErrorPrefix": "Impossible d'enregistrer le profil :",
       "profileVibeTitle": "Photo de profil et vibe sociale",
-      "instagramHint": "Utilise Instagram."
+      "instagramHint": "Utilise Instagram.",
+      "photoUploadHint": "Clique pour televerser ta photo de profil (JPG, PNG ou WEBP jusqu'a 5 Mo).",
+      "photoUploading": "Televersement de la photo de profil...",
+      "photoUploadSuccess": "Photo de profil mise a jour.",
+      "photoUploadErrorPrefix": "Impossible de televerser la photo de profil :",
+      "photoInvalidType": "Seules les images JPG, JPEG, PNG et WEBP sont permises.",
+      "photoFileTooLarge": "La photo de profil doit etre de 5 Mo ou moins."
     }
   },
   "admin": {

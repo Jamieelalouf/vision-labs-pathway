@@ -38,6 +38,7 @@ create table public.dancers (
   guardian_name text,
   guardian_email text,
   guardian_phone text,
+  avatar_storage_path text,
   internal_notes text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -293,10 +294,10 @@ create index returning_price_overrides_lookup_idx
   on public.returning_price_overrides(dancer_id, consumed, expires_at);
 
 insert into public.reward_levels values
-  ('member', 1, 'LABS Member', 'Membre LABS', '$25 off VISION Convention', '25 $ de rabais sur la convention VISION', 25, false),
-  ('alumni', 2, 'LABS Alumni', 'Ancien LABS', '$50 off VISION Convention', '50 $ de rabais sur la convention VISION', 50, false),
-  ('elite', 3, 'LABS Elite', 'LABS Elite', '$100 off VISION Convention', '100 $ de rabais sur la convention VISION', 100, false),
-  ('legacy', 5, 'LABS Legacy', 'LABS Legacy', '$200 off VISION Convention', '200 $ de rabais sur la convention VISION', 200, false);
+  ('member', 1, 'LABS Member', 'Membre LABS', 'LABS Member Digital Badge', 'Badge numérique Membre LABS', 25, false),
+  ('alumni', 2, 'LABS Alumni', 'Ancien LABS', 'LABS Alumni Digital Badge', 'Badge numérique Alumni LABS', 50, false),
+  ('elite', 3, 'LABS Elite', 'LABS Elite', 'LABS Elite Digital Badge', 'Badge numérique Elite LABS', 100, false),
+  ('legacy', 5, 'LABS Legacy', 'LABS Legacy', 'LABS Legacy Digital Badge', 'Badge numérique Legacy LABS', 200, false);
 
 insert into public.system_settings (id) values (1);
 

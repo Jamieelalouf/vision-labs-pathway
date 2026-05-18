@@ -250,3 +250,35 @@ export async function updateDancerProfileAction(
     message: "Profile saved."
   };
 }
+
+export async function updateDancerAvatarStoragePathAction(formData: FormData) {
+  const localeValue = formValue(formData, "language_pref");
+  const locale = isLocale(localeValue) ? localeValue : defaultLocale;
+  const avatarStoragePath = cleanOptional(formValue(formData, "avatar_storage_path"));
+
+  if (!avatarStoragePath) {
+    return { ok: false, message: "Missing avatar path." };
+  }
+
+  const supabase = createServerClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { ok: false, message: "Your session expired. Please sign in again." };
+  }
+
+  const { error } = await supabase
+    .from("dancers")
+    .update({ avatar_storage_path: avatarStoragePath })
+    .eq("profile_id", user.id);
+
+  if (error) {
+    console.error("dancers avatar update failed:", error.message);
+    return { ok: false, message: "Could not save profile photo right now. Please try again." };
+  }
+
+  revalidatePath(`/${locale}/portal`, "layout");
+  return { ok: true, message: "Profile photo saved." };
+}

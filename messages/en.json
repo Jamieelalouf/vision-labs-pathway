@@ -150,7 +150,7 @@
           {
             "title": "Status",
             "items": [
-              "LABS Member badge",
+              "LABS Member Digital Badge",
               "Founding Member badge, for early members only"
             ]
           }
@@ -189,7 +189,7 @@
           {
             "title": "Status",
             "items": [
-              "LABS Alumni badge"
+              "LABS Alumni Digital Badge"
             ]
           }
         ]
@@ -227,7 +227,7 @@
           {
             "title": "Status",
             "items": [
-              "LABS Elite badge"
+              "LABS Elite Digital Badge"
             ]
           }
         ]
@@ -266,7 +266,7 @@
           {
             "title": "Status",
             "items": [
-              "LABS Legacy badge",
+              "LABS Legacy Digital Badge",
               "Permanent Legacy recognition"
             ]
           }
@@ -356,7 +356,7 @@
           {
             "title": "Status",
             "items": [
-              "LABS Member badge",
+              "LABS Member Digital Badge",
               "Founding Member badge, for early members only"
             ]
           }
@@ -395,7 +395,7 @@
           {
             "title": "Status",
             "items": [
-              "LABS Alumni badge"
+              "LABS Alumni Digital Badge"
             ]
           }
         ]
@@ -433,7 +433,7 @@
           {
             "title": "Status",
             "items": [
-              "LABS Elite badge"
+              "LABS Elite Digital Badge"
             ]
           }
         ]
@@ -472,7 +472,7 @@
           {
             "title": "Status",
             "items": [
-              "LABS Legacy badge",
+              "LABS Legacy Digital Badge",
               "Permanent Legacy recognition"
             ]
           }
@@ -751,7 +751,13 @@
       "saveSuccess": "Profile saved.",
       "saveErrorPrefix": "Could not save profile:",
       "profileVibeTitle": "Profile photo and social vibe",
-      "instagramHint": "Use Instagram"
+      "instagramHint": "Use Instagram",
+      "photoUploadHint": "Click to upload your profile photo (JPG, PNG, or WEBP up to 5MB).",
+      "photoUploading": "Uploading profile photo...",
+      "photoUploadSuccess": "Profile photo updated.",
+      "photoUploadErrorPrefix": "Could not upload profile photo:",
+      "photoInvalidType": "Only JPG, JPEG, PNG, and WEBP images are allowed.",
+      "photoFileTooLarge": "Profile photo must be 5MB or smaller."
     }
   },
   "admin": {

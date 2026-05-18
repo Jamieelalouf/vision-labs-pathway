@@ -102,6 +102,8 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
                   <a
                     key={resource.id}
                     href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="block rounded-xl border border-border/80 bg-background/40 p-4 text-sm transition-colors hover:border-primary/40 hover:text-primary"
                   >
                     <span className="font-medium">
