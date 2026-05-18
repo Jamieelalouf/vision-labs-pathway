@@ -24,15 +24,21 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
   const sessions = [...(cohort?.cohort_sessions ?? [])].sort(
     (a: any, b: any) => a.session_number - b.session_number
   );
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const resources = cohort?.resources ?? [];
   const timelineItems: CohortTimelineItem[] = sessions.map((session: any) => {
     const theme = localizedField(session, "theme", params.locale);
     const notes = localizedField(session, "notes", params.locale);
+    const sessionDate = new Date(`${session.session_date}T00:00:00`);
+    const isCompleted = !Number.isNaN(sessionDate.getTime()) && sessionDate <= today;
     return {
       step: `${t("week")} ${session.session_number}`,
       title: String(theme ?? t("sessionFallback")),
       description: notes ? String(notes) : null,
       date: formatDate(session.session_date, params.locale),
+      isCompleted,
+      statusLabel: isCompleted ? t("sessionCompletedLabel") : null,
       meta: `${formatTime(session.start_time, params.locale)} - ${formatTime(
         session.end_time,
         params.locale

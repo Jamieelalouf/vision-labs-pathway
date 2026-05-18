@@ -91,6 +91,37 @@ function getSignedUploadUrl(video?: Record<string, any> | null) {
   return null;
 }
 
+function AvatarCircle({
+  signedUrl,
+  initials,
+  sizeClass,
+  fallbackClassName
+}: {
+  signedUrl?: string | null;
+  initials: string;
+  sizeClass: string;
+  fallbackClassName?: string;
+}) {
+  if (signedUrl) {
+    return (
+      <img
+        src={signedUrl}
+        alt=""
+        className={`${sizeClass} shrink-0 rounded-full object-cover`}
+        loading="lazy"
+      />
+    );
+  }
+
+  return (
+    <div
+      className={`flex ${sizeClass} shrink-0 items-center justify-center rounded-full text-sm font-semibold ${fallbackClassName ?? "bg-primary/10 text-primary"}`}
+    >
+      {initials}
+    </div>
+  );
+}
+
 function CommunityVideoPreview({
   title,
   uploadUrl,
@@ -202,9 +233,11 @@ export default async function AdminCommunityPage({ params }: { params: { locale:
               >
                 <CardContent className="space-y-3 p-4 md:p-5">
                   <div className="flex items-start gap-3">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary ring-1 ring-primary/30">
-                      {getInitials(author?.first_name, author?.last_name)}
-                    </div>
+                    <AvatarCircle
+                      signedUrl={author?.avatar_signed_url}
+                      initials={getInitials(author?.first_name, author?.last_name)}
+                      sizeClass="h-11 w-11 ring-1 ring-primary/30"
+                    />
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <p className="font-semibold text-foreground">
@@ -259,9 +292,12 @@ export default async function AdminCommunityPage({ params }: { params: { locale:
                             : comment.dancers;
                           return (
                             <div key={comment.id} className="flex gap-2">
-                              <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary text-[11px] font-semibold text-muted-foreground">
-                                {getInitials(commentAuthor?.first_name, commentAuthor?.last_name)}
-                              </div>
+                              <AvatarCircle
+                                signedUrl={commentAuthor?.avatar_signed_url}
+                                initials={getInitials(commentAuthor?.first_name, commentAuthor?.last_name)}
+                                sizeClass="mt-0.5 h-7 w-7 text-[11px]"
+                                fallbackClassName="bg-secondary text-muted-foreground"
+                              />
                               <div className="flex-1 rounded-xl bg-secondary/50 px-3 py-2 text-sm">
                                 <p className="font-medium text-foreground">
                                   {commentAuthor?.first_name} {commentAuthor?.last_name}

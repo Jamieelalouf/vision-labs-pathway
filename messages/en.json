@@ -576,6 +576,7 @@
       "location": "Location",
       "dates": "Dates",
       "week": "Week",
+      "sessionCompletedLabel": "Completed",
       "sessionFallback": "Session theme TBA",
       "noResources": "No resources posted yet.",
       "noUploads": "No uploads for this cohort yet.",

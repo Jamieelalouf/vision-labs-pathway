@@ -576,6 +576,7 @@
       "location": "Lieu",
       "dates": "Dates",
       "week": "Semaine",
+      "sessionCompletedLabel": "Completee",
       "sessionFallback": "Theme de session a venir",
       "noResources": "Aucune ressource publiee pour le moment.",
       "noUploads": "Aucune video pour cette cohorte pour le moment.",

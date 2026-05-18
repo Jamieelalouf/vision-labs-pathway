@@ -169,6 +169,22 @@ async function addSignedVideoUrls<T extends { source?: string; storage_path?: st
     });
 }
 
+async function createSignedProfilePhotoMap(
+  supabase: ReturnType<typeof createServerClient>,
+  paths: Array<string | null | undefined>
+) {
+  const uniquePaths = Array.from(
+    new Set(paths.filter((path): path is string => typeof path === "string" && path.trim().length > 0))
+  );
+  if (!uniquePaths.length) return new Map<string, string | null>();
+
+  const signedPairs = await mapWithConcurrency(uniquePaths, 8, async (path) => {
+    const { data } = await supabase.storage.from("profile-photos").createSignedUrl(path, 60 * 60);
+    return [path, data?.signedUrl ?? null] as const;
+  });
+  return new Map<string, string | null>(signedPairs);
+}
+
 export const getAdminDashboard = cache(async () => {
   if (!hasSupabaseEnv()) {
     return {
@@ -718,7 +734,7 @@ export const getCommunityFeed = cache(async (cohortId?: string) => {
         dancer_id: "demo-dancer-2",
         caption: "Quick process cut from tonight's phrase lab.",
         created_at: new Date(now - 1000 * 60 * 55).toISOString(),
-        dancers: { first_name: "Ari", last_name: "Kim" },
+        dancers: { first_name: "Ari", last_name: "Kim", avatar_storage_path: null, avatar_signed_url: null },
         cohorts: { name: "VISION LABS Cohort One" },
         video_uploads: {
           id: "demo-video-2",
@@ -734,7 +750,7 @@ export const getCommunityFeed = cache(async (cohortId?: string) => {
             body: "Nice timing accents in the second 8.",
             hidden_by_admin: false,
             created_at: new Date(now - 1000 * 60 * 40).toISOString(),
-            dancers: { first_name: "Noah", last_name: "Patel" }
+            dancers: { first_name: "Noah", last_name: "Patel", avatar_storage_path: null, avatar_signed_url: null }
           }
         ],
         community_reactions: [{ id: "demo-react-1", dancer_id: "demo-dancer-vision-labs" }]
@@ -745,7 +761,7 @@ export const getCommunityFeed = cache(async (cohortId?: string) => {
         dancer_id: "demo-dancer-3",
         caption: "Question: are we keeping the ending canon from class?",
         created_at: new Date(now - 1000 * 60 * 20).toISOString(),
-        dancers: { first_name: "Noah", last_name: "Patel" },
+        dancers: { first_name: "Noah", last_name: "Patel", avatar_storage_path: null, avatar_signed_url: null },
         cohorts: { name: "VISION LABS Cohort One" },
         video_uploads: null,
         community_comments: [],
@@ -759,7 +775,7 @@ export const getCommunityFeed = cache(async (cohortId?: string) => {
   let query = supabase
     .from("community_posts")
     .select(
-      "*, dancers(first_name,last_name), cohorts(name), video_uploads(id,title,source,external_url,storage_path), community_comments(*, dancers(first_name,last_name)), community_reactions(id,dancer_id)"
+      "*, dancers(first_name,last_name,avatar_storage_path), cohorts(name), video_uploads(id,title,source,external_url,storage_path), community_comments(*, dancers(first_name,last_name,avatar_storage_path)), community_reactions(id,dancer_id)"
     )
     .order("created_at", { ascending: false })
     .limit(80);
@@ -774,16 +790,55 @@ export const getCommunityFeed = cache(async (cohortId?: string) => {
 
   const signedVideos = await addSignedVideoUrls(supabase, uploadVideos);
   const signedById = new Map(signedVideos.map((video: any) => [video.id, video.signed_url ?? null]));
+  const profilePhotoMap = await createSignedProfilePhotoMap(
+    supabase,
+    posts.flatMap((post: any) => {
+      const author = Array.isArray(post.dancers) ? post.dancers[0] : post.dancers;
+      const commentPaths = (post.community_comments ?? []).map((comment: any) => {
+        const commentAuthor = Array.isArray(comment.dancers) ? comment.dancers[0] : comment.dancers;
+        return commentAuthor?.avatar_storage_path ?? null;
+      });
+      return [author?.avatar_storage_path ?? null, ...commentPaths];
+    })
+  );
 
   return posts.map((post: any) => {
     const video = Array.isArray(post.video_uploads) ? post.video_uploads[0] : post.video_uploads;
-    if (!video) return post;
+    const author = Array.isArray(post.dancers) ? post.dancers[0] : post.dancers;
+    const comments = (post.community_comments ?? []).map((comment: any) => {
+      const commentAuthor = Array.isArray(comment.dancers) ? comment.dancers[0] : comment.dancers;
+      const commentSignedUrl = commentAuthor?.avatar_storage_path
+        ? (profilePhotoMap.get(commentAuthor.avatar_storage_path) ?? null)
+        : null;
+      return {
+        ...comment,
+        dancers: commentAuthor
+          ? {
+              ...commentAuthor,
+              avatar_signed_url: commentSignedUrl
+            }
+          : commentAuthor
+      };
+    });
+
+    const signedAuthorUrl = author?.avatar_storage_path
+      ? (profilePhotoMap.get(author.avatar_storage_path) ?? null)
+      : null;
     return {
       ...post,
-      video_uploads: {
-        ...video,
-        signed_url: signedById.get(video.id) ?? null
-      }
+      dancers: author
+        ? {
+            ...author,
+            avatar_signed_url: signedAuthorUrl
+          }
+        : author,
+      community_comments: comments,
+      video_uploads: video
+        ? {
+            ...video,
+            signed_url: signedById.get(video.id) ?? null
+          }
+        : null
     };
   });
 });
