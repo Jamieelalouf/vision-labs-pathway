@@ -311,6 +311,7 @@
     "rules": [
       "Les recompenses s'appliquent seulement a la prochaine convention annuelle VISION.",
       "Les recompenses montent de niveau et ne se combinent jamais.",
+      "Les niveaux se reinitialisent apres chaque VISION Dance Convention en janvier.",
       "Les danseurs qui reviennent gardent le tarif reduit membre de retour pour la cohorte immediate suivante.",
       "Legacy donne 200 $ de reduction sur la convention annuelle VISION et recommence a chaque saison."
     ],
@@ -616,6 +617,7 @@
       "requiredPlural": "{count} cohortes completees",
       "rulesItems": [
         "Les recompenses montent de niveau et ne se combinent jamais.",
+        "Les niveaux se reinitialisent apres chaque VISION Dance Convention en janvier.",
         "Le prix de retour depend de la cohorte immediate suivante.",
         "Legacy se debloque a 5 cohortes completees dans la saison active."
       ]

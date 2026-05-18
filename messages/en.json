@@ -311,6 +311,7 @@
     "rules": [
       "Rewards apply to the next annual VISION Convention only.",
       "Rewards upgrade and never stack.",
+      "Tiers reset after every VISION Dance Convention in January.",
       "Returning dancers keep the returning member discounted rate for the immediate next cohort.",
       "Legacy gives $200 off the annual VISION Convention and resets each season."
     ],
@@ -616,6 +617,7 @@
       "requiredPlural": "{count} cohorts completed",
       "rulesItems": [
         "Rewards upgrade and never stack.",
+        "Tiers reset after every VISION Dance Convention in January.",
         "Returning price is based on the immediate next cohort.",
         "Legacy unlocks at 5 completed cohorts in the active season."
       ]
