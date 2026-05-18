@@ -33,7 +33,7 @@ export async function AdminShell({
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-background">
-        <div className="page-shell flex h-16 items-center justify-between gap-4">
+        <div className="mx-auto flex h-16 w-full max-w-screen-2xl items-center justify-between gap-4 px-6 md:px-12">
           <div className="flex flex-none items-center">
             <Logo locale={locale} />
           </div>
@@ -52,7 +52,7 @@ export async function AdminShell({
           </div>
         </div>
       </header>
-      <div className="page-shell grid min-w-0 gap-8 py-8 md:grid-cols-[240px_minmax(0,1fr)]">
+      <div className="mx-auto grid w-full max-w-screen-2xl min-w-0 gap-8 px-6 py-8 md:grid-cols-[240px_minmax(0,1fr)] md:px-12">
         <aside className="min-w-0 md:sticky md:top-24 md:h-fit">
           <div className="min-w-0 rounded-2xl border border-border/70 bg-secondary/15 p-3">
             <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
