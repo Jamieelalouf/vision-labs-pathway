@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
 
-import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { Logo } from "@/components/layout/logo";
 import { PortalDesktopNav } from "@/components/layout/portal-desktop-nav";
 import { PortalMobileNav } from "@/components/layout/portal-mobile-nav";
@@ -33,7 +32,6 @@ export async function PortalShell({
                 {t("demoPreview")}
               </span>
             ) : null}
-            <LanguageSwitcher locale={locale} />
             <ThemeToggle />
             <form action={signOutAction}>
               <Button variant="secondary" size="sm">

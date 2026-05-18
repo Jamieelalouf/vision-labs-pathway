@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
 import { AdminDesktopNav } from "@/components/layout/admin-desktop-nav";
-import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { Logo } from "@/components/layout/logo";
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/i18n/routing";
@@ -43,7 +42,6 @@ export async function AdminShell({
                 {demoRole === "admin" ? t("demoAdminPreview") : t("demoStudentPreview")}
               </span>
             ) : null}
-            <LanguageSwitcher locale={locale} />
             <form action={signOutAction}>
               <Button variant="secondary" size="sm">
                 {t("signOut")}
