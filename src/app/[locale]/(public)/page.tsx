@@ -236,7 +236,6 @@ export default async function LandingPage({ params }: { params: { locale: Locale
                   location: cohortLabels("location"),
                   regularPrice: cohortLabels("regularPrice"),
                   returningPrice: cohortLabels("returningPrice"),
-                  capacity: cohortLabels("capacity"),
                   full: cohortLabels("full"),
                   eyebrow: cohortLabels("featured"),
                   register: common("registerNext")

@@ -83,7 +83,6 @@ export default async function CohortsPage({ params }: { params: { locale: Locale
                     location: t("location"),
                     regularPrice: t("regularPrice"),
                     returningPrice: t("returningPrice"),
-                    capacity: t("capacity"),
                     full: t("full"),
                     eyebrow: t("featured"),
                     register: actions("registerNext")

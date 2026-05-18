@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { AlertCircle, CalendarDays, MapPin, Users } from "lucide-react";
+import { AlertCircle, CalendarDays, MapPin } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { Button } from "@/components/ui/button";
@@ -120,10 +120,6 @@ export default async function CohortDetailPage({
               <p className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" aria-hidden="true" />
                 {cohort.location_name}
-              </p>
-              <p className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-primary" aria-hidden="true" />
-                {t("capacity")}: {cohort.capacity}
               </p>
             </div>
             {description ? (

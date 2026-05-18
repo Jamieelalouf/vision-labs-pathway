@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, MapPin, Users } from "lucide-react";
+import { CalendarDays, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,7 +31,6 @@ export function UpcomingCohortCard({
     location: string;
     regularPrice: string;
     returningPrice: string;
-    capacity: string;
     full: string;
     eyebrow: string;
     register: string;
@@ -59,10 +58,6 @@ export function UpcomingCohortCard({
             <MapPin className="h-4 w-4 text-primary" aria-hidden="true" />
             <span className="sr-only">{labels.location}</span>
             {cohort.location_name}
-          </p>
-          <p className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-primary" aria-hidden="true" />
-            {labels.capacity}: {cohort.capacity}
           </p>
         </div>
       </CardHeader>
