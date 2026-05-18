@@ -423,10 +423,13 @@ begin
   select count(*)::integer
   into completed_count
   from public.enrollments e
+  join public.cohorts c on c.id = e.cohort_id
   where e.dancer_id = new.dancer_id
     and e.season_id = new.season_id
+    and e.payment_status = 'paid'
     and e.completion_status = 'completed'
-    and e.enrollment_status not in ('refunded', 'cancelled');
+    and e.enrollment_status not in ('refunded', 'cancelled')
+    and (c.status = 'completed' or c.end_date < current_date);
 
   if completed_count >= 5 then
     next_tier := 'legacy';
