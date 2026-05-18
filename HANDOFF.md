@@ -49,7 +49,7 @@ All commands passed:
 /Users/jamie/Library/pnpm/pnpm run typecheck
 /Users/jamie/Library/pnpm/pnpm run lint
 env NODE_PATH=/Users/jamie/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules /Users/jamie/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node node_modules/next/dist/bin/next build
-env NEXT_PUBLIC_SUPABASE_URL=https://example.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=anon SUPABASE_SERVICE_ROLE_KEY=service STRIPE_SECRET_KEY=sk_test_dummy STRIPE_WEBHOOK_SECRET=whsec_dummy STRIPE_PUBLISHABLE_KEY=pk_test_dummy RESEND_API_KEY=re_dummy NEXT_PUBLIC_APP_URL=https://labs.visiondns.ca CRON_SECRET=cron_dummy /Users/jamie/Library/pnpm/pnpm run preflight
+env NEXT_PUBLIC_SUPABASE_URL=https://example.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=anon SUPABASE_SERVICE_ROLE_KEY=service STRIPE_SECRET_KEY=sk_test_dummy STRIPE_WEBHOOK_SECRET=whsec_dummy STRIPE_PUBLISHABLE_KEY=pk_test_dummy RESEND_API_KEY=re_dummy NEXT_PUBLIC_APP_URL=https://labs.visiondance.ca CRON_SECRET=cron_dummy /Users/jamie/Library/pnpm/pnpm run preflight
 ```
 
 Production build generated 57 app routes, including:

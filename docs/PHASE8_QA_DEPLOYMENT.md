@@ -89,7 +89,7 @@ Optional monitoring:
 2. Add all environment variables for Preview and Production.
 3. Confirm `NEXT_PUBLIC_APP_URL` points to the deployed URL:
    - Preview: Vercel preview URL
-   - Production: `https://labs.visiondns.ca`
+   - Production: `https://labs.visiondance.ca`
 4. Confirm Vercel Cron is active:
    - `/api/cron/compute-completions` at `0 7 * * *`
    - `/api/cron/expire-rewards` at `0 8 * * *`
@@ -110,7 +110,7 @@ Authorization: Bearer ${CRON_SECRET}
 5. Add webhook endpoint:
 
 ```text
-https://labs.visiondns.ca/api/webhooks/stripe
+https://labs.visiondance.ca/api/webhooks/stripe
 ```
 
 6. Subscribe to:
@@ -135,7 +135,7 @@ https://labs.visiondns.ca/api/webhooks/stripe
 Target production domain:
 
 ```text
-labs.visiondns.ca
+labs.visiondance.ca
 ```
 
 Point DNS to Vercel. If the final domain changes to `visionsdance.ca`, update:

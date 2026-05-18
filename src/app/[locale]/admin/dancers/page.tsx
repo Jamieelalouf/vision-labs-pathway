@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import { EmptyState } from "@/components/vision/empty-state";
 import type { Locale } from "@/i18n/routing";
+import { countCompletedEnrollments } from "@/lib/domain/enrollments";
 import { formatCad } from "@/lib/utils";
 import { manuallyGrantReturningEligibilityAction } from "@/server/actions/admin";
 import { getDancersForAdmin } from "@/server/queries/data";
@@ -62,9 +63,7 @@ export default async function AdminDancersPage({ params }: { params: { locale: L
                     ? dancer.profiles[0]
                     : dancer.profiles;
                   const enrollments = dancer.enrollments ?? [];
-                  const completions = enrollments.filter(
-                    (enrollment: any) => enrollment.completion_status === "completed"
-                  ).length;
+                  const completions = countCompletedEnrollments(enrollments);
                   const paidEnrollments = enrollments.filter(
                     (enrollment: any) => enrollment.payment_status === "paid"
                   );

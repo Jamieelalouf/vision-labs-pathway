@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { EmptyState } from "@/components/vision/empty-state";
 import type { Locale } from "@/i18n/routing";
+import { countCompletedEnrollments } from "@/lib/domain/enrollments";
 import { formatCad, formatDate } from "@/lib/utils";
 import { manuallyGrantReturningEligibilityAction } from "@/server/actions/admin";
 import { getDancerForAdmin } from "@/server/queries/data";
@@ -37,9 +38,7 @@ export default async function AdminDancerDetailPage({
   const enrollments = dancer.enrollments ?? [];
   const videos = dancer.video_uploads ?? [];
   const overrides = dancer.returning_price_overrides ?? [];
-  const completedCount = enrollments.filter(
-    (enrollment: any) => enrollment.completion_status === "completed"
-  ).length;
+  const completedCount = countCompletedEnrollments(enrollments);
   const paidCount = enrollments.filter(
     (enrollment: any) => enrollment.payment_status === "paid"
   ).length;

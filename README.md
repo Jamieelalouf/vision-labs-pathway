@@ -76,7 +76,7 @@ Useful production checks:
 
 ```bash
 pnpm run preflight
-curl https://labs.visiondns.ca/api/health
+curl https://labs.visiondance.ca/api/health
 ```
 
 ## Current Scope

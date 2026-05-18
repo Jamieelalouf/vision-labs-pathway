@@ -1,3 +1,4 @@
+import "server-only";
 import { Resend } from "resend";
 
 type EmailParams = {
@@ -15,7 +16,7 @@ export async function sendEmail({ to, subject, html }: EmailParams) {
 
   const resend = new Resend(apiKey);
   return resend.emails.send({
-    from: "VISION LABS <labs@visiondns.ca>",
+    from: "VISION LABS <labs@visiondance.ca>",
     to,
     subject,
     html
