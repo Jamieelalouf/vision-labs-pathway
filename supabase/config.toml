@@ -224,14 +224,14 @@ otp_length = 8
 otp_expiry = 3600
 
 # Use a production-ready SMTP server
-# [auth.email.smtp]
-# enabled = true
-# host = "smtp.sendgrid.net"
-# port = 587
-# user = "apikey"
-# pass = "env(SENDGRID_API_KEY)"
-# admin_email = "admin@email.com"
-# sender_name = "Admin"
+[auth.email.smtp]
+enabled = false
+host = ""
+port = 0
+user = ""
+pass = ""
+admin_email = ""
+sender_name = ""
 
 # Uncomment to customize email template
 # [auth.email.template.invite]
