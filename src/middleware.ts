@@ -21,13 +21,21 @@ const protectedAdmin = /^\/(en|fr)\/admin(\/|$)/;
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const isProtectedRoute = protectedPortal.test(pathname) || protectedAdmin.test(pathname);
+
+  if (isProtectedRoute && (pathname.startsWith("/fr/portal") || pathname.startsWith("/fr/admin"))) {
+    const targetUrl = request.nextUrl.clone();
+    targetUrl.pathname = pathname.replace(/^\/fr\//, "/en/");
+    return NextResponse.redirect(targetUrl, 308);
+  }
+
   if (pathname === "/") {
     return NextResponse.redirect(new URL(`/${defaultLocale}`, request.url));
   }
 
   let response = intlMiddleware(request);
 
-  if (!protectedPortal.test(pathname) && !protectedAdmin.test(pathname)) {
+  if (!isProtectedRoute) {
     return response;
   }
 
@@ -62,9 +70,13 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    const locale = pathname.split("/")[1] || defaultLocale;
-    const loginUrl = new URL(`/${locale}/login`, request.url);
-    loginUrl.searchParams.set("next", pathname);
+    const internalTarget =
+      pathname.startsWith("/fr/") && (pathname.startsWith("/fr/portal") || pathname.startsWith("/fr/admin"))
+        ? pathname.replace(/^\/fr\//, "/en/")
+        : pathname;
+    const nextTarget = `${internalTarget}${request.nextUrl.search}`;
+    const loginUrl = new URL("/en/login", request.url);
+    loginUrl.searchParams.set("next", nextTarget);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -76,8 +88,7 @@ export async function middleware(request: NextRequest) {
       .maybeSingle();
 
     if (profile?.role !== "admin") {
-      const locale = pathname.split("/")[1] || defaultLocale;
-      return NextResponse.redirect(new URL(`/${locale}/portal/dashboard`, request.url));
+      return NextResponse.redirect(new URL("/en/portal/dashboard", request.url));
     }
   }
 
