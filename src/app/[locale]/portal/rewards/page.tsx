@@ -1,15 +1,21 @@
-import { CheckCircle2, Clock, Lock, Ticket } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, CheckCircle2, Clock, Lock, Ticket, Trophy } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DiscountCodeReveal } from "@/components/vision/discount-code-reveal";
+import { PathwayProgress } from "@/components/vision/pathway-progress";
 import { TierBadge } from "@/components/vision/tier-badge";
 import type { Locale } from "@/i18n/routing";
-import { getRewardLabel } from "@/lib/domain/rewards";
-import { formatDate } from "@/lib/utils";
-import { claimRewardCodeAction } from "@/server/actions/rewards";
+import {
+  getRewardLabel,
+  getTierLabel,
+  nextTierForCompletedCount,
+  rewardTierMeta
+} from "@/lib/domain/rewards";
+import { formatDate, formatRelativeDate } from "@/lib/utils";
 import { requireCompleteDancerProfile } from "@/server/queries/auth";
 import { getStudentPortalData } from "@/server/queries/data";
 
@@ -25,6 +31,8 @@ export default async function RewardsPage({ params }: { params: { locale: Locale
       : reward.discount_codes
     : null;
   const rules = t.raw("rulesItems") as string[];
+  const completed = reward?.cohorts_completed_count ?? 0;
+  const nextTier = nextTierForCompletedCount(completed);
   const statusNote = reward
     ? {
         unlocked: t("unlockedNote"),
@@ -74,21 +82,14 @@ export default async function RewardsPage({ params }: { params: { locale: Locale
                 <StatusIcon className="h-9 w-9 text-primary" aria-hidden="true" />
               </div>
               <p className="text-sm leading-6 text-muted-foreground">{statusNote}</p>
-              {reward.status === "unlocked" ? (
-                <form action={claimRewardCodeAction}>
-                  <input type="hidden" name="locale" value={params.locale} />
-                  <input type="hidden" name="dancer_reward_id" value={reward.id} />
-                  <Button size="lg">
-                    <Ticket className="h-4 w-4" aria-hidden="true" />
-                    {t(reward.tier === "legacy" ? "claimLegacyPass" : "claimCode")}
-                  </Button>
-                </form>
-              ) : null}
               {code ? (
                 <DiscountCodeReveal
                   code={code.code}
                   expiresLabel={t("expires")}
                   expiresAt={code.expires_at ? formatDate(code.expires_at, params.locale) : null}
+                  expiresRelative={
+                    code.expires_at ? formatRelativeDate(code.expires_at, params.locale) : null
+                  }
                   copyLabel={actions("copy")}
                   copiedLabel={actions("copied")}
                 />
@@ -100,6 +101,32 @@ export default async function RewardsPage({ params }: { params: { locale: Locale
               <p className="text-sm leading-6 text-muted-foreground">{t("empty")}</p>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card className="border-primary/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Trophy className="h-5 w-5 text-primary" aria-hidden="true" />
+            {t("nextUnlockTitle")}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <PathwayProgress completed={completed} />
+          <p className="text-sm leading-6 text-muted-foreground">
+            {nextTier
+              ? t("nextUnlockLine", {
+                  count: rewardTierMeta[nextTier].cohortsRequired - completed,
+                  tier: getTierLabel(nextTier, params.locale)
+                })
+              : t("allUnlocked")}
+          </p>
+          <Button asChild variant="secondary" size="sm" className="rounded-full">
+            <Link href={`/${params.locale}/portal/pathway`}>
+              {t("viewPathway")}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </Button>
         </CardContent>
       </Card>
 

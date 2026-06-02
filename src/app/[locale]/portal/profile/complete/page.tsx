@@ -32,9 +32,9 @@ export default async function CompleteProfilePage({
   const t = await getTranslations({ locale: params.locale, namespace: "auth" });
   const profile = await getTranslations({ locale: params.locale, namespace: "portal.profile" });
   const actions = await getTranslations({ locale: params.locale, namespace: "common.actions" });
-  const dashboardHref = `/${params.locale}/portal/dashboard${
-    searchParams?.cohort ? `?cohort=${encodeURIComponent(searchParams.cohort)}` : ""
-  }`;
+  const dashboardHref = searchParams?.cohort
+    ? `/${params.locale}/register?cohort=${encodeURIComponent(searchParams.cohort)}`
+    : `/${params.locale}/portal/dashboard`;
 
   return (
     <section className="max-w-3xl space-y-6">
@@ -82,7 +82,7 @@ export default async function CompleteProfilePage({
           pending: profile("savePending"),
           success: profile("saveSuccess"),
           errorPrefix: profile("saveErrorPrefix"),
-          goToDashboard: actions("goToDashboard")
+          goToDashboard: searchParams?.cohort ? actions("continue") : actions("goToDashboard")
         }}
       />
     </section>

@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import {
   ArrowRight,
   CheckCircle2,
-  Film,
   NotebookPen,
+  Quote,
   Target,
   Trophy,
   Users,
@@ -19,10 +19,13 @@ import { CohortTimeline, type CohortTimelineItem } from "@/components/vision/coh
 import { EmptyState } from "@/components/vision/empty-state";
 import { PathwayProgress } from "@/components/vision/pathway-progress";
 import { RewardCard } from "@/components/vision/reward-card";
+import { StickyCtaBar } from "@/components/vision/sticky-cta-bar";
 import { UpcomingCohortCard } from "@/components/vision/upcoming-cohort-card";
 import type { Locale } from "@/i18n/routing";
 import type { RewardTier } from "@/lib/supabase/database.types";
 import { getOpenCohorts } from "@/server/queries/data";
+
+const COHORT3_ID = "52790026-6e83-400d-bb0c-1e9632a0624e";
 
 type RewardCopy = {
   tier: RewardTier;
@@ -34,6 +37,11 @@ type RewardCopy = {
 type FeatureCopy = {
   title: string;
   description: string;
+};
+
+type TestimonialCopy = {
+  quote: string;
+  name: string;
 };
 
 export async function generateMetadata({
@@ -71,10 +79,10 @@ export default async function LandingPage({ params }: { params: { locale: Locale
   const features = t.raw("gets") as FeatureCopy[];
   const rewardCards = t.raw("rewardCards") as RewardCopy[];
   const progressLabels = t.raw("progressLabels") as Record<RewardTier, string>;
-  const testimonials = t.raw("testimonials") as { quote: string; name: string }[];
-  const faqItems = (faq.raw("items") as { q: string; a: string }[]).slice(0, 5);
+  const testimonials = (t.raw("testimonials") as TestimonialCopy[]) ?? [];
+  const faqItems = ((faq.raw("items") as { q: string; a: string }[]) ?? []).slice(0, 4);
   const cohorts = await getOpenCohorts();
-  const featuredCohort = cohorts[0] ?? null;
+  const featuredCohort = cohorts.find((cohort) => cohort.id === COHORT3_ID) ?? null;
   const featureIcons = [Target, Users, Video, Trophy, CheckCircle2, NotebookPen];
 
   return (
@@ -91,18 +99,30 @@ export default async function LandingPage({ params }: { params: { locale: Locale
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(10,10,10,0.94)_0%,rgba(10,10,10,0.72)_44%,rgba(10,10,10,0.32)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-background to-transparent" />
         <div className="page-shell flex min-h-[calc(92vh-4rem)] flex-col justify-center py-24">
-          <p className="animate-hero-reveal text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+          <p
+            className="animate-hero-reveal text-sm font-semibold uppercase tracking-[0.2em] text-primary"
+            style={{ animationDelay: "0ms" }}
+          >
             {t("eyebrow")}
           </p>
-          <h1 className="mt-6 max-w-5xl animate-hero-reveal font-display text-5xl font-bold leading-[0.98] md:text-7xl lg:text-8xl">
+          <h1
+            className="mt-6 max-w-5xl animate-hero-reveal font-display text-5xl font-bold leading-[0.98] md:text-7xl lg:text-8xl"
+            style={{ animationDelay: "90ms" }}
+          >
             {t("headline")}
           </h1>
-          <p className="mt-6 max-w-2xl animate-hero-reveal text-lg leading-8 text-muted-foreground">
+          <p
+            className="mt-6 max-w-2xl animate-hero-reveal text-lg leading-8 text-muted-foreground"
+            style={{ animationDelay: "180ms" }}
+          >
             {t("subhead")}
           </p>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+          <div
+            className="mt-10 flex animate-hero-reveal flex-col gap-3 sm:flex-row"
+            style={{ animationDelay: "270ms" }}
+          >
             <Button asChild size="lg">
-              <Link href={`/${params.locale}/cohorts`}>
+              <Link href={`/${params.locale}/cohorts/${COHORT3_ID}`}>
                 {common("registerNext")}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
@@ -111,7 +131,10 @@ export default async function LandingPage({ params }: { params: { locale: Locale
               <Link href={`/${params.locale}/pathway`}>{common("viewPathway")}</Link>
             </Button>
           </div>
-          <div className="mt-16 flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+          <div
+            className="mt-16 flex animate-hero-reveal items-center gap-3 text-xs uppercase tracking-[0.18em] text-muted-foreground"
+            style={{ animationDelay: "360ms" }}
+          >
             <span className="h-px w-10 bg-primary" />
             {t("heroMeta")}
           </div>
@@ -213,16 +236,11 @@ export default async function LandingPage({ params }: { params: { locale: Locale
       <section className="section-y">
         <div className="page-shell">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-                {t("cohortTitle")}
-              </p>
-              <h2 className="mt-4 max-w-3xl font-display text-3xl font-bold md:text-5xl">
-                {t("finalTitle")}
-              </h2>
-            </div>
+            <h2 className="max-w-3xl font-display text-3xl font-bold md:text-5xl">
+              {t("cohortTitle")}
+            </h2>
             <Button asChild variant="secondary">
-              <Link href={`/${params.locale}/cohorts`}>{common("viewDetails")}</Link>
+              <Link href={`/${params.locale}/cohorts/${COHORT3_ID}`}>{common("viewDetails")}</Link>
             </Button>
           </div>
           <div className="mt-10">
@@ -236,9 +254,11 @@ export default async function LandingPage({ params }: { params: { locale: Locale
                   location: cohortLabels("location"),
                   regularPrice: cohortLabels("regularPrice"),
                   returningPrice: cohortLabels("returningPrice"),
-                  full: cohortLabels("full"),
                   eyebrow: cohortLabels("featured"),
-                  register: common("registerNext")
+                  cta: common("registerNext"),
+                  spotsPrefix: cohortLabels("spotsPrefix"),
+                  spotsSuffix: cohortLabels("spotsSuffix"),
+                  starts: cohortLabels("starts")
                 }}
               />
             ) : (
@@ -248,48 +268,48 @@ export default async function LandingPage({ params }: { params: { locale: Locale
         </div>
       </section>
 
-      <section className="section-y border-t border-border bg-[#101010]">
-        <div className="page-shell">
-          <h2 className="font-display text-3xl font-bold md:text-5xl">{t("testimonialsTitle")}</h2>
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {testimonials.map((testimonial) => (
-              <Card key={testimonial.quote}>
-                <CardContent className="p-6">
-                  <Film className="h-5 w-5 text-primary" aria-hidden="true" />
-                  <blockquote className="mt-5 text-lg leading-7">
-                    &ldquo;{testimonial.quote}&rdquo;
-                  </blockquote>
-                  <p className="mt-5 text-sm uppercase tracking-[0.14em] text-muted-foreground">
-                    {testimonial.name}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+      {testimonials.length ? (
+        <section className="section-y border-t border-border bg-[#101010]">
+          <div className="page-shell">
+            <h2 className="font-display text-3xl font-bold md:text-5xl">{t("testimonialsTitle")}</h2>
+            <div className="mt-10 grid gap-4 md:grid-cols-3">
+              {testimonials.map((item, index) => (
+                <Card key={index}>
+                  <CardContent className="flex h-full flex-col gap-4 p-6">
+                    <Quote className="h-6 w-6 text-primary" aria-hidden="true" />
+                    <p className="text-lg leading-7">{`“${item.quote}”`}</p>
+                    <p className="mt-auto text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                      {item.name}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
-      <section className="section-y">
-        <div className="page-shell grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">FAQ</p>
-            <h2 className="mt-4 font-display text-3xl font-bold md:text-5xl">{t("faqTitle")}</h2>
+      {faqItems.length ? (
+        <section className="section-y border-t border-border">
+          <div className="page-shell max-w-4xl">
+            <h2 className="font-display text-3xl font-bold md:text-5xl">{t("faqTitle")}</h2>
+            <div className="mt-10 grid gap-4">
+              {faqItems.map((item) => (
+                <details key={item.q} className="group rounded-lg border border-border bg-card p-6">
+                  <summary className="focus-ring flex cursor-pointer items-center justify-between gap-4 font-display text-xl font-semibold">
+                    {item.q}
+                    <ArrowRight className="h-4 w-4 flex-none text-primary transition-transform group-open:rotate-90" aria-hidden="true" />
+                  </summary>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.a}</p>
+                </details>
+              ))}
+            </div>
             <Button asChild variant="secondary" className="mt-8">
               <Link href={`/${params.locale}/faq`}>{t("faqLink")}</Link>
             </Button>
           </div>
-          <div className="grid gap-3">
-            {faqItems.map((item) => (
-              <details key={item.q} className="rounded-lg border border-border bg-card p-5">
-                <summary className="cursor-pointer font-display text-lg font-semibold">
-                  {item.q}
-                </summary>
-                <p className="mt-4 text-sm leading-6 text-muted-foreground">{item.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section className="section-y border-t border-border bg-[#101010]">
         <div className="page-shell flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
@@ -305,10 +325,17 @@ export default async function LandingPage({ params }: { params: { locale: Locale
             </p>
           </div>
           <Button asChild size="lg">
-            <Link href={`/${params.locale}/cohorts`}>{common("registerNext")}</Link>
+            <Link href={`/${params.locale}/cohorts/${COHORT3_ID}`}>{common("registerNext")}</Link>
           </Button>
         </div>
       </section>
+
+      <StickyCtaBar
+        href={`/${params.locale}/cohorts/${COHORT3_ID}`}
+        label={common("registerNext")}
+        title={t("eyebrow")}
+        priceLabel={t("heroMeta")}
+      />
     </main>
   );
 }

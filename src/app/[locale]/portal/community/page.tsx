@@ -1,19 +1,16 @@
-import { Bookmark, Heart, MessageCircle, MoreHorizontal, Send } from "lucide-react";
+import { CheckCircle2, MessageCircle, Upload, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+import { CommentThread } from "@/components/portal/comment-thread";
+import { CommunityComposer } from "@/components/portal/community-composer";
+import { CommunityFeedProvider } from "@/components/portal/community-feed-context";
+import { PendingPosts } from "@/components/portal/pending-posts";
+import { PostActionsMenu } from "@/components/portal/post-actions-menu";
+import { PostHeartButton } from "@/components/portal/post-heart-button";
 import { VideoUploader } from "@/components/portal/video-uploader";
-import {
-  createCommunityCommentAction,
-  createCommunityPostAction,
-  deleteOwnCommunityCommentAction,
-  deleteOwnCommunityPostAction,
-  toggleCommunityReactionAction
-} from "@/server/actions/community";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { EmptyState } from "@/components/vision/empty-state";
 import type { Locale } from "@/i18n/routing";
 import { createServerClient } from "@/lib/supabase/server";
@@ -195,10 +192,20 @@ export default async function CommunityPage({
   searchParams
 }: {
   params: { locale: Locale };
-  searchParams?: { cohort?: string };
+  searchParams?: { cohort?: string; error?: string; uploaded?: string };
 }) {
   const dancer = await requireCompleteDancerProfile(params.locale);
   const t = await getTranslations({ locale: params.locale, namespace: "portal.community" });
+  const uploadJustSucceeded = searchParams?.uploaded === "1";
+  const errorMessages: Record<string, string> = {
+    invalid: t("errors.invalid"),
+    "post-failed": t("errors.postFailed"),
+    "comment-failed": t("errors.commentFailed"),
+    "reaction-failed": t("errors.reactionFailed"),
+    "delete-post-failed": t("errors.deleteFailed"),
+    "delete-comment-failed": t("errors.deleteFailed")
+  };
+  const errorMessage = searchParams?.error ? errorMessages[searchParams.error] ?? t("errors.generic") : null;
   const tv = await getTranslations({ locale: params.locale, namespace: "portal.videos" });
   const [cohorts, portal, settings] = await Promise.all([
     getEligibleCommunityCohorts(),
@@ -276,53 +283,60 @@ export default async function CommunityPage({
       </Card>
 
       {cohorts.length === 0 ? (
-        <EmptyState title={t("emptyTitle")} description={t("emptyDescription")} />
+        <EmptyState title={t("emptyTitle")} description={t("emptyDescription")} icon={Users} />
       ) : (
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="mx-auto w-full max-w-[640px] space-y-5">
+            <CommunityFeedProvider>
             <Card id="post" className="scroll-mb-28 rounded-3xl border-border/70 bg-secondary/15">
               <CardContent className="space-y-4 p-4 md:p-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">{t("feed.publish")}</p>
-              <form action={createCommunityPostAction} className="space-y-3 md:space-y-4">
-                <input type="hidden" name="locale" value={params.locale} />
-                <input type="hidden" name="cohort_id" value={selectedCohortId} />
-                <input type="hidden" name="visibility" value="cohort" />
-                <div className="flex gap-2.5 md:gap-3">
-                  <AvatarCircle signedUrl={composerAvatarSignedUrl} initials={profileInitials} sizeClass="h-10 w-10" />
-                  <Textarea
-                    name="caption"
-                    placeholder={t("feed.captionPlaceholder")}
-                    maxLength={3000}
-                    className="min-h-20 resize-none rounded-2xl border border-white/10 bg-black/30 md:min-h-24"
-                  />
-                </div>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <select
-                    name="video_upload_id"
-                    defaultValue=""
-                    className="h-9 max-w-[200px] rounded-full border border-border bg-background px-3 text-xs md:max-w-[220px]"
-                  >
-                    <option value="">{t("feed.videoPicker")}</option>
-                    {videos.map((video: any) => (
-                      <option key={video.id} value={video.id}>
-                        {video.title}
-                      </option>
-                    ))}
-                  </select>
-                  <Button className="rounded-full" size="sm">
-                    <Send className="h-4 w-4" aria-hidden="true" />
-                    {t("feed.publish")}
-                  </Button>
-                </div>
-              </form>
+                {uploadJustSucceeded ? (
+                  <p className="flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-sm font-medium text-primary">
+                    <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                    {tv("uploadSuccess")} {t("feed.attachHint")}
+                  </p>
+                ) : null}
+                {errorMessage ? (
+                  <p className="rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                    {errorMessage}
+                  </p>
+                ) : null}
+                <CommunityComposer
+                  locale={params.locale}
+                  cohortId={selectedCohortId}
+                  videos={videos.map((video: any) => ({ id: video.id, title: video.title }))}
+                  initialVideoId={uploadJustSucceeded ? videos[0]?.id : undefined}
+                  author={{
+                    name: `${dancer.first_name ?? ""} ${dancer.last_name ?? ""}`.trim() || "You",
+                    initials: profileInitials,
+                    avatarUrl: composerAvatarSignedUrl
+                  }}
+                  avatar={
+                    <AvatarCircle signedUrl={composerAvatarSignedUrl} initials={profileInitials} sizeClass="h-10 w-10" />
+                  }
+                  copy={{
+                    placeholder: t("feed.captionPlaceholder"),
+                    publish: t("feed.publish"),
+                    posting: t("feed.posting"),
+                    videoPicker: t("feed.videoPicker"),
+                    emptyHint: t("feed.emptyComposerHint")
+                  }}
+                />
             </CardContent>
             </Card>
             <Card className="rounded-3xl border-border/70 bg-secondary/15">
               <CardContent className="space-y-4 p-4 md:p-5">
-                <details id="upload-panel" className="group rounded-2xl border border-border bg-background/30 p-3">
-                  <summary className="focus-ring flex cursor-pointer list-none items-center justify-between rounded-xl px-1 py-1 text-sm font-semibold text-foreground">
-                    <span>{t("feed.uploadSummary")}</span>
-                    <span className="text-xs font-medium text-muted-foreground group-open:hidden">{t("feed.uploadExpand")}</span>
+                <details id="upload-panel" className="group rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-3 transition-colors hover:border-primary/60">
+                  <summary className="focus-ring flex cursor-pointer list-none items-center gap-3 rounded-xl px-2 py-2 text-sm font-semibold text-foreground">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+                      <Upload className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <span className="flex-1">
+                      <span className="block">{t("feed.uploadSummary")}</span>
+                      <span className="block text-xs font-normal text-muted-foreground">{t("feed.uploadHelper")}</span>
+                    </span>
+                    <span className="text-xs font-medium text-primary group-open:hidden">{t("feed.uploadExpand")}</span>
                     <span className="hidden text-xs font-medium text-muted-foreground group-open:inline">{t("feed.uploadCollapse")}</span>
                   </summary>
                   <div className="mt-4">
@@ -351,6 +365,8 @@ export default async function CommunityPage({
                         noEligibleCohorts: tv("noEligibleCohorts"),
                         maxFileHint: tv("maxFileHint", { size: settings?.max_video_size_mb ?? 500 }),
                         uploading: tv("uploading"),
+                        finishing: tv("finishing"),
+                        changeFile: tv("changeFile"),
                         unsupportedFormat: tv("unsupportedFormat"),
                         fileTooLarge: tv("fileTooLarge")
                       }}
@@ -361,6 +377,7 @@ export default async function CommunityPage({
             </Card>
 
             <div className="space-y-4">
+              <PendingPosts postingLabel={t("feed.posting")} videoAttachedLabel={t("feed.videoAttached")} />
               {feed.length ? (
                 feed.map((post: any) => {
                 const author = Array.isArray(post.dancers) ? post.dancers[0] : post.dancers;
@@ -392,10 +409,13 @@ export default async function CommunityPage({
                             </span>
                           </div>
                         </div>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground">
-                          <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
-                          <span className="sr-only">{t("feed.more")}</span>
-                        </Button>
+                        {post.dancer_id === dancer.id ? (
+                          <PostActionsMenu
+                            postId={post.id}
+                            locale={params.locale}
+                            labels={{ menu: t("feed.more"), deletePost: t("feed.deletePost") }}
+                          />
+                        ) : null}
                       </div>
 
                       {video ? (
@@ -412,24 +432,18 @@ export default async function CommunityPage({
                       ) : null}
 
                       <div className="flex items-center gap-1 pt-1">
-                        <form action={toggleCommunityReactionAction}>
-                          <input type="hidden" name="locale" value={params.locale} />
-                          <input type="hidden" name="post_id" value={post.id} />
-                          <Button size="icon" variant="ghost" className="h-9 w-9 rounded-full">
-                            <Heart className={`h-4 w-4 ${reacted ? "fill-current text-rose-500" : ""}`} aria-hidden="true" />
-                          </Button>
-                        </form>
-                        <Button size="icon" variant="ghost" className="h-9 w-9 rounded-full">
-                          <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                          <span className="sr-only">{t("feed.comment")}</span>
-                        </Button>
-                        <Button size="icon" variant="ghost" className="h-9 w-9 rounded-full">
-                          <Send className="h-4 w-4" aria-hidden="true" />
-                          <span className="sr-only">{t("feed.publish")}</span>
-                        </Button>
-                        <Button size="icon" variant="ghost" className="ml-auto h-9 w-9 rounded-full">
-                          <Bookmark className="h-4 w-4" aria-hidden="true" />
-                          <span className="sr-only">{t("feed.save")}</span>
+                        <PostHeartButton
+                          postId={post.id}
+                          locale={params.locale}
+                          initialLiked={reacted}
+                          likeLabel={t("feed.like")}
+                          unlikeLabel={t("feed.unlike")}
+                        />
+                        <Button asChild size="icon" variant="ghost" className="h-9 w-9 rounded-full">
+                          <a href={`#comments-${post.id}`}>
+                            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                            <span className="sr-only">{t("feed.comment")}</span>
+                          </a>
                         </Button>
                       </div>
 
@@ -446,75 +460,46 @@ export default async function CommunityPage({
                         <p className="text-xs text-muted-foreground">{t("feed.commentsCount", { count: comments.length })}</p>
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-3">
-                        {post.dancer_id === dancer.id ? (
-                          <form action={deleteOwnCommunityPostAction}>
-                            <input type="hidden" name="locale" value={params.locale} />
-                            <input type="hidden" name="post_id" value={post.id} />
-                            <Button size="sm" variant="ghost" className="rounded-full text-destructive hover:text-destructive">
-                              {t("feed.deletePost")}
-                            </Button>
-                          </form>
-                        ) : null}
+                      <div id={`comments-${post.id}`} className="scroll-mb-28">
+                        <CommentThread
+                          postId={post.id}
+                          locale={params.locale}
+                          currentUser={{
+                            name: `${dancer.first_name ?? ""} ${dancer.last_name ?? ""}`.trim() || "You",
+                            initials: profileInitials,
+                            avatarUrl: composerAvatarSignedUrl
+                          }}
+                          comments={comments.map((comment: any) => {
+                            const commentAuthor = Array.isArray(comment.dancers)
+                              ? comment.dancers[0]
+                              : comment.dancers;
+                            return {
+                              id: comment.id,
+                              body: comment.body,
+                              authorName: `${commentAuthor?.first_name ?? ""} ${commentAuthor?.last_name ?? ""}`.trim(),
+                              initials: getInitials(commentAuthor?.first_name, commentAuthor?.last_name),
+                              avatarUrl: commentAuthor?.avatar_signed_url ?? null,
+                              isOwn: comment.dancer_id === dancer.id
+                            };
+                          })}
+                          copy={{
+                            placeholder: t("feed.commentPlaceholder"),
+                            send: t("feed.comment"),
+                            delete: t("feed.deleteComment"),
+                            viewAll: t("feed.viewComments", { count: 0 }).replace("0", "{count}"),
+                            empty: t("feed.noComments")
+                          }}
+                        />
                       </div>
-
-                      <details className="rounded-xl border border-border bg-secondary/20 px-3 py-2">
-                        <summary className="cursor-pointer list-none text-sm font-medium text-foreground">
-                          <span className="inline-flex items-center gap-2">
-                            <MessageCircle className="h-4 w-4 text-primary" aria-hidden="true" />
-                            {t("feed.viewComments", { count: comments.length })}
-                          </span>
-                        </summary>
-                        <div className="mt-3 space-y-3">
-                          <div className="space-y-3">
-                            {comments.map((comment: any) => {
-                              const commentAuthor = Array.isArray(comment.dancers) ? comment.dancers[0] : comment.dancers;
-                              return (
-                                <div key={comment.id} className="flex gap-2">
-                                  <AvatarCircle
-                                    signedUrl={commentAuthor?.avatar_signed_url}
-                                    initials={getInitials(commentAuthor?.first_name, commentAuthor?.last_name)}
-                                    sizeClass="mt-0.5 h-7 w-7 text-[11px]"
-                                    fallbackClassName="bg-secondary text-muted-foreground"
-                                  />
-                                  <div className="flex-1 rounded-xl bg-secondary/50 px-3 py-2 text-sm">
-                                    <p className="font-medium text-foreground">
-                                      {commentAuthor?.first_name} {commentAuthor?.last_name}
-                                    </p>
-                                    <p className="mt-1 text-muted-foreground">{comment.body}</p>
-                                    {comment.dancer_id === dancer.id ? (
-                                      <form action={deleteOwnCommunityCommentAction} className="mt-2">
-                                        <input type="hidden" name="locale" value={params.locale} />
-                                        <input type="hidden" name="comment_id" value={comment.id} />
-                                        <Button size="sm" variant="ghost" className="h-auto px-1 py-0 text-xs text-muted-foreground">
-                                          {t("feed.deleteComment")}
-                                        </Button>
-                                      </form>
-                                    ) : null}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-
-                          <form action={createCommunityCommentAction} className="flex gap-2">
-                            <input type="hidden" name="locale" value={params.locale} />
-                            <input type="hidden" name="post_id" value={post.id} />
-                            <Input name="body" required maxLength={2000} placeholder={t("feed.commentPlaceholder")} className="rounded-full" />
-                            <Button size="sm" className="rounded-full">
-                              {t("feed.comment")}
-                            </Button>
-                          </form>
-                        </div>
-                      </details>
                     </CardContent>
                     </Card>
                   );
                 })
               ) : (
-                <EmptyState title={t("feed.emptyTitle")} description={t("feed.emptyDescription")} />
+                <EmptyState title={t("feed.emptyTitle")} description={t("feed.emptyDescription")} icon={MessageCircle} />
               )}
             </div>
+            </CommunityFeedProvider>
           </div>
 
           <aside className="hidden xl:block">

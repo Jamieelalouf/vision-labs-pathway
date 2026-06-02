@@ -80,12 +80,23 @@ const config: Config = {
         "hero-reveal": {
           from: { opacity: "0", transform: "translateY(16px)" },
           to: { opacity: "1", transform: "translateY(0)" }
+        },
+        "celebrate-in": {
+          "0%": { opacity: "0", transform: "translateY(10px) scale(0.98)" },
+          "60%": { transform: "translateY(0) scale(1.01)" },
+          "100%": { opacity: "1", transform: "translateY(0) scale(1)" }
+        },
+        sparkle: {
+          "0%, 100%": { opacity: "0.5", transform: "scale(0.9)" },
+          "50%": { opacity: "1", transform: "scale(1.15)" }
         }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "hero-reveal": "hero-reveal 0.4s ease-out both"
+        "hero-reveal": "hero-reveal 0.4s ease-out both",
+        "celebrate-in": "celebrate-in 0.5s ease-out both",
+        sparkle: "sparkle 2.4s ease-in-out infinite"
       }
     }
   },

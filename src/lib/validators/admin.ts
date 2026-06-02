@@ -42,7 +42,7 @@ export const settingsSchema = z.object({
   regular_price_cad: z.coerce.number().int().positive(),
   returning_price_cad: z.coerce.number().int().positive(),
   completion_min_attendance: z.coerce.number().int().min(1).max(4),
-  max_video_size_mb: z.coerce.number().int().positive(),
+  max_video_size_mb: z.coerce.number().int().positive().max(500),
   stripe_regular_price_id: z.string().optional(),
   stripe_returning_price_id: z.string().optional(),
   legacy_pass_uses_stripe: z.coerce.boolean().default(false)

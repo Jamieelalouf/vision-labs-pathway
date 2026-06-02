@@ -28,7 +28,9 @@ const nextConfig = {
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",
-      "upgrade-insecure-requests"
+      process.env.NODE_ENV === "production" && process.env.VERCEL_ENV === "production"
+        ? "upgrade-insecure-requests"
+        : ""
     ]
       .filter(Boolean)
       .join("; ");

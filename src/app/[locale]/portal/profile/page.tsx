@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 
 import type { Locale } from "@/i18n/routing";
 import { getCurrentDancer, requireUser } from "@/server/queries/auth";
+import { ProfileCompleteness, type CompletenessItem } from "@/components/portal/profile-completeness";
 import { ProfileForm, type ProfileFormDefaults } from "@/components/portal/profile-form";
 import { ProfilePhotoUploader } from "@/components/portal/profile-photo-uploader";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +29,15 @@ export default async function ProfilePage({ params }: { params: { locale: Locale
         .data?.signedUrl ?? null
     : null;
 
+  const completenessItems: CompletenessItem[] = [
+    { label: t("firstName"), done: Boolean(dancer?.first_name) },
+    { label: t("lastName"), done: Boolean(dancer?.last_name) },
+    { label: t("phone"), done: Boolean(dancer?.phone) },
+    { label: t("instagram"), done: Boolean(dancer?.instagram_handle) },
+    { label: t("dateOfBirth"), done: Boolean(dancer?.date_of_birth) },
+    { label: t("completenessPhoto"), done: Boolean(dancer?.avatar_storage_path) }
+  ];
+
   return (
     <section className="max-w-4xl space-y-6 pb-36 md:space-y-8 md:pb-8">
       <Card className="relative overflow-hidden rounded-3xl border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)]">
@@ -52,6 +62,13 @@ export default async function ProfilePage({ params }: { params: { locale: Locale
           />
         </CardContent>
       </Card>
+
+      <ProfileCompleteness
+        items={completenessItems}
+        title={t("completenessTitle")}
+        allSetLabel={t("completenessAllSet")}
+        missingLabel={t("completenessMissing")}
+      />
 
       <div className="rounded-3xl border border-border/70 bg-secondary/10 p-1.5">
         <ProfileForm

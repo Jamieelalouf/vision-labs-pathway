@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { defaultLocale, isLocale, type Locale } from "@/i18n/routing";
+import { createServiceClient } from "@/lib/supabase/service";
 import { createServerClient } from "@/lib/supabase/server";
 import {
   cohortSchema,
@@ -43,6 +44,39 @@ function nullable(value?: string) {
 
 function formValue(formData: FormData, key: string, fallback: string) {
   return formData.has(key) ? readString(formData, key) : fallback;
+}
+
+const DANCER_VIDEOS_BUCKET_ID = "dancer-videos";
+const DEFAULT_DANCER_VIDEO_MIME_TYPES = ["video/mp4", "video/quicktime"];
+const SUPABASE_MAX_VIDEO_SIZE_MB = 500;
+
+async function syncVideoUploadBucketLimit(maxVideoSizeMb: number) {
+  const serviceClient = createServiceClient();
+  const { data: bucket, error: bucketError } = await serviceClient.storage.getBucket(
+    DANCER_VIDEOS_BUCKET_ID
+  );
+
+  if (bucketError) {
+    return { error: bucketError.message };
+  }
+
+  const allowedMimeTypes =
+    bucket?.allowed_mime_types && bucket.allowed_mime_types.length > 0
+      ? bucket.allowed_mime_types
+      : DEFAULT_DANCER_VIDEO_MIME_TYPES;
+  const bucketLimitMb = Math.min(maxVideoSizeMb, SUPABASE_MAX_VIDEO_SIZE_MB);
+
+  const { error: updateError } = await serviceClient.storage.updateBucket(DANCER_VIDEOS_BUCKET_ID, {
+    public: false,
+    fileSizeLimit: bucketLimitMb,
+    allowedMimeTypes
+  });
+
+  if (updateError) {
+    return { error: updateError.message };
+  }
+
+  return { error: null };
 }
 
 export async function createSeasonAction(formData: FormData) {
@@ -468,6 +502,13 @@ export async function updateSettingsAction(formData: FormData) {
   });
 
   if (!parsed.success) redirect(`/${locale}/admin/settings?error=invalid`);
+
+  const bucketSync = await syncVideoUploadBucketLimit(parsed.data.max_video_size_mb);
+  if (bucketSync.error) {
+    redirect(
+      `/${locale}/admin/settings?error=video-bucket-sync&detail=${encodeURIComponent(bucketSync.error)}`
+    );
+  }
 
   const supabase = createServerClient();
   const { error } = await supabase

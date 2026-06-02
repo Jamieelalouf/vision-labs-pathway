@@ -5,10 +5,11 @@
       "cohorts": "Cohorts",
       "faq": "FAQ",
       "login": "Login",
-      "register": "Register"
+      "register": "Register",
+      "menu": "Menu"
     },
     "footer": {
-      "tagline": "A focused cohort system for dancers building toward the annual VISION Dance Convention.",
+      "tagline": "",
       "pathway": "LABS Pathway",
       "cohorts": "Upcoming cohorts"
     },
@@ -23,7 +24,8 @@
       "profile": "Profile",
       "more": "More",
       "signOut": "Sign out",
-      "demoPreview": "Demo preview"
+      "demoPreview": "Demo preview",
+      "settings": "Settings"
     },
     "adminNav": {
       "overview": "Overview",
@@ -111,8 +113,8 @@
         "description": "Complete the immediate previous cohort and your next LABS registration drops to $247."
       },
       {
-        "title": "Convention alignment",
-        "description": "The season points toward the annual VISION Dance Convention without making rewards messy."
+        "title": "Custom dancer workbook",
+        "description": "A custom dancer workbook tailored to the program so your development stays clear week to week."
       }
     ],
     "pathwayTitle": "The more you complete, the more you unlock",
@@ -463,7 +465,7 @@
   },
   "cohorts": {
     "title": "Upcoming Cohorts",
-    "intro": "Open and active VISION LABS cohorts will appear here once an admin publishes them.",
+    "intro": "Cohort 3 runs June 16 to July 7. Register now to secure your spot.",
     "emptyTitle": "No cohorts are open yet",
     "emptyDescription": "Create a cohort in the admin area, set it open, and it will show up here automatically.",
     "dateRange": "Dates",
@@ -478,13 +480,30 @@
     "descriptionTitle": "About this cohort",
     "registrationTitle": "Registration",
     "returningNote": "Returning dancer price",
-    "securePayment": "Secure payment through Stripe after profile completion.",
+    "registrationFinePrint": "Dancers can now register directly without waiting for program acceptance. Since spots are limited, registration will be first come, first served.\n\nIf LABS expands to a second day during the week, dancers will be separated by level. At this time, the program runs on Tuesdays from 6:30–9:30 PM.",
+    "weeklySchedule": "{day} {time}",
+    "weekdaySunday": "Sundays",
+    "weekdayMonday": "Mondays",
+    "weekdayTuesday": "Tuesdays",
+    "weekdayWednesday": "Wednesdays",
+    "weekdayThursday": "Thursdays",
+    "weekdayFriday": "Fridays",
+    "weekdaySaturday": "Saturdays",
+    "securePayment": "Complete your profile, then continue to secure Stripe checkout. If Stripe is not configured locally, your registration is saved as pending payment for demo review.",
+    "guestSecurePayment": "Checkout is handled by Stripe. Use your email, full name, and phone in checkout. After payment, we will email your access details.",
     "weekPrefix": "Week",
     "sessionFallback": "Focused cohort training session",
     "registrationClosed": "Registration closed",
+    "registrationSuccessTitle": "Payment received",
+    "registrationSuccessDescription": "Thank you. Your payment was received and your cohort access details will be emailed shortly.",
+    "registrationCancelledTitle": "Checkout cancelled",
     "errorTitle": "Registration needs attention",
     "supabaseMissingTitle": "Supabase is not configured",
-    "supabaseMissingDescription": "Add Supabase environment variables to load live cohort details."
+    "supabaseMissingDescription": "Add Supabase environment variables to load live cohort details.",
+    "spotsPrefix": "Limited to",
+    "spotsSuffix": "spots",
+    "starts": "Starts",
+    "errorBody": "We couldn't process that request. Please try again, or contact us if it keeps happening."
   },
   "faq": {
     "title": "FAQ",
@@ -553,6 +572,8 @@
       "paymentProcessingTitle": "Processing your payment",
       "paymentProcessingDescription": "Stripe confirmed your checkout. The portal may take up to a minute to show the paid cohort while the webhook finishes.",
       "paymentConfirmedTitle": "Registration confirmed",
+      "pendingPaymentTitle": "Registration saved as pending payment",
+      "pendingPaymentDescription": "Stripe is not configured in this local environment. Your cohort registration is saved and marked pending payment for review.",
       "weeklyPrompt": "Weekly ritual",
       "weeklyPromptText": "Drop one training clip this week and one line about what you are refining.",
       "cohortActivity": "{count} posts in your cohort feed",
@@ -564,7 +585,16 @@
       "statCohorts": "Cohorts",
       "statActivity": "Activity",
       "statUploads": "Uploads",
-      "statReward": "Reward"
+      "statReward": "Reward",
+      "startsRelative": "Starts {relative}",
+      "endsRelative": "Ends {relative}",
+      "greetingMorning": "Good morning",
+      "greetingAfternoon": "Good afternoon",
+      "greetingEvening": "Good evening",
+      "lockedInHeadingNoName": "Stay locked in.",
+      "nextSession": "Your next session",
+      "addToCalendar": "Add to calendar",
+      "week": "Week"
     },
     "cohort": {
       "title": "My Cohort",
@@ -577,6 +607,7 @@
       "dates": "Dates",
       "week": "Week",
       "sessionCompletedLabel": "Completed",
+      "sessionNextLabel": "Next up",
       "sessionFallback": "Session theme TBA",
       "noResources": "No resources posted yet.",
       "noUploads": "No uploads for this cohort yet.",
@@ -601,7 +632,10 @@
         "Tiers reset after every VISION Dance Convention in January.",
         "Returning price is based on the immediate next cohort.",
         "Legacy unlocks at 5 completed cohorts in the active season."
-      ]
+      ],
+      "unlockedEyebrow": "Reward unlocked",
+      "unlockedTitle": "You've unlocked {tier}",
+      "unlockedBody": "Your reward is unlocked and will be handled through your profile."
     },
     "rewards": {
       "eyebrow": "Convention reward",
@@ -610,9 +644,7 @@
       "status": "Status",
       "rewardCode": "Reward code",
       "expires": "Expires",
-      "claimCode": "Get my code",
-      "claimLegacyPass": "Claim Legacy Discount",
-      "unlockedNote": "Your reward is unlocked. Generate your one-time code when you are ready to use it.",
+      "unlockedNote": "Your reward is unlocked and will be handled through your profile.",
       "generatedNote": "Your code is ready to use at convention registration.",
       "redeemedNote": "This reward has been marked redeemed.",
       "expiredNote": "This reward has expired for its season.",
@@ -622,7 +654,11 @@
         "Rewards upgrade and never stack.",
         "Codes are tied to the active season and expire after convention grace.",
         "LABS Legacy is a $200 VISION Convention discount."
-      ]
+      ],
+      "nextUnlockTitle": "Next unlock",
+      "nextUnlockLine": "{count, plural, one {# more cohort} other {# more cohorts}} to unlock {tier}.",
+      "allUnlocked": "You've reached the top of the Pathway — LABS Legacy. Incredible.",
+      "viewPathway": "View pathway"
     },
     "videos": {
       "title": "Videos",
@@ -656,7 +692,10 @@
       "uploading": "Uploading",
       "unsupportedFormat": "Use an MP4 or MOV file.",
       "fileTooLarge": "This video is larger than the allowed limit.",
-      "uploadPrompt": "Upload after class or rehearsal to keep your progression visible."
+      "uploadPrompt": "Upload after class or rehearsal to keep your progression visible.",
+      "finishing": "Finishing up…",
+      "changeFile": "Change file",
+      "uploadSuccess": "Your video was added."
     },
     "community": {
       "eyebrow": "Community",
@@ -708,9 +747,23 @@
         "commentPlaceholder": "Add a comment...",
         "comment": "Comment",
         "commentsCount": "{count, plural, one {# comment} other {# comments}}",
-        "viewComments": "Comments ({count})"
+        "viewComments": "Comments ({count})",
+        "emptyComposerHint": "Add a caption or attach a video to post.",
+        "uploadHelper": "Add a clip from your cohort to share on the wall.",
+        "attachHint": "It's attached below — add a note and post it.",
+        "noComments": "No comments yet. Start the conversation.",
+        "posting": "Posting…",
+        "videoAttached": "Video attached"
       },
-      "quickActions": "Quick actions"
+      "quickActions": "Quick actions",
+      "errors": {
+        "invalid": "That post couldn't be published. Add a caption or attach a video.",
+        "postFailed": "We couldn't publish your post. Please try again.",
+        "commentFailed": "We couldn't add your comment. Please try again.",
+        "reactionFailed": "We couldn't update your reaction. Please try again.",
+        "deleteFailed": "We couldn't delete that. Please try again.",
+        "generic": "Something went wrong. Please try again."
+      }
     },
     "profile": {
       "title": "Profile",
@@ -740,7 +793,52 @@
       "photoUploadSuccess": "Profile photo updated.",
       "photoUploadErrorPrefix": "Could not upload profile photo:",
       "photoInvalidType": "Only JPG, JPEG, PNG, and WEBP images are allowed.",
-      "photoFileTooLarge": "Profile photo must be 5MB or smaller."
+      "photoFileTooLarge": "Profile photo must be 5MB or smaller.",
+      "completenessTitle": "Profile completeness",
+      "completenessComplete": "complete",
+      "completenessAllSet": "Your profile is all set. Nice work.",
+      "completenessMissing": "Still to add:",
+      "completenessPhoto": "Profile photo"
+    },
+    "settings": {
+      "eyebrow": "Account",
+      "title": "Settings",
+      "subtitle": "Manage your account and security.",
+      "accountTitle": "Account",
+      "emailLabel": "Email",
+      "roleLabel": "Role",
+      "memberSince": "Member since",
+      "personalDetailsNote": "Looking for your name, photo, or contact details?",
+      "personalDetailsLink": "Edit your profile",
+      "passwordTitle": "Password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "passwordHint": "Use at least 10 characters.",
+      "savePassword": "Update password",
+      "showPasswords": "Show",
+      "hidePasswords": "Hide",
+      "sessionTitle": "Session",
+      "sessionBody": "Signed in on this device.",
+      "signOut": "Sign out",
+      "success": {
+        "changed": "Password updated.",
+        "demo": "Password changes are disabled in preview mode.",
+        "emailCheck": "Check your inbox to confirm your new email."
+      },
+      "errors": {
+        "weak": "Password must be at least 10 characters.",
+        "mismatch": "Those passwords don't match.",
+        "currentWrong": "Your current password is incorrect.",
+        "session": "Your session expired. Please sign in again.",
+        "updateFailed": "Could not update your password. Please try again.",
+        "badEmail": "That doesn't look like a valid email address.",
+        "emailFailed": "Could not update your email. Please try again."
+      },
+      "emailTitle": "Email address",
+      "newEmailLabel": "New email",
+      "emailPasswordHint": "We'll email both addresses a confirmation link. The change takes effect once you confirm.",
+      "saveEmail": "Update email"
     }
   },
   "admin": {

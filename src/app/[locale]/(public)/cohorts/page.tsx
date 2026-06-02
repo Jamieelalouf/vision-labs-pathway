@@ -19,7 +19,7 @@ async function getVisibleCohorts() {
     .in("status", ["open", "active"])
     .order("start_date", { ascending: true });
 
-  return data ?? [];
+  return (data ?? []).filter((cohort) => !cohort.name.toLowerCase().includes("cohort 2"));
 }
 
 export async function generateMetadata({
@@ -83,9 +83,11 @@ export default async function CohortsPage({ params }: { params: { locale: Locale
                     location: t("location"),
                     regularPrice: t("regularPrice"),
                     returningPrice: t("returningPrice"),
-                    full: t("full"),
                     eyebrow: t("featured"),
-                    register: actions("registerNext")
+                    cta: actions("registerNext"),
+                    spotsPrefix: t("spotsPrefix"),
+                    spotsSuffix: t("spotsSuffix"),
+                    starts: t("starts")
                   }}
                 />
               ))}

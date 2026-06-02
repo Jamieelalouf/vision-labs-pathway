@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CohortTimeline, type CohortTimelineItem } from "@/components/vision/cohort-timeline";
 import { EmptyState } from "@/components/vision/empty-state";
 import type { Locale } from "@/i18n/routing";
-import { formatDate, formatTime, localizedField } from "@/lib/utils";
+import { formatDate, formatRelativeDate, formatTime, localizedField } from "@/lib/utils";
 import { requireCompleteDancerProfile } from "@/server/queries/auth";
 import { getStudentPortalData } from "@/server/queries/data";
 
@@ -32,18 +32,28 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
     const notes = localizedField(session, "notes", params.locale);
     const sessionDate = new Date(`${session.session_date}T00:00:00`);
     const isCompleted = !Number.isNaN(sessionDate.getTime()) && sessionDate <= today;
+    const isNext = !Number.isNaN(sessionDate.getTime()) && sessionDate >= today;
+    const relative = formatRelativeDate(session.session_date, params.locale);
     return {
       step: `${t("week")} ${session.session_number}`,
       title: String(theme ?? t("sessionFallback")),
       description: notes ? String(notes) : null,
       date: formatDate(session.session_date, params.locale),
+      relativeDate: relative,
       isCompleted,
+      isNext: isNext && !isCompleted,
       statusLabel: isCompleted ? t("sessionCompletedLabel") : null,
       meta: `${formatTime(session.start_time, params.locale)} - ${formatTime(
         session.end_time,
         params.locale
       )}`
     };
+  });
+  // Flag only the soonest upcoming session as "next" so the timeline has a single focal point.
+  const firstNextIndex = timelineItems.findIndex((item) => item.isNext);
+  timelineItems.forEach((item, index) => {
+    item.isNext = index === firstNextIndex;
+    item.nextLabel = item.isNext ? t("sessionNextLabel") : null;
   });
 
   return (
@@ -94,7 +104,7 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
                 </CardContent>
               </Card>
             ) : (
-              <EmptyState title={t("timeline")} description={t("sessionFallback")} />
+              <EmptyState title={t("timeline")} description={t("sessionFallback")} icon={CalendarDays} />
             )}
           </section>
 
@@ -132,6 +142,7 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
         <EmptyState
           title={t("emptyTitle")}
           description={t("emptyDescription")}
+          icon={CalendarDays}
           action={
             <Button asChild>
               <Link href={`/${params.locale}/cohorts`}>{t("viewCohorts")}</Link>

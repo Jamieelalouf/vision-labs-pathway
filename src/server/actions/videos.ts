@@ -27,7 +27,9 @@ function actionReturnTo(formData: FormData) {
 }
 
 function videosPath(locale: Locale, returnTo: "community" | "videos") {
-  return returnTo === "community" ? `/${locale}/portal/community#post` : `/${locale}/portal/videos`;
+  return returnTo === "community"
+    ? `/${locale}/portal/community?uploaded=1#post`
+    : `/${locale}/portal/videos?uploaded=1`;
 }
 
 function videosErrorPath(locale: Locale, returnTo: "community" | "videos", code: string) {
@@ -301,4 +303,5 @@ export async function deleteVideoAction(formData: FormData) {
 
   await supabase.from("video_uploads").delete().eq("id", id).eq("dancer_id", dancer.id);
   revalidatePath(`/${locale}/portal/videos`);
+  revalidatePath(`/${locale}/portal/community`);
 }

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Camera, Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
 
+import { useToast } from "@/components/ui/toast";
 import type { Locale } from "@/i18n/routing";
 import { updateDancerAvatarStoragePathAction } from "@/server/actions/auth";
 
@@ -34,6 +35,7 @@ export function ProfilePhotoUploader({
   const [imageUrl, setImageUrl] = useState<string | null>(initialImageUrl ?? null);
   const [message, setMessage] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
+  const { showToast, toastNode } = useToast();
 
   function validateImage(file: File) {
     const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
@@ -105,18 +107,20 @@ export function ProfilePhotoUploader({
       }
 
       setMessage(copy.success);
+      showToast(copy.success, "success");
     } catch (error) {
       URL.revokeObjectURL(objectUrl);
       setImageUrl(previousImageUrl ?? null);
-      setMessage(
-        `${copy.uploadErrorPrefix} ${error instanceof Error ? error.message : "Profile photo upload failed."}`
-      );
+      const errorMessage = `${copy.uploadErrorPrefix} ${error instanceof Error ? error.message : "Profile photo upload failed."}`;
+      setMessage(errorMessage);
+      showToast(errorMessage, "error");
     } finally {
       setIsUploading(false);
     }
   }
 
   return (
+    <>
     <button
       type="button"
       onClick={() => inputRef.current?.click()}
@@ -138,6 +142,11 @@ export function ProfilePhotoUploader({
             <Camera className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
           </div>
         )}
+        {isUploading ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+            <Loader2 className="h-5 w-5 animate-spin text-white" aria-hidden="true" />
+          </div>
+        ) : null}
       </div>
       <div>
         <p className="text-sm font-semibold">{copy.title}</p>
@@ -150,5 +159,7 @@ export function ProfilePhotoUploader({
       </div>
       {isUploading ? <Loader2 className="ml-auto h-4 w-4 animate-spin text-white/80" /> : null}
     </button>
+    {toastNode}
+    </>
   );
 }

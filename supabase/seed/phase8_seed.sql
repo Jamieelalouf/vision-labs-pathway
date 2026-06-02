@@ -96,23 +96,31 @@ insert into public.cohorts (
     '2026-09-29',
     2,
     '18:30',
-    '20:30',
+    '21:30',
     'VISION Studio',
     'Montreal, QC',
     30,
     'open',
     'open',
-    'Performance cohort.',
-    'Cohorte performance.'
+    'A 4-week training program with Jamie Elalouf, including one invited guest class. Dancers will work on choreography, performance, mindset, and consistency.',
+    'Un programme d''entrainement de 4 semaines avec Jamie Elalouf, incluant un cours avec un invite. Les danseurs travailleront la choregraphie, la performance, l''etat d''esprit et la constance.'
   )
 on conflict (id) do update set
   name = excluded.name,
   start_date = excluded.start_date,
   end_date = excluded.end_date,
+  start_time = excluded.start_time,
+  end_time = excluded.end_time,
   registration_status = excluded.registration_status,
   status = excluded.status,
   description_en = excluded.description_en,
   description_fr = excluded.description_fr;
+
+update public.cohort_sessions
+set
+  start_time = '18:30',
+  end_time = '21:30'
+where cohort_id = '20000000-0000-4000-8000-000000000003';
 
 insert into auth.users (
   id,

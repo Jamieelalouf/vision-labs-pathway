@@ -2,11 +2,13 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { isRedirectError } from "next/dist/client/components/redirect";
 
 import { defaultLocale, isLocale, type Locale } from "@/i18n/routing";
 import { determinePriceType } from "@/lib/domain/pricing";
 import { sendEmail } from "@/lib/email";
 import { createServerClient } from "@/lib/supabase/server";
+import { hasStripeEnv } from "@/lib/env";
 import { getStripe } from "@/lib/stripe";
 import { requireCompleteDancerProfile } from "@/server/queries/auth";
 
@@ -21,7 +23,7 @@ function actionLocale(formData: FormData): Locale {
 }
 
 async function createCheckoutSession(cohortId: string, locale: Locale) {
-  const dancer = await requireCompleteDancerProfile(locale);
+  const dancer = await requireCompleteDancerProfile(locale, cohortId);
   const supabase = createServerClient();
 
   const { data: cohort } = await supabase
@@ -60,11 +62,6 @@ async function createCheckoutSession(cohortId: string, locale: Locale) {
   }
 
   const decision = await determinePriceType(supabase, dancer.id, cohort.id);
-  const priceId = decision.priceId;
-
-  if (!priceId) {
-    throw new Error("Stripe price IDs are not configured in system settings.");
-  }
 
   const { data: enrollmentId, error: enrollmentError } = await supabase.rpc(
     "reserve_cohort_enrollment",
@@ -93,6 +90,12 @@ async function createCheckoutSession(cohortId: string, locale: Locale) {
   const {
     data: { user }
   } = await supabase.auth.getUser();
+  const stripeReady = hasStripeEnv() && Boolean(decision.priceId);
+
+  if (!stripeReady) {
+    return `/${locale}/portal/dashboard?registration=pending-payment`;
+  }
+
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
   const stripe = getStripe();
   const checkoutMetadata = {
@@ -104,7 +107,7 @@ async function createCheckoutSession(cohortId: string, locale: Locale) {
   };
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
-    line_items: [{ price: priceId, quantity: 1 }],
+    line_items: [{ price: decision.priceId!, quantity: 1 }],
     client_reference_id: enrollmentId,
     customer_email: user?.email ?? undefined,
     metadata: checkoutMetadata,
@@ -123,6 +126,75 @@ async function createCheckoutSession(cohortId: string, locale: Locale) {
   return session.url ?? `/${locale}/portal/dashboard`;
 }
 
+async function createGuestCheckoutSession(cohortId: string, locale: Locale) {
+  const supabase = createServerClient();
+  const { data: cohort } = await supabase
+    .from("cohorts")
+    .select("id,name,season_id,status,registration_status,capacity,regular_price_cad")
+    .eq("id", cohortId)
+    .maybeSingle();
+
+  if (!cohort || cohort.status !== "open" || cohort.registration_status !== "open") {
+    throw new Error("This cohort is not open for registration.");
+  }
+
+  if (!hasStripeEnv()) {
+    throw new Error("Stripe checkout is not configured yet");
+  }
+
+  const { count: paidCount } = await supabase
+    .from("enrollments")
+    .select("id", { count: "exact", head: true })
+    .eq("cohort_id", cohort.id)
+    .eq("payment_status", "paid")
+    .in("enrollment_status", ["registered", "completed"]);
+
+  if ((paidCount ?? 0) >= cohort.capacity) {
+    await supabase.from("cohorts").update({ registration_status: "full" }).eq("id", cohort.id);
+    throw new Error("This cohort is full.");
+  }
+
+  const amountCad = cohort.regular_price_cad ?? 297;
+  const origin = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const stripe = getStripe();
+  const checkoutMetadata = {
+    cohort_id: cohort.id,
+    cohort_name: cohort.name,
+    season_id: cohort.season_id,
+    source: "guest_checkout",
+    price_type: "regular"
+  };
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    customer_creation: "always",
+    line_items: [
+      {
+        quantity: 1,
+        price_data: {
+          currency: "cad",
+          unit_amount: amountCad * 100,
+          product_data: {
+            name: `${cohort.name} - VISION LABS Registration`
+          }
+        }
+      }
+    ],
+    metadata: checkoutMetadata,
+    payment_intent_data: {
+      metadata: checkoutMetadata
+    },
+    phone_number_collection: {
+      enabled: true
+    },
+    billing_address_collection: "required",
+    success_url: `${origin}/${locale}/cohorts/${cohort.id}?registration=success`,
+    cancel_url: `${origin}/${locale}/cohorts/${cohort.id}?registration=cancelled`
+  });
+
+  return session.url ?? `/${locale}/cohorts/${cohort.id}?registration=success`;
+}
+
 export async function createCheckoutSessionAction(
   cohortId: string,
   locale: Locale = defaultLocale
@@ -138,6 +210,28 @@ export async function registerForCohortAction(formData: FormData) {
   try {
     url = await createCheckoutSession(cohortId, locale);
   } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+    redirect(
+      `/${locale}/cohorts/${cohortId}?error=${encodeURIComponent((error as Error).message)}`
+    );
+  }
+
+  redirect(url);
+}
+
+export async function registerForCohortGuestAction(formData: FormData) {
+  const locale = actionLocale(formData);
+  const cohortId = readString(formData, "cohort_id");
+  let url: string;
+
+  try {
+    url = await createGuestCheckoutSession(cohortId, locale);
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
     redirect(
       `/${locale}/cohorts/${cohortId}?error=${encodeURIComponent((error as Error).message)}`
     );

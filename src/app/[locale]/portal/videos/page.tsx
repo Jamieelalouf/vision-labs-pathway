@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ExternalLink, FileVideo, Filter, Upload } from "lucide-react";
+import { CheckCircle2, ExternalLink, FileVideo, Filter, Upload } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { DeleteVideoButton } from "@/components/portal/delete-video-button";
@@ -27,10 +27,11 @@ export default async function VideosPage({
   searchParams
 }: {
   params: { locale: Locale };
-  searchParams?: { cohort?: string; session?: string };
+  searchParams?: { cohort?: string; session?: string; uploaded?: string };
 }) {
   await requireCompleteDancerProfile(params.locale);
   const t = await getTranslations({ locale: params.locale, namespace: "portal.videos" });
+  const uploadJustSucceeded = searchParams?.uploaded === "1";
   const [portal, settings] = await Promise.all([getStudentPortalData(), getSettings()]);
   const paidEnrollments = portal?.paidEnrollments ?? [];
   const cohorts = paidEnrollments.reduce<VideoCohortOption[]>((options: VideoCohortOption[], enrollment: any) => {
@@ -65,10 +66,24 @@ export default async function VideosPage({
         <h1 className="mt-2 font-display text-4xl font-bold">{t("title")}</h1>
       </div>
 
+      {uploadJustSucceeded ? (
+        <div className="flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-medium text-primary">
+          <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+          {t("uploadSuccess")}
+        </div>
+      ) : null}
+
       <Card>
         <CardHeader>
           <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
-            <CardTitle>{t("myVideos")}</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              {t("myVideos")}
+              {videos.length ? (
+                <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                  {videos.length}
+                </span>
+              ) : null}
+            </CardTitle>
             {showFilters ? (
               <form className="flex flex-wrap gap-2" action={`/${params.locale}/portal/videos`}>
                 <div className="flex items-center gap-2 rounded-md border border-border bg-secondary px-3">
@@ -113,7 +128,7 @@ export default async function VideosPage({
               ))}
             </div>
           ) : (
-            <EmptyState title={t("noVideos")} description={t("noVideosDescription")} />
+            <EmptyState title={t("noVideos")} description={t("noVideosDescription")} icon={FileVideo} />
           )}
         </CardContent>
       </Card>
@@ -151,6 +166,8 @@ export default async function VideosPage({
               noEligibleCohorts: t("noEligibleCohorts"),
               maxFileHint: t("maxFileHint", { size: settings?.max_video_size_mb ?? 500 }),
               uploading: t("uploading"),
+              finishing: t("finishing"),
+              changeFile: t("changeFile"),
               unsupportedFormat: t("unsupportedFormat"),
               fileTooLarge: t("fileTooLarge")
             }}
@@ -178,7 +195,7 @@ function StudentVideoCard({
   const session = Array.isArray(video.cohort_sessions) ? video.cohort_sessions[0] : video.cohort_sessions;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-secondary/20">
+    <div className="group overflow-hidden rounded-xl border border-border bg-secondary/20 transition-colors hover:border-primary/40">
       <div className="overflow-hidden border-b border-border bg-secondary/40">
         {video.source === "upload" && video.signed_url ? (
           <video src={video.signed_url} controls preload="metadata" className="aspect-video w-full bg-black object-cover" />

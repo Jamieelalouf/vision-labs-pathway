@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MoreHorizontal, PlusSquare, Route, User, Users } from "lucide-react";
+import { ChevronUp, Home, MoreHorizontal, PlusSquare, Route, Settings, User, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type MobileNavItem = {
@@ -24,7 +24,8 @@ const mobilePortalNav: MobileNavItem[] = [
 const overflowNav: MobileNavItem[] = [
   { key: "cohort", href: "cohort", icon: Users, label: "My Cohort" },
   { key: "pathway", href: "pathway", icon: Route, label: "Pathway" },
-  { key: "profile", href: "profile", icon: User, label: "Profile" }
+  { key: "profile", href: "profile", icon: User, label: "Profile" },
+  { key: "settings", href: "settings", icon: Settings, label: "Settings" }
 ];
 
 export function PortalMobileNav({
@@ -45,8 +46,11 @@ export function PortalMobileNav({
           if (item.isMore) {
             return (
               <details key={`${item.key}-${pathname ?? ""}`} className="group relative">
-                <summary className="focus-ring flex h-full list-none flex-col items-center justify-center gap-1 text-[11px] font-medium text-muted-foreground">
-                  <Icon className="h-4 w-4" aria-hidden />
+                <summary className="focus-ring flex h-full list-none flex-col items-center justify-center gap-1 text-[11px] font-medium text-muted-foreground transition-colors group-open:text-primary">
+                  <span className="relative flex items-center">
+                    <Icon className="h-4 w-4" aria-hidden />
+                    <ChevronUp className="ml-0.5 h-3 w-3 transition-transform group-open:rotate-180" aria-hidden />
+                  </span>
                   <span>{labels.more ?? item.label}</span>
                 </summary>
                 <div className="absolute bottom-16 right-2 min-w-44 rounded-xl border border-border bg-background p-2 shadow-2xl">

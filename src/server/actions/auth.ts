@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { defaultLocale, isLocale, type Locale } from "@/i18n/routing";
+import { isDemoBypassEnabled } from "@/lib/demo-bypass";
 import { createServerClient } from "@/lib/supabase/server";
 import { profileSchema, resetPasswordSchema, signInSchema, signUpSchema } from "@/lib/validators/auth";
 
@@ -146,6 +147,95 @@ export async function updatePasswordAction(formData: FormData) {
 
   await supabase.auth.signOut();
   redirect(`/${resolvedLocale}/login?reset=1`);
+}
+
+export async function changePasswordAction(formData: FormData) {
+  const localeValue = formValue(formData, "locale");
+  const locale = isLocale(localeValue) ? localeValue : defaultLocale;
+  const settingsPath = `/${locale}/portal/settings`;
+
+  // No real auth session in preview/demo mode — show a friendly notice instead of failing.
+  if (isDemoBypassEnabled()) {
+    redirect(`${settingsPath}?password=demo`);
+  }
+
+  const currentPassword = formValue(formData, "current_password");
+  const password = formValue(formData, "password");
+  const confirmPassword = formValue(formData, "confirmPassword");
+
+  if (password.length < 10) {
+    redirect(`${settingsPath}?error=weak`);
+  }
+  if (password !== confirmPassword) {
+    redirect(`${settingsPath}?error=mismatch`);
+  }
+
+  const supabase = createServerClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user?.email) {
+    redirect(`${settingsPath}?error=session`);
+  }
+
+  // Verify the current password before allowing a change.
+  const { error: reauthError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: currentPassword
+  });
+  if (reauthError) {
+    redirect(`${settingsPath}?error=current-wrong`);
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    redirect(`${settingsPath}?error=update-failed`);
+  }
+
+  redirect(`${settingsPath}?password=changed`);
+}
+
+export async function changeEmailAction(formData: FormData) {
+  const localeValue = formValue(formData, "locale");
+  const locale = isLocale(localeValue) ? localeValue : defaultLocale;
+  const settingsPath = `/${locale}/portal/settings`;
+
+  if (isDemoBypassEnabled()) {
+    redirect(`${settingsPath}?email=demo`);
+  }
+
+  const newEmail = formValue(formData, "new_email").trim();
+  const currentPassword = formValue(formData, "current_password");
+
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(newEmail)) {
+    redirect(`${settingsPath}?error=bad-email`);
+  }
+
+  const supabase = createServerClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user?.email) {
+    redirect(`${settingsPath}?error=session`);
+  }
+
+  // Verify identity with the current password before changing the email.
+  const { error: reauthError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: currentPassword
+  });
+  if (reauthError) {
+    redirect(`${settingsPath}?error=current-wrong`);
+  }
+
+  const { error } = await supabase.auth.updateUser({ email: newEmail });
+  if (error) {
+    redirect(`${settingsPath}?error=email-failed`);
+  }
+
+  redirect(`${settingsPath}?email=check`);
 }
 
 export async function updateLanguagePrefAction(locale: Locale) {

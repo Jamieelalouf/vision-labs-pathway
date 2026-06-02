@@ -25,17 +25,28 @@ export function RewardCard({
   className?: string;
 }) {
   const locked = status === "locked";
+  const unlocked = status === "unlocked";
   const visibleCategories = (categories ?? []).filter((category) => category.items.length);
 
   return (
-    <Card className={cn("overflow-hidden", locked ? "opacity-60" : "border-primary/40", className)}>
+    <Card
+      className={cn(
+        "overflow-hidden transition-shadow",
+        locked ? "opacity-60" : "border-primary/40",
+        unlocked && "ring-1 ring-primary/40 shadow-[0_18px_50px_-28px_rgba(249,115,22,0.6)]",
+        className
+      )}
+    >
       <CardHeader>
         <div className="flex items-center justify-between gap-3">
           <TierBadge tier={tier} />
           {locked ? (
             <Lock className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
           ) : (
-            <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
+            <Sparkles
+              className={cn("h-4 w-4 text-primary", unlocked && "animate-sparkle")}
+              aria-hidden="true"
+            />
           )}
         </div>
         <CardTitle className="pt-4">{title}</CardTitle>

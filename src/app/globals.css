@@ -89,3 +89,21 @@
     @apply py-20 md:py-32;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Reveal animations must never leave content hidden for reduced-motion users. */
+  .animate-hero-reveal,
+  .animate-celebrate-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .animate-sparkle {
+    animation: none !important;
+  }
+}

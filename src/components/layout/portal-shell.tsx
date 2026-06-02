@@ -9,7 +9,7 @@ import type { Locale } from "@/i18n/routing";
 import { isDemoBypassEnabled } from "@/lib/demo-bypass";
 import { signOutAction } from "@/server/actions/auth";
 
-const portalNav = ["dashboard", "cohort", "community", "pathway", "profile"] as const;
+const portalNav = ["dashboard", "cohort", "community", "pathway", "profile", "settings"] as const;
 
 export async function PortalShell({
   locale,
@@ -51,7 +51,8 @@ export async function PortalShell({
               cohort: t("cohort"),
               community: t("community"),
               pathway: t("pathway"),
-              profile: t("profile")
+              profile: t("profile"),
+              settings: t("settings")
             }}
           />
         </aside>
@@ -66,6 +67,7 @@ export async function PortalShell({
           post: t("post"),
           pathway: t("pathway"),
           profile: t("profile"),
+          settings: t("settings"),
           more: t("more")
         }}
       />

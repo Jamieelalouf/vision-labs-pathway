@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, type FormEvent } from "react";
-import { AlertCircle, FileVideo, LinkIcon, UploadCloud } from "lucide-react";
+import { AlertCircle, FileVideo, LinkIcon, UploadCloud, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,12 @@ function isNextRedirect(error: unknown): boolean {
   if (!error || typeof error !== "object") return false;
   const digest = (error as { digest?: unknown }).digest;
   return typeof digest === "string" && digest.startsWith("NEXT_REDIRECT");
+}
+
+function formatBytes(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 type VideoCohortOption = {
@@ -48,9 +54,13 @@ type VideoUploaderCopy = {
   noEligibleCohorts: string;
   maxFileHint: string;
   uploading: string;
+  finishing: string;
+  changeFile: string;
   unsupportedFormat: string;
   fileTooLarge: string;
 };
+
+type UploadPhase = "idle" | "uploading" | "finishing";
 
 export function VideoUploader({
   locale,
@@ -73,11 +83,15 @@ export function VideoUploader({
   const [selectedCohortId, setSelectedCohortId] = useState(defaultCohortId ?? cohorts[0]?.id ?? "");
   const [selectedSessionId, setSelectedSessionId] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [title, setTitle] = useState("");
+  const [dragActive, setDragActive] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [phase, setPhase] = useState<UploadPhase>("idle");
   const [error, setError] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const titleEditedRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const isUploading = phase !== "idle";
   const selectedCohort = useMemo(
     () => cohorts.find((cohort) => cohort.id === selectedCohortId) ?? cohorts[0],
     [cohorts, selectedCohortId]
@@ -115,6 +129,18 @@ export function VideoUploader({
       return;
     }
     setFile(nextFile);
+    // Effortless default: name the upload after the file, unless the student typed their own.
+    if (!titleEditedRef.current) {
+      const base = nextFile.name.replace(/\.[^/.]+$/, "").replace(/[_-]+/g, " ").trim();
+      setTitle(base);
+    }
+  }
+
+  function clearFile() {
+    setFile(null);
+    setProgress(0);
+    setError(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   async function uploadViaSignedUrl(signedUrl: string, uploadFile: File) {
@@ -123,12 +149,14 @@ export function VideoUploader({
 
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
-          setProgress(Math.round((event.loaded / event.total) * 95));
+          // Reserve the last stretch for the record-save step so the bar never lies.
+          setProgress(Math.round((event.loaded / event.total) * 90));
         }
       };
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
-          setProgress(100);
+          setProgress(90);
+          setPhase("finishing");
           resolve();
         } else {
           reject(new Error(xhr.responseText || "Upload failed."));
@@ -148,8 +176,8 @@ export function VideoUploader({
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const title = String(formData.get("title") ?? "").trim();
-    if (!title || !file || !selectedCohortId) {
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle || !file || !selectedCohortId) {
       setError(copy.requiredFields);
       return;
     }
@@ -160,7 +188,7 @@ export function VideoUploader({
       return;
     }
 
-    setIsUploading(true);
+    setPhase("uploading");
     setProgress(5);
 
     try {
@@ -189,7 +217,7 @@ export function VideoUploader({
 
       const record = new FormData();
       record.set("locale", locale);
-      record.set("title", title);
+      record.set("title", trimmedTitle);
       record.set("description", String(formData.get("description") ?? ""));
       record.set("cohort_id", selectedCohortId);
       record.set("cohort_session_id", selectedSessionId);
@@ -204,7 +232,7 @@ export function VideoUploader({
         throw uploadError;
       }
       setError(uploadError instanceof Error ? uploadError.message : "Upload failed.");
-      setIsUploading(false);
+      setPhase("idle");
       setProgress(0);
     }
   }
@@ -248,6 +276,90 @@ export function VideoUploader({
         <form onSubmit={handleUpload} className="grid gap-4 md:grid-cols-2">
           <input type="hidden" name="locale" value={locale} />
           <input type="hidden" name="return_to" value={returnTo} />
+
+          {/* Step 1: choose the clip first. */}
+          <div className="space-y-2 md:col-span-2">
+            <Label>{copy.fileLabel}</Label>
+            {file ? (
+              <div className="flex items-center gap-3 rounded-xl border border-primary/40 bg-primary/5 p-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+                  <FileVideo className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium">{file.name}</p>
+                  <p className="text-xs text-muted-foreground">{formatBytes(file.size)}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="focus-ring shrink-0 rounded-full px-3 py-1 text-xs font-medium text-primary hover:bg-primary/10"
+                  disabled={isUploading}
+                >
+                  {copy.changeFile}
+                </button>
+                <button
+                  type="button"
+                  onClick={clearFile}
+                  className="focus-ring shrink-0 rounded-full p-1 text-muted-foreground hover:text-foreground"
+                  aria-label={copy.changeFile}
+                  disabled={isUploading}
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                onDragOver={(event) => {
+                  event.preventDefault();
+                  setDragActive(true);
+                }}
+                onDragLeave={() => setDragActive(false)}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  setDragActive(false);
+                  selectFile(event.dataTransfer.files.item(0));
+                }}
+                className={cn(
+                  "focus-ring flex min-h-44 w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed bg-secondary p-6 text-center transition-colors",
+                  dragActive ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
+                )}
+                disabled={disabled}
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <UploadCloud className="h-6 w-6" aria-hidden="true" />
+                </span>
+                <span className="font-medium">{copy.chooseFile}</span>
+                <span className="text-xs text-muted-foreground">
+                  {copy.dropHint} · {copy.maxFileHint}
+                </span>
+              </button>
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={accept}
+              className="sr-only"
+              onChange={(event) => selectFile(event.target.files?.item(0) ?? null)}
+            />
+          </div>
+
+          {/* Step 2: details (title pre-filled from the file name). */}
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="upload-title">{copy.titleLabel}</Label>
+            <Input
+              id="upload-title"
+              name="title"
+              value={title}
+              onChange={(event) => {
+                titleEditedRef.current = true;
+                setTitle(event.target.value);
+              }}
+              required
+              disabled={disabled}
+            />
+          </div>
           <FieldSelects
             copy={copy}
             cohorts={cohorts}
@@ -260,51 +372,24 @@ export function VideoUploader({
             }}
             setSelectedSessionId={setSelectedSessionId}
           />
-          <div className="space-y-2">
-            <Label htmlFor="upload-title">{copy.titleLabel}</Label>
-            <Input id="upload-title" name="title" required disabled={disabled} />
-          </div>
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="upload-description">{copy.descriptionLabel}</Label>
             <Textarea id="upload-description" name="description" disabled={disabled} />
           </div>
-          <div className="space-y-2 md:col-span-2">
-            <Label>{copy.fileLabel}</Label>
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              onDragOver={(event) => event.preventDefault()}
-              onDrop={(event) => {
-                event.preventDefault();
-                selectFile(event.dataTransfer.files.item(0));
-              }}
-              className="focus-ring flex min-h-40 w-full flex-col items-center justify-center gap-3 rounded-md border border-dashed border-border bg-secondary p-6 text-center transition-colors hover:border-primary/50"
-              disabled={disabled}
-            >
-              <FileVideo className="h-8 w-8 text-primary" aria-hidden="true" />
-              <span className="font-medium">{file ? file.name : copy.chooseFile}</span>
-              <span className="text-xs text-muted-foreground">
-                {copy.dropHint} {copy.maxFileHint}
-              </span>
-            </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept={accept}
-              className="sr-only"
-              onChange={(event) => selectFile(event.target.files?.item(0) ?? null)}
-            />
-          </div>
-          {progress > 0 ? (
-            <div className="md:col-span-2">
-              <div className="h-2 rounded-full bg-muted">
+
+          {phase !== "idle" ? (
+            <div className="md:col-span-2" aria-live="polite">
+              <div className="h-2 overflow-hidden rounded-full bg-muted">
                 <div
-                  className="h-2 rounded-full bg-primary transition-all"
-                  style={{ width: `${progress}%` }}
+                  className={cn(
+                    "h-2 rounded-full bg-primary transition-all duration-300",
+                    phase === "finishing" && "animate-pulse"
+                  )}
+                  style={{ width: phase === "finishing" ? "100%" : `${progress}%` }}
                 />
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
-                {copy.uploading} {progress}%
+                {phase === "finishing" ? copy.finishing : `${copy.uploading} ${progress}%`}
               </p>
             </div>
           ) : null}
@@ -317,7 +402,7 @@ export function VideoUploader({
           <div className="md:col-span-2">
             <Button disabled={disabled || !file}>
               <UploadCloud className="h-4 w-4" aria-hidden="true" />
-              {copy.saveUpload}
+              {isUploading ? copy.uploading : copy.saveUpload}
             </Button>
           </div>
         </form>
@@ -325,6 +410,20 @@ export function VideoUploader({
         <form action={addExternalVideoLinkAction} className="grid gap-4 md:grid-cols-2">
           <input type="hidden" name="locale" value={locale} />
           <input type="hidden" name="return_to" value={returnTo} />
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="external_url">{copy.urlLabel}</Label>
+            <Input
+              id="external_url"
+              name="external_url"
+              type="url"
+              placeholder="https://youtube.com/..."
+              required
+            />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="link-title">{copy.titleLabel}</Label>
+            <Input id="link-title" name="title" required />
+          </div>
           <FieldSelects
             copy={copy}
             cohorts={cohorts}
@@ -337,20 +436,6 @@ export function VideoUploader({
             }}
             setSelectedSessionId={setSelectedSessionId}
           />
-          <div className="space-y-2">
-            <Label htmlFor="link-title">{copy.titleLabel}</Label>
-            <Input id="link-title" name="title" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="external_url">{copy.urlLabel}</Label>
-            <Input
-              id="external_url"
-              name="external_url"
-              type="url"
-              placeholder="https://youtube.com/..."
-              required
-            />
-          </div>
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="link-description">{copy.descriptionLabel}</Label>
             <Textarea id="link-description" name="description" />

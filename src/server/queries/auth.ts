@@ -106,11 +106,15 @@ export async function requireAdmin(locale: Locale = defaultLocale) {
   return profile;
 }
 
-export async function requireCompleteDancerProfile(locale: Locale = defaultLocale) {
+export async function requireCompleteDancerProfile(
+  locale: Locale = defaultLocale,
+  cohortId?: string
+) {
   await requireUser(locale);
   const dancer = await getCurrentDancer();
   if (!dancer) {
-    redirect(`/${locale}/portal/profile/complete`);
+    const cohortQuery = cohortId ? `?cohort=${encodeURIComponent(cohortId)}` : "";
+    redirect(`/${locale}/portal/profile/complete${cohortQuery}`);
   }
   return dancer;
 }

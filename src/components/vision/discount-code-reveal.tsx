@@ -4,26 +4,35 @@ import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/toast";
 
 export function DiscountCodeReveal({
   code,
   expiresLabel,
   expiresAt,
+  expiresRelative,
   copyLabel = "Copy",
   copiedLabel = "Copied"
 }: {
   code: string;
   expiresLabel: string;
   expiresAt?: string | null;
+  expiresRelative?: string | null;
   copyLabel?: string;
   copiedLabel?: string;
 }) {
   const [copied, setCopied] = useState(false);
+  const { showToast, toastNode } = useToast();
 
   async function copyCode() {
-    await navigator.clipboard.writeText(code);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      showToast(copiedLabel, "success");
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      showToast(`${copyLabel}: ${code}`, "error");
+    }
   }
 
   return (
@@ -43,8 +52,10 @@ export function DiscountCodeReveal({
       {expiresAt ? (
         <p className="mt-3 text-sm text-muted-foreground">
           {expiresLabel} {expiresAt}
+          {expiresRelative ? <span className="text-primary/80"> · {expiresRelative}</span> : null}
         </p>
       ) : null}
+      {toastNode}
     </div>
   );
 }

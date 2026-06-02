@@ -56,8 +56,12 @@ export default async function AdminSettingsPage({ params }: { params: { locale: 
                 id="max_video_size_mb"
                 name="max_video_size_mb"
                 type="number"
+                max="500"
                 defaultValue={settings?.max_video_size_mb ?? 500}
               />
+              <p className="text-xs text-muted-foreground">
+                Current Supabase direct-upload hard cap: 500 MB.
+              </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="stripe_regular_price_id">Stripe regular price ID</Label>

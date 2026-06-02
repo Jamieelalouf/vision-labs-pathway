@@ -25,6 +25,9 @@ export default async function AdminCohortsPage({ params }: { params: { locale: L
       <div>
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Phase 3</p>
         <h1 className="mt-2 font-display text-4xl font-bold">Cohorts</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Cohort 3 target window: June 16 to July 7.
+        </p>
       </div>
       <Card>
         <CardHeader>
@@ -50,19 +53,19 @@ export default async function AdminCohortsPage({ params }: { params: { locale: L
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" placeholder="Cohort 3 - November" required />
+              <Input id="name" name="name" defaultValue="Cohort 3" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="cohort_number">Number</Label>
-              <Input id="cohort_number" name="cohort_number" type="number" required />
+              <Input id="cohort_number" name="cohort_number" type="number" defaultValue="3" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="start_date">Start</Label>
-              <Input id="start_date" name="start_date" type="date" required />
+              <Input id="start_date" name="start_date" type="date" defaultValue="2026-06-16" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="end_date">End</Label>
-              <Input id="end_date" name="end_date" type="date" required />
+              <Input id="end_date" name="end_date" type="date" defaultValue="2026-07-07" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="day_of_week">Day</Label>
@@ -92,7 +95,7 @@ export default async function AdminCohortsPage({ params }: { params: { locale: L
               <select
                 id="status"
                 name="status"
-                defaultValue="draft"
+                defaultValue="open"
                 className="h-11 w-full rounded-md border border-input bg-secondary px-3 text-sm"
               >
                 {["draft", "open", "active", "completed", "cancelled"].map((status) => (
@@ -130,7 +133,7 @@ export default async function AdminCohortsPage({ params }: { params: { locale: L
               <select
                 id="registration_status"
                 name="registration_status"
-                defaultValue="closed"
+                defaultValue="open"
                 className="h-11 w-full rounded-md border border-input bg-secondary px-3 text-sm"
               >
                 {["closed", "open", "full"].map((status) => (
@@ -157,6 +160,7 @@ export default async function AdminCohortsPage({ params }: { params: { locale: L
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
+                <TableHead>#</TableHead>
                 <TableHead>Dates</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Registration</TableHead>
@@ -173,8 +177,14 @@ export default async function AdminCohortsPage({ params }: { params: { locale: L
                       className="hover:text-primary"
                     >
                       {cohort.name}
+                      {cohort.cohort_number === 3 ? (
+                        <span className="ml-2 rounded-full bg-primary/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-primary">
+                          Cohort 3
+                        </span>
+                      ) : null}
                     </Link>
                   </TableCell>
+                  <TableCell>{cohort.cohort_number}</TableCell>
                   <TableCell>
                     {cohort.start_date} - {cohort.end_date}
                   </TableCell>

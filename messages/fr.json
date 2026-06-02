@@ -5,10 +5,11 @@
       "cohorts": "Cohortes",
       "faq": "FAQ",
       "login": "Connexion",
-      "register": "Inscription"
+      "register": "Inscription",
+      "menu": "Menu"
     },
     "footer": {
-      "tagline": "Un systeme de cohortes cible pour les danseurs qui avancent vers la convention annuelle VISION Dance.",
+      "tagline": "",
       "pathway": "LABS Pathway",
       "cohorts": "Cohortes a venir"
     },
@@ -23,7 +24,8 @@
       "profile": "Profil",
       "more": "Plus",
       "signOut": "Deconnexion",
-      "demoPreview": "Apercu demo"
+      "demoPreview": "Apercu demo",
+      "settings": "Paramètres"
     },
     "adminNav": {
       "overview": "Vue globale",
@@ -111,8 +113,8 @@
         "description": "Complete la cohorte precedente immediate et ta prochaine inscription LABS passe a 247 $."
       },
       {
-        "title": "Lien avec la convention",
-        "description": "La saison pointe vers la convention annuelle VISION Dance sans compliquer les recompenses."
+        "title": "Workbook danseur personnalise",
+        "description": "Un workbook danseur personnalise selon le programme pour garder ton developpement clair d'une semaine a l'autre."
       }
     ],
     "pathwayTitle": "Plus tu completes, plus tu debloques",
@@ -478,13 +480,30 @@
     "descriptionTitle": "A propos de cette cohorte",
     "registrationTitle": "Inscription",
     "returningNote": "Prix danseur de retour",
-    "securePayment": "Paiement securise avec Stripe apres completion du profil.",
+    "registrationFinePrint": "Les danseurs peuvent maintenant s'inscrire directement, sans attendre l'acceptation au programme. Comme les places sont limitees, les inscriptions se feront selon le principe premier arrive, premier servi.\n\nSi LABS ajoute une deuxieme journee pendant la semaine, les danseurs seront separes par niveau. Pour l'instant, le programme a lieu le mardi de 18 h 30 a 21 h 30.",
+    "weeklySchedule": "{day} {time}",
+    "weekdaySunday": "Les dimanches",
+    "weekdayMonday": "Les lundis",
+    "weekdayTuesday": "Les mardis",
+    "weekdayWednesday": "Les mercredis",
+    "weekdayThursday": "Les jeudis",
+    "weekdayFriday": "Les vendredis",
+    "weekdaySaturday": "Les samedis",
+    "securePayment": "Complete ton profil, puis continue vers le paiement Stripe securise. Si Stripe n'est pas configure en local, ton inscription est enregistree en paiement en attente pour la demo.",
+    "guestSecurePayment": "Le paiement est traite par Stripe. Utilise ton courriel, ton nom complet et ton numero de telephone dans la caisse. Apres le paiement, nous enverrons les details d'acces par courriel.",
     "weekPrefix": "Semaine",
     "sessionFallback": "Session d'entrainement ciblee",
     "registrationClosed": "Inscriptions fermees",
+    "registrationSuccessTitle": "Paiement recu",
+    "registrationSuccessDescription": "Merci. Ton paiement a ete recu et les details d'acces a la cohorte seront envoyes par courriel sous peu.",
+    "registrationCancelledTitle": "Paiement annule",
     "errorTitle": "L'inscription demande ton attention",
     "supabaseMissingTitle": "Supabase n'est pas configure",
-    "supabaseMissingDescription": "Ajoute les variables d'environnement Supabase pour charger les details de cohorte."
+    "supabaseMissingDescription": "Ajoute les variables d'environnement Supabase pour charger les details de cohorte.",
+    "spotsPrefix": "Limité à",
+    "spotsSuffix": "places",
+    "starts": "Commence",
+    "errorBody": "Nous n'avons pas pu traiter cette demande. Réessaie, ou contacte-nous si le problème persiste."
   },
   "faq": {
     "title": "FAQ",
@@ -553,6 +572,8 @@
       "paymentProcessingTitle": "Traitement de ton paiement",
       "paymentProcessingDescription": "Stripe a confirme ton paiement. Le portail peut prendre jusqu'a une minute avant d'afficher la cohorte payee pendant que le webhook se termine.",
       "paymentConfirmedTitle": "Inscription confirmee",
+      "pendingPaymentTitle": "Inscription enregistree en paiement en attente",
+      "pendingPaymentDescription": "Stripe n'est pas configure dans cet environnement local. Ton inscription de cohorte est enregistree et marquee comme paiement en attente pour verification.",
       "weeklyPrompt": "Rituel de la semaine",
       "weeklyPromptText": "Publie un clip d'entrainement cette semaine et une ligne sur ce que tu raffines.",
       "cohortActivity": "{count} publications dans ton feed de cohorte",
@@ -564,7 +585,16 @@
       "statCohorts": "Cohortes",
       "statActivity": "Activite",
       "statUploads": "Videos",
-      "statReward": "Recompense"
+      "statReward": "Recompense",
+      "startsRelative": "Commence {relative}",
+      "endsRelative": "Se termine {relative}",
+      "greetingMorning": "Bonjour",
+      "greetingAfternoon": "Bon après-midi",
+      "greetingEvening": "Bonsoir",
+      "lockedInHeadingNoName": "Reste concentré.",
+      "nextSession": "Ta prochaine séance",
+      "addToCalendar": "Ajouter au calendrier",
+      "week": "Semaine"
     },
     "cohort": {
       "title": "Ma cohorte",
@@ -577,6 +607,7 @@
       "dates": "Dates",
       "week": "Semaine",
       "sessionCompletedLabel": "Completee",
+      "sessionNextLabel": "À venir",
       "sessionFallback": "Theme de session a venir",
       "noResources": "Aucune ressource publiee pour le moment.",
       "noUploads": "Aucune video pour cette cohorte pour le moment.",
@@ -601,7 +632,10 @@
         "Les niveaux se reinitialisent apres chaque VISION Dance Convention en janvier.",
         "Le prix de retour depend de la cohorte immediate suivante.",
         "Legacy se debloque a 5 cohortes completees dans la saison active."
-      ]
+      ],
+      "unlockedEyebrow": "Récompense débloquée",
+      "unlockedTitle": "Tu as débloqué {tier}",
+      "unlockedBody": "Ta récompense est débloquée et sera gérée dans ton profil."
     },
     "rewards": {
       "eyebrow": "Recompense convention",
@@ -610,9 +644,7 @@
       "status": "Statut",
       "rewardCode": "Code recompense",
       "expires": "Expire le",
-      "claimCode": "Obtenir mon code",
-      "claimLegacyPass": "Reclamer la reduction Legacy",
-      "unlockedNote": "Ta recompense est debloquee. Genere ton code a usage unique quand tu es pret a l'utiliser.",
+      "unlockedNote": "Ta recompense est debloquee et sera geree dans ton profil.",
       "generatedNote": "Ton code est pret pour l'inscription a la convention.",
       "redeemedNote": "Cette recompense est marquee comme utilisee.",
       "expiredNote": "Cette recompense a expire pour sa saison.",
@@ -622,7 +654,11 @@
         "Les recompenses montent de niveau et ne se combinent jamais.",
         "Les codes sont lies a la saison active et expirent apres le grace de convention.",
         "LABS Legacy donne 200 $ de reduction sur la convention VISION."
-      ]
+      ],
+      "nextUnlockTitle": "Prochain palier",
+      "nextUnlockLine": "{count, plural, one {# cohorte de plus} other {# cohortes de plus}} pour débloquer {tier}.",
+      "allUnlocked": "Tu as atteint le sommet du Parcours — LABS Legacy. Incroyable.",
+      "viewPathway": "Voir le parcours"
     },
     "videos": {
       "title": "Videos",
@@ -656,7 +692,10 @@
       "uploading": "Televersement",
       "unsupportedFormat": "Utilise un fichier MP4 ou MOV.",
       "fileTooLarge": "Cette video depasse la limite permise.",
-      "uploadPrompt": "Televerse apres un cours ou une repetition pour rendre ta progression visible."
+      "uploadPrompt": "Televerse apres un cours ou une repetition pour rendre ta progression visible.",
+      "finishing": "Finalisation…",
+      "changeFile": "Changer de fichier",
+      "uploadSuccess": "Ta vidéo a été ajoutée."
     },
     "community": {
       "eyebrow": "Communaute",
@@ -708,9 +747,23 @@
         "commentPlaceholder": "Ajouter un commentaire...",
         "comment": "Commenter",
         "commentsCount": "{count, plural, one {# commentaire} other {# commentaires}}",
-        "viewComments": "Commentaires ({count})"
+        "viewComments": "Commentaires ({count})",
+        "emptyComposerHint": "Ajoute une légende ou une vidéo pour publier.",
+        "uploadHelper": "Ajoute un clip de ta cohorte pour le partager sur le mur.",
+        "attachHint": "Elle est jointe ci-dessous — ajoute une note et publie.",
+        "noComments": "Aucun commentaire. Lance la conversation.",
+        "posting": "Publication…",
+        "videoAttached": "Vidéo jointe"
       },
-      "quickActions": "Actions rapides"
+      "quickActions": "Actions rapides",
+      "errors": {
+        "invalid": "Cette publication n'a pas pu être publiée. Ajoute une légende ou une vidéo.",
+        "postFailed": "Nous n'avons pas pu publier ta publication. Réessaie.",
+        "commentFailed": "Nous n'avons pas pu ajouter ton commentaire. Réessaie.",
+        "reactionFailed": "Nous n'avons pas pu mettre à jour ta réaction. Réessaie.",
+        "deleteFailed": "Nous n'avons pas pu supprimer cela. Réessaie.",
+        "generic": "Une erreur s'est produite. Réessaie."
+      }
     },
     "profile": {
       "title": "Profil",
@@ -740,7 +793,52 @@
       "photoUploadSuccess": "Photo de profil mise a jour.",
       "photoUploadErrorPrefix": "Impossible de televerser la photo de profil :",
       "photoInvalidType": "Seules les images JPG, JPEG, PNG et WEBP sont permises.",
-      "photoFileTooLarge": "La photo de profil doit etre de 5 Mo ou moins."
+      "photoFileTooLarge": "La photo de profil doit etre de 5 Mo ou moins.",
+      "completenessTitle": "Profil complété",
+      "completenessComplete": "complété",
+      "completenessAllSet": "Ton profil est complet. Bien joué.",
+      "completenessMissing": "À ajouter :",
+      "completenessPhoto": "Photo de profil"
+    },
+    "settings": {
+      "eyebrow": "Compte",
+      "title": "Paramètres",
+      "subtitle": "Gère ton compte et ta sécurité.",
+      "accountTitle": "Compte",
+      "emailLabel": "Courriel",
+      "roleLabel": "Rôle",
+      "memberSince": "Membre depuis",
+      "personalDetailsNote": "Tu cherches ton nom, ta photo ou tes coordonnées?",
+      "personalDetailsLink": "Modifier ton profil",
+      "passwordTitle": "Mot de passe",
+      "currentPassword": "Mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirme le nouveau mot de passe",
+      "passwordHint": "Utilise au moins 10 caractères.",
+      "savePassword": "Mettre à jour",
+      "showPasswords": "Afficher",
+      "hidePasswords": "Masquer",
+      "sessionTitle": "Session",
+      "sessionBody": "Connecté sur cet appareil.",
+      "signOut": "Se déconnecter",
+      "success": {
+        "changed": "Mot de passe mis à jour.",
+        "demo": "Les changements de mot de passe sont désactivés en mode aperçu.",
+        "emailCheck": "Vérifie ta boîte de réception pour confirmer ton nouveau courriel."
+      },
+      "errors": {
+        "weak": "Le mot de passe doit comporter au moins 10 caractères.",
+        "mismatch": "Ces mots de passe ne correspondent pas.",
+        "currentWrong": "Ton mot de passe actuel est incorrect.",
+        "session": "Ta session a expiré. Reconnecte-toi.",
+        "updateFailed": "Impossible de mettre à jour ton mot de passe. Réessaie.",
+        "badEmail": "Cette adresse courriel semble invalide.",
+        "emailFailed": "Impossible de mettre à jour ton courriel. Réessaie."
+      },
+      "emailTitle": "Adresse courriel",
+      "newEmailLabel": "Nouveau courriel",
+      "emailPasswordHint": "Nous enverrons un lien de confirmation aux deux adresses. Le changement prend effet après confirmation.",
+      "saveEmail": "Mettre à jour le courriel"
     }
   },
   "admin": {

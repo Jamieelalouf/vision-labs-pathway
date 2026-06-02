@@ -49,13 +49,25 @@ export function PathwayProgress({
           );
         })}
       </div>
-      <div className="grid grid-cols-4 gap-2 text-xs text-muted-foreground">
-        {defaultMilestones.map((milestone) => (
-          <div key={milestone.count} className="min-w-0">
-            <p className="font-semibold text-foreground">{milestone.count}</p>
-            <p className="truncate">{labels?.[milestone.key] ?? milestone.label}</p>
-          </div>
-        ))}
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+        {defaultMilestones.map((milestone) => {
+          const reached = clamped >= milestone.count;
+          return (
+            <div key={milestone.count} className="min-w-0 text-center">
+              <p
+                className={cn(
+                  "text-sm font-semibold",
+                  reached ? "text-primary" : "text-foreground"
+                )}
+              >
+                {milestone.count}
+              </p>
+              <p className="text-[11px] leading-tight text-muted-foreground sm:text-xs">
+                {labels?.[milestone.key] ?? milestone.label}
+              </p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

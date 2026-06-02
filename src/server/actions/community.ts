@@ -123,22 +123,24 @@ export async function toggleCommunityReactionAction(formData: FormData) {
   if (!parsed.success) safeErrorRedirect(locale, "invalid");
 
   const supabase = createServerClient() as any;
-  const { data: existing } = await supabase
+  // Race-safe toggle: delete by composite key first, insert only if nothing was deleted.
+  // The (post_id, dancer_id) UNIQUE constraint on community_reactions guards against
+  // duplicate inserts from concurrent submissions, which we treat as success.
+  const { data: deleted, error: deleteError } = await supabase
     .from("community_reactions")
-    .select("id")
+    .delete()
     .eq("post_id", parsed.data.post_id)
     .eq("dancer_id", dancer.id)
-    .maybeSingle();
+    .select("id");
 
-  if (existing?.id) {
-    const { error } = await supabase.from("community_reactions").delete().eq("id", existing.id);
-    if (error) safeErrorRedirect(locale, "reaction-failed");
-  } else {
-    const { error } = await supabase.from("community_reactions").insert({
+  if (deleteError) safeErrorRedirect(locale, "reaction-failed");
+
+  if (!deleted || deleted.length === 0) {
+    const { error: insertError } = await supabase.from("community_reactions").insert({
       post_id: parsed.data.post_id,
       dancer_id: dancer.id
     });
-    if (error) safeErrorRedirect(locale, "reaction-failed");
+    if (insertError && insertError.code !== "23505") safeErrorRedirect(locale, "reaction-failed");
   }
 
   revalidatePath(path(locale));

@@ -1,4 +1,4 @@
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Sparkles } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +7,7 @@ import { PathwayProgress } from "@/components/vision/pathway-progress";
 import { RewardCard } from "@/components/vision/reward-card";
 import { TierBadge } from "@/components/vision/tier-badge";
 import type { Locale } from "@/i18n/routing";
-import { rewardTierMeta } from "@/lib/domain/rewards";
+import { getTierLabel, rewardTierMeta } from "@/lib/domain/rewards";
 import type { RewardStatus, RewardTier } from "@/lib/supabase/database.types";
 import { formatDate } from "@/lib/utils";
 import { requireCompleteDancerProfile } from "@/server/queries/auth";
@@ -47,6 +47,27 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
           <p className="text-sm text-white/75">{t("progressTitle", { completed, season: seasonSuffix })}</p>
         </CardContent>
       </Card>
+
+      {portal?.reward?.status === "unlocked" && portal.reward.tier ? (
+        <Card className="animate-celebrate-in overflow-hidden rounded-3xl border-primary/40 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent">
+          <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between md:p-6">
+            <div className="flex items-start gap-3">
+              <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/20 text-primary">
+                <Sparkles className="animate-sparkle h-6 w-6" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+                  {t("unlockedEyebrow")}
+                </p>
+                <p className="mt-1 font-display text-2xl font-bold">
+                  {t("unlockedTitle", { tier: getTierLabel(portal.reward.tier, params.locale) })}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">{t("unlockedBody")}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
 
       <Card className="rounded-2xl border-border/70 bg-secondary/15">
         <CardHeader>

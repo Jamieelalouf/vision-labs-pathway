@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
   if (record.duplicate) return NextResponse.json({ received: true });
 
   const object = event.data.object as any;
-  const enrollmentId = metadataValue(object, "enrollment_id") ?? object.client_reference_id ?? null;
+  const enrollmentId = metadataValue(object, "enrollment_id");
   const dancerId = metadataValue(object, "dancer_id");
   const returningOverrideId = metadataValue(object, "returning_override_id");
   const paymentIntentId =
