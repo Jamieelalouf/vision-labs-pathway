@@ -32,7 +32,6 @@ export default async function ProfilePage({ params }: { params: { locale: Locale
   const completenessItems: CompletenessItem[] = [
     { label: t("firstName"), done: Boolean(dancer?.first_name) },
     { label: t("lastName"), done: Boolean(dancer?.last_name) },
-    { label: t("phone"), done: Boolean(dancer?.phone) },
     { label: t("instagram"), done: Boolean(dancer?.instagram_handle) },
     { label: t("dateOfBirth"), done: Boolean(dancer?.date_of_birth) },
     { label: t("completenessPhoto"), done: Boolean(dancer?.avatar_storage_path) }

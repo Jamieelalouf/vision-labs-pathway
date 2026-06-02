@@ -2,29 +2,41 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-const requiredEnv = [
+const coreEnv = [
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-  "SUPABASE_SERVICE_ROLE_KEY",
-  "STRIPE_SECRET_KEY",
-  "STRIPE_WEBHOOK_SECRET",
-  "STRIPE_PUBLISHABLE_KEY",
   "RESEND_API_KEY",
-  "NEXT_PUBLIC_APP_URL",
+  "NEXT_PUBLIC_APP_URL"
+] as const;
+
+const opsEnv = [
+  "SUPABASE_SERVICE_ROLE_KEY",
   "CRON_SECRET"
-];
+] as const;
 
 export function GET() {
-  const missing = requiredEnv.filter((key) => !process.env[key]);
-  const status = missing.length === 0 ? 200 : 503;
+  const missingCore = coreEnv.filter((key) => !process.env[key]);
+  const missingOps = opsEnv.filter((key) => !process.env[key]);
+  const coreHealthy = missingCore.length === 0;
+  const status = coreHealthy ? 200 : 503;
   const isProduction = process.env.NODE_ENV === "production";
 
   return NextResponse.json(
     {
-      ok: missing.length === 0,
+      ok: coreHealthy,
       service: "vision-labs-pathway",
       checkedAt: new Date().toISOString(),
-      ...(isProduction ? {} : { missing })
+      checks: {
+        coreApp: coreHealthy,
+        supabase: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+        appUrl: Boolean(process.env.NEXT_PUBLIC_APP_URL),
+        email: Boolean(process.env.RESEND_API_KEY),
+        operations: {
+          supabaseServiceRoleConfigured: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+          cronConfigured: Boolean(process.env.CRON_SECRET)
+        }
+      },
+      ...(isProduction ? {} : { missingCore, missingOps })
     },
     {
       status,
