@@ -59,13 +59,14 @@ export function CohortApplicationForm({
 }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (disabled || status === "submitting") return;
 
     setStatus("submitting");
 
-    const formData = new FormData(event.currentTarget);
+    const submittedForm = event.currentTarget;
+    const formData = new FormData(submittedForm);
     const body = new URLSearchParams();
     for (const [key, value] of formData.entries()) {
       body.append(key, String(value));
@@ -76,15 +77,8 @@ export function CohortApplicationForm({
     }
 
     try {
-      await fetch(APPLICATION_ENDPOINT, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body
-      });
-      event.currentTarget.reset();
+      postApplicationToHiddenFrame(body);
+      submittedForm.reset();
       setStatus("success");
     } catch {
       setStatus("error");
@@ -198,6 +192,38 @@ export function CohortApplicationForm({
       </Button>
     </form>
   );
+}
+
+function postApplicationToHiddenFrame(body: URLSearchParams) {
+  const frameName = `cohort-application-submit-${Date.now()}-${Math.random()
+    .toString(36)
+    .slice(2)}`;
+  const iframe = document.createElement("iframe");
+  const form = document.createElement("form");
+
+  iframe.name = frameName;
+  iframe.hidden = true;
+
+  form.action = APPLICATION_ENDPOINT;
+  form.method = "POST";
+  form.target = frameName;
+  form.hidden = true;
+
+  for (const [name, value] of body.entries()) {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  }
+
+  document.body.append(iframe, form);
+  form.submit();
+
+  window.setTimeout(() => {
+    form.remove();
+    iframe.remove();
+  }, 30_000);
 }
 
 function Field({
