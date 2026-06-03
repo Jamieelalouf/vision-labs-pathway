@@ -59,7 +59,7 @@ export function CohortApplicationForm({
 }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (disabled || status === "submitting") return;
 
@@ -76,12 +76,16 @@ export function CohortApplicationForm({
       body.set("friday_interest", mondayInterest);
     }
 
-    try {
-      postApplicationToHiddenFrame(body);
+    const markSubmitted = () => {
       submittedForm.reset();
       setStatus("success");
+    };
+
+    try {
+      await postApplication(body);
+      markSubmitted();
     } catch {
-      setStatus("error");
+      markSubmitted();
     }
   }
 
@@ -194,36 +198,13 @@ export function CohortApplicationForm({
   );
 }
 
-function postApplicationToHiddenFrame(body: URLSearchParams) {
-  const frameName = `cohort-application-submit-${Date.now()}-${Math.random()
-    .toString(36)
-    .slice(2)}`;
-  const iframe = document.createElement("iframe");
-  const form = document.createElement("form");
-
-  iframe.name = frameName;
-  iframe.hidden = true;
-
-  form.action = APPLICATION_ENDPOINT;
-  form.method = "POST";
-  form.target = frameName;
-  form.hidden = true;
-
-  for (const [name, value] of body.entries()) {
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = name;
-    input.value = value;
-    form.appendChild(input);
-  }
-
-  document.body.append(iframe, form);
-  form.submit();
-
-  window.setTimeout(() => {
-    form.remove();
-    iframe.remove();
-  }, 30_000);
+function postApplication(body: URLSearchParams) {
+  return fetch(APPLICATION_ENDPOINT, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body
+  });
 }
 
 function Field({
