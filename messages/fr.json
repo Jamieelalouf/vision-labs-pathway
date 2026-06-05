@@ -274,21 +274,6 @@
     "cohortTitle": "Prochaine cohorte",
     "cohortEmptyTitle": "La prochaine cohorte arrive",
     "cohortEmptyDescription": "Quand les inscriptions ouvrent, la cohorte en vedette apparaitra ici automatiquement.",
-    "testimonialsTitle": "Ce qu'on ressent dans la salle",
-    "testimonials": [
-      {
-        "quote": "La structure m'a fait arriver differemment chaque semaine.",
-        "name": "Danseur LABS"
-      },
-      {
-        "quote": "C'etait serieux sans etre froid. Tu savais vers quoi tu travaillais.",
-        "name": "Danseur de retour"
-      },
-      {
-        "quote": "Le Pathway rendait la constance visible.",
-        "name": "Participant VISION LABS"
-      }
-    ],
     "faqTitle": "Des questions avant de commencer?",
     "faqLink": "Lire la FAQ complete",
     "finalTitle": "Mets l'intention en action. Joins la prochaine cohorte.",

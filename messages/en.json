@@ -274,21 +274,6 @@
     "cohortTitle": "Upcoming cohort",
     "cohortEmptyTitle": "The next cohort is coming",
     "cohortEmptyDescription": "Once registration opens, the featured cohort will appear here automatically.",
-    "testimonialsTitle": "What the room feels like",
-    "testimonials": [
-      {
-        "quote": "The structure made me show up differently every week.",
-        "name": "LABS dancer"
-      },
-      {
-        "quote": "It felt serious without feeling cold. You knew what you were working toward.",
-        "name": "Returning dancer"
-      },
-      {
-        "quote": "The Pathway made consistency feel visible.",
-        "name": "VISION LABS participant"
-      }
-    ],
     "faqTitle": "Questions before you step in?",
     "faqLink": "Read the full FAQ",
     "finalTitle": "Apply intention. Join the next cohort.",
