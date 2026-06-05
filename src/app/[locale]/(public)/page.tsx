@@ -5,7 +5,6 @@ import {
   ArrowRight,
   CheckCircle2,
   NotebookPen,
-  Quote,
   Target,
   Trophy,
   Users,
@@ -37,11 +36,6 @@ type RewardCopy = {
 type FeatureCopy = {
   title: string;
   description: string;
-};
-
-type TestimonialCopy = {
-  quote: string;
-  name: string;
 };
 
 export async function generateMetadata({
@@ -79,7 +73,6 @@ export default async function LandingPage({ params }: { params: { locale: Locale
   const features = t.raw("gets") as FeatureCopy[];
   const rewardCards = t.raw("rewardCards") as RewardCopy[];
   const progressLabels = t.raw("progressLabels") as Record<RewardTier, string>;
-  const testimonials = (t.raw("testimonials") as TestimonialCopy[]) ?? [];
   const faqItems = ((faq.raw("items") as { q: string; a: string }[]) ?? []).slice(0, 4);
   const cohorts = await getOpenCohorts();
   const featuredCohort = cohorts.find((cohort) => cohort.id === COHORT3_ID) ?? null;
@@ -267,27 +260,6 @@ export default async function LandingPage({ params }: { params: { locale: Locale
           </div>
         </div>
       </section>
-
-      {testimonials.length ? (
-        <section className="section-y border-t border-border bg-[#101010]">
-          <div className="page-shell">
-            <h2 className="font-display text-3xl font-bold md:text-5xl">{t("testimonialsTitle")}</h2>
-            <div className="mt-10 grid gap-4 md:grid-cols-3">
-              {testimonials.map((item, index) => (
-                <Card key={index}>
-                  <CardContent className="flex h-full flex-col gap-4 p-6">
-                    <Quote className="h-6 w-6 text-primary" aria-hidden="true" />
-                    <p className="text-lg leading-7">{`“${item.quote}”`}</p>
-                    <p className="mt-auto text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                      {item.name}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
 
       {faqItems.length ? (
         <section className="section-y border-t border-border">
