@@ -3,8 +3,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CommunityLoading() {
   return (
-    <section className="space-y-5 pb-36 md:space-y-6 md:pb-8" aria-busy="true">
-      <Card className="overflow-hidden rounded-3xl border-primary/25 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e]">
+    <section className="space-y-5 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:space-y-6 md:pb-8" aria-busy="true">
+      <Card className="overflow-hidden rounded-[1.35rem] border-primary/25 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] md:rounded-3xl">
         <CardContent className="space-y-4 p-4 md:p-5">
           <Skeleton className="h-4 w-24 bg-white/10" />
           <Skeleton className="h-7 w-48 bg-white/10" />
@@ -17,7 +17,7 @@ export default function CommunityLoading() {
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
         <div className="mx-auto w-full max-w-[640px] space-y-5">
-          <Card className="rounded-3xl border-border/70 bg-secondary/15">
+          <Card className="rounded-[1.35rem] border-border/70 bg-secondary/15 md:rounded-3xl">
             <CardContent className="space-y-3 p-4 md:p-5">
               <Skeleton className="h-3 w-16" />
               <div className="flex gap-3">
@@ -32,7 +32,7 @@ export default function CommunityLoading() {
           </Card>
 
           {[0, 1, 2].map((i) => (
-            <Card key={i} className="overflow-hidden rounded-3xl border-border/70 bg-black/40">
+            <Card key={i} className="overflow-hidden rounded-[1.35rem] border-border/70 bg-black/40 md:rounded-3xl">
               <CardContent className="space-y-3 p-4 md:p-5">
                 <div className="flex items-start gap-3">
                   <Skeleton className="h-11 w-11 rounded-full" />

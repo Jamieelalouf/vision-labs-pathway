@@ -60,10 +60,10 @@ export default async function VideosPage({
   );
 
   return (
-    <section className="space-y-8">
+    <section className="space-y-5 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:space-y-8 md:pb-8">
       <div>
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">{t("eyebrow")}</p>
-        <h1 className="mt-2 font-display text-4xl font-bold">{t("title")}</h1>
+        <h1 className="mt-2 font-display text-3xl font-bold md:text-4xl">{t("title")}</h1>
       </div>
 
       {uploadJustSucceeded ? (

@@ -73,11 +73,11 @@ export function ProfileForm({
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
         <CardTitle>{labels.dancerDetails}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <form action={action} className="grid gap-5 md:grid-cols-2">
+      <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+        <form action={action} className="grid gap-4 md:grid-cols-2 md:gap-5">
           <input type="hidden" name="language_pref" value={locale} />
           <input type="hidden" name="cohort" value={cohort ?? ""} />
           <div className="md:col-span-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -114,7 +114,7 @@ export function ProfileForm({
           </div>
           {mode === "full" ? (
             <>
-              <div className="md:col-span-2 mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              <div className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground md:col-span-2">
                 {labels.emergency}
               </div>
               <div className="space-y-2">
@@ -134,7 +134,7 @@ export function ProfileForm({
                   defaultValue={defaults?.emergency_contact_phone ?? ""}
                 />
               </div>
-              <div className="md:col-span-2 mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              <div className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground md:col-span-2">
                 {labels.guardian}
               </div>
               <div className="space-y-2">

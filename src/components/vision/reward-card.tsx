@@ -37,7 +37,7 @@ export function RewardCard({
         className
       )}
     >
-      <CardHeader>
+      <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
         <div className="flex items-center justify-between gap-3">
           <TierBadge tier={tier} />
           {locked ? (
@@ -49,15 +49,15 @@ export function RewardCard({
             />
           )}
         </div>
-        <CardTitle className="pt-4">{title}</CardTitle>
+        <CardTitle className="pt-2 text-lg md:pt-4 md:text-xl">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 p-4 pt-0 md:space-y-4 md:p-6 md:pt-0">
         {visibleCategories.length ? (
-          <div className="grid gap-3">
+          <div className={cn("grid gap-2 md:gap-3", locked && "hidden sm:grid")}>
             {visibleCategories.map((category) => (
-              <div key={category.title} className="rounded-xl border border-border/80 bg-background/40 p-3">
+              <div key={category.title} className="rounded-xl border border-border/80 bg-background/40 p-2.5 md:p-3">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">{category.title}</p>
-                <ul className="mt-2 space-y-1.5">
+                <ul className="mt-2 space-y-1">
                   {category.items.map((item) => (
                     <li key={item} className="text-sm text-muted-foreground">
                       {item}
@@ -70,7 +70,7 @@ export function RewardCard({
         ) : reward ? (
           <p className="text-sm text-muted-foreground">{reward}</p>
         ) : null}
-        <p className="border-t border-border pt-4 text-xs uppercase tracking-[0.16em] text-muted-foreground">
+        <p className="border-t border-border pt-3 text-xs uppercase tracking-[0.16em] text-muted-foreground md:pt-4">
           {requiredLabel ?? `${required} ${required === 1 ? "cohort" : "cohorts"} completed`}
         </p>
       </CardContent>

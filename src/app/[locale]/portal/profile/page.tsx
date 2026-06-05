@@ -38,14 +38,14 @@ export default async function ProfilePage({ params }: { params: { locale: Locale
   ];
 
   return (
-    <section className="max-w-4xl space-y-6 pb-36 md:space-y-8 md:pb-8">
-      <Card className="relative overflow-hidden rounded-3xl border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)]">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/25 blur-3xl" aria-hidden="true" />
-        <CardContent className="relative space-y-4 p-5 md:p-8">
+    <section className="max-w-4xl space-y-5 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:space-y-8 md:pb-8">
+      <Card className="relative overflow-hidden rounded-[1.35rem] border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)] md:rounded-3xl">
+        <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/20 blur-3xl md:-right-16 md:-top-16 md:h-56 md:w-56 md:bg-primary/25" aria-hidden="true" />
+        <CardContent className="relative space-y-3 p-4 md:space-y-4 md:p-8">
           <Badge className="w-fit rounded-full bg-primary/20 text-xs uppercase tracking-[0.14em] text-primary hover:bg-primary/20">
             {t("account")}
           </Badge>
-          <h1 className="font-display text-3xl font-bold text-white md:text-5xl">{t("title")}</h1>
+          <h1 className="font-display text-2xl font-bold text-white md:text-5xl">{t("title")}</h1>
           <ProfilePhotoUploader
             locale={params.locale}
             initialImageUrl={avatarSignedUrl}
@@ -69,7 +69,7 @@ export default async function ProfilePage({ params }: { params: { locale: Locale
         missingLabel={t("completenessMissing")}
       />
 
-      <div className="rounded-3xl border border-border/70 bg-secondary/10 p-1.5">
+      <div className="rounded-[1.35rem] border border-border/70 bg-secondary/10 p-1 md:rounded-3xl md:p-1.5">
         <ProfileForm
           locale={params.locale}
           mode="edit"

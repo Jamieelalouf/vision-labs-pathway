@@ -57,14 +57,14 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
   });
 
   return (
-    <section className="space-y-6 pb-36 md:space-y-8 md:pb-8">
-      <Card className="relative overflow-hidden rounded-3xl border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)]">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/25 blur-3xl" aria-hidden="true" />
-        <CardContent className="relative flex flex-col gap-4 p-5 md:p-8">
+    <section className="space-y-5 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:space-y-8 md:pb-8">
+      <Card className="relative overflow-hidden rounded-[1.35rem] border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)] md:rounded-3xl">
+        <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/20 blur-3xl md:-right-16 md:-top-16 md:h-56 md:w-56 md:bg-primary/25" aria-hidden="true" />
+        <CardContent className="relative flex flex-col gap-3 p-4 md:gap-4 md:p-8">
           <Badge className="w-fit rounded-full bg-primary/20 text-xs uppercase tracking-[0.14em] text-primary hover:bg-primary/20">
             {t("eyebrow")}
           </Badge>
-          <h1 className="font-display text-3xl font-bold text-white md:text-5xl">{t("title")}</h1>
+          <h1 className="font-display text-2xl font-bold text-white md:text-5xl">{t("title")}</h1>
           <p className="text-sm text-white/75">{cohort?.name ?? t("emptyDescription")}</p>
         </CardContent>
       </Card>
@@ -72,10 +72,10 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
       {cohort ? (
         <>
           <Card className="rounded-2xl border-border/70 bg-secondary/15">
-            <CardContent className="grid gap-8 p-5 md:p-6 lg:grid-cols-[1fr_0.42fr]">
+            <CardContent className="grid gap-5 p-4 md:gap-8 md:p-6 lg:grid-cols-[1fr_0.42fr]">
               <div>
-                <h2 className="font-display text-3xl font-bold">{cohort.name}</h2>
-                <div className="mt-6 grid gap-3 text-sm text-muted-foreground">
+                <h2 className="font-display text-2xl font-bold md:text-3xl">{cohort.name}</h2>
+                <div className="mt-4 grid gap-2 text-sm text-muted-foreground md:mt-6 md:gap-3">
                   <p className="flex items-center gap-2">
                     <CalendarDays className="h-4 w-4 text-primary" aria-hidden="true" />
                     {t("dates")}: {formatDate(cohort.start_date, params.locale)} -{" "}
@@ -95,11 +95,11 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
             </CardContent>
           </Card>
 
-          <section className="space-y-5">
-            <h2 className="font-display text-3xl font-bold">{t("timeline")}</h2>
+          <section className="scroll-mb-[calc(5rem+env(safe-area-inset-bottom))] space-y-3 md:space-y-5">
+            <h2 className="font-display text-2xl font-bold md:text-3xl">{t("timeline")}</h2>
             {timelineItems.length ? (
               <Card className="rounded-2xl border-border/70 bg-secondary/15">
-                <CardContent className="p-4 md:p-6">
+                <CardContent className="p-3 md:p-6">
                   <CohortTimeline items={timelineItems} />
                 </CardContent>
               </Card>
@@ -109,10 +109,10 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
           </section>
 
           <Card className="rounded-2xl border-border/70 bg-secondary/15">
-            <CardHeader>
+            <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
               <CardTitle>{t("resources")}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-3 p-4 pt-0 md:p-6 md:pt-0">
               {resources.length ? (
                 resources.map((resource: any) => (
                   <a
@@ -120,7 +120,7 @@ export default async function MyCohortPage({ params }: { params: { locale: Local
                     href={resource.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block rounded-xl border border-border/80 bg-background/40 p-4 text-sm transition-colors hover:border-primary/40 hover:text-primary"
+                    className="block rounded-xl border border-border/80 bg-background/40 p-3 text-sm transition-colors hover:border-primary/40 hover:text-primary md:p-4"
                   >
                     <span className="font-medium">
                       {String(localizedField(resource, "title", params.locale) ?? resource.url)}

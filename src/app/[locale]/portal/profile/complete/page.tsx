@@ -37,16 +37,16 @@ export default async function CompleteProfilePage({
     : `/${params.locale}/portal/dashboard`;
 
   return (
-    <section className="max-w-3xl space-y-6">
+    <section className="max-w-3xl space-y-5 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:space-y-6 md:pb-8">
       <div>
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">VISION LABS</p>
-        <h1 className="mt-4 font-display text-4xl font-bold md:text-5xl">{t("profileTitle")}</h1>
-        <p className="mt-4 text-muted-foreground">{t("profileIntro")}</p>
+        <h1 className="mt-3 font-display text-3xl font-bold md:mt-4 md:text-5xl">{t("profileTitle")}</h1>
+        <p className="mt-3 text-sm text-muted-foreground md:mt-4 md:text-base">{t("profileIntro")}</p>
       </div>
       <Card className="border-primary/20 bg-gradient-to-r from-secondary/50 to-background">
-        <CardContent className="flex items-center gap-4 p-5">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/30">
-            <Camera className="h-6 w-6" aria-hidden="true" />
+        <CardContent className="flex items-center gap-3 p-4 md:gap-4 md:p-5">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/30 md:h-14 md:w-14">
+            <Camera className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
           </div>
           <div>
             <p className="text-sm font-semibold">{profile("profileVibeTitle")}</p>

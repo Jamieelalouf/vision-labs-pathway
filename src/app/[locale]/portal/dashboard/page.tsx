@@ -70,7 +70,7 @@ export default async function DashboardPage({
   }).format(new Date());
 
   return (
-    <section className="space-y-6 pb-36 md:space-y-8 md:pb-8">
+    <section className="space-y-5 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:space-y-8 md:pb-8">
       {searchParams?.registration === "success" ? (
         <PaymentStatusNotice
           title={t("paymentProcessingTitle")}
@@ -89,13 +89,13 @@ export default async function DashboardPage({
         </Card>
       ) : null}
 
-      <Card className="relative overflow-hidden rounded-3xl border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)]">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/25 blur-3xl" aria-hidden="true" />
-        <div className="pointer-events-none absolute bottom-0 right-12 h-32 w-32 rounded-full border border-white/15" aria-hidden="true" />
-        <div className="pointer-events-none absolute bottom-10 right-20 h-20 w-20 rounded-full border-2 border-primary/50" aria-hidden="true" />
-        <div className="pointer-events-none absolute bottom-8 right-6 h-24 w-1 rotate-12 rounded-full bg-gradient-to-b from-primary to-transparent" aria-hidden="true" />
+      <Card className="relative overflow-hidden rounded-[1.35rem] border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)] md:rounded-3xl">
+        <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/20 blur-3xl md:-right-16 md:-top-16 md:h-56 md:w-56 md:bg-primary/25" aria-hidden="true" />
+        <div className="pointer-events-none absolute bottom-0 right-12 hidden h-32 w-32 rounded-full border border-white/15 sm:block" aria-hidden="true" />
+        <div className="pointer-events-none absolute bottom-10 right-20 hidden h-20 w-20 rounded-full border-2 border-primary/50 sm:block" aria-hidden="true" />
+        <div className="pointer-events-none absolute bottom-8 right-6 hidden h-24 w-1 rotate-12 rounded-full bg-gradient-to-b from-primary to-transparent sm:block" aria-hidden="true" />
 
-        <CardContent className="relative flex flex-col gap-6 p-5 md:p-8">
+        <CardContent className="relative flex flex-col gap-4 p-4 md:gap-6 md:p-8">
           <div className="flex flex-wrap items-center gap-2">
             <Badge className="rounded-full bg-primary/20 text-xs uppercase tracking-[0.14em] text-primary hover:bg-primary/20">
               <TimeGreeting
@@ -116,7 +116,7 @@ export default async function DashboardPage({
           </div>
 
           <div className="flex flex-col gap-4 md:max-w-2xl">
-            <h1 className="font-display text-3xl font-bold tracking-tight text-white md:text-5xl">
+            <h1 className="font-display text-2xl font-bold tracking-tight text-white md:text-5xl">
               {dancer?.first_name
                 ? t("lockedInHeading", { name: dancer.first_name })
                 : t("lockedInHeadingNoName")}
@@ -128,36 +128,36 @@ export default async function DashboardPage({
             </p>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <Button asChild className="h-11 rounded-full px-6 text-sm font-semibold">
+          <div className="flex flex-col gap-2 min-[380px]:flex-row min-[380px]:flex-wrap min-[380px]:items-center sm:gap-3">
+            <Button asChild className="h-10 rounded-full px-5 text-sm font-semibold md:h-11 md:px-6">
               <Link href={primaryAction.href}>
                 <PrimaryIcon className="h-4 w-4" aria-hidden="true" />
                 {primaryAction.label}
               </Link>
             </Button>
-            <Button asChild variant="secondary" className="h-11 rounded-full px-6">
+            <Button asChild variant="secondary" size="sm" className="h-9 rounded-full px-4 text-xs md:h-11 md:px-6 md:text-sm">
               <Link href={`/${params.locale}/portal/community#post`}>{t("postClip")}</Link>
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(300px,0.85fr)]">
-        <div className="space-y-5">
+      <div className="grid gap-4 md:gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(300px,0.85fr)]">
+        <div className="space-y-4 md:space-y-5">
           {nextSession ? (
             <Card className="rounded-2xl border-primary/30 bg-gradient-to-br from-primary/10 to-secondary/20">
-              <CardHeader className="pb-3">
+              <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <CalendarClock className="h-5 w-5 text-primary" aria-hidden="true" />
                   {t("nextSession")}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3 p-4 pt-0 md:space-y-4 md:p-6 md:pt-0">
                 <div className="space-y-1">
                   <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
                     {t("week")} {nextSession.session_number}
                   </p>
-                  <p className="font-display text-2xl font-bold">
+                  <p className="font-display text-xl font-bold md:text-2xl">
                     {String(localizedField(nextSession, "theme", params.locale) ?? currentCohort?.name ?? "")}
                   </p>
                 </div>
@@ -201,14 +201,14 @@ export default async function DashboardPage({
           ) : null}
 
           <Card className="rounded-2xl border-border/70 bg-secondary/15">
-            <CardHeader className="pb-3">
+            <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
               <CardTitle className="text-lg">{t("currentCohort")}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-5">
+            <CardContent className="space-y-4 p-4 pt-0 md:space-y-5 md:p-6 md:pt-0">
               {currentCohort ? (
                 <>
                   <div className="space-y-2">
-                    <p className="font-display text-3xl font-bold">{currentCohort.name}</p>
+                    <p className="font-display text-2xl font-bold md:text-3xl">{currentCohort.name}</p>
                     <p className="flex items-center gap-2 text-sm text-muted-foreground">
                       <CalendarDays className="h-4 w-4 text-primary" aria-hidden="true" />
                       {formatDate(currentCohort.start_date, params.locale)} - {formatDate(currentCohort.end_date, params.locale)}
@@ -254,10 +254,10 @@ export default async function DashboardPage({
           </Card>
 
           <Card className="rounded-2xl border-border/70 bg-secondary/15">
-            <CardHeader className="pb-3">
+            <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
               <CardTitle className="text-lg">{t("seasonProgress")}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-5">
+            <CardContent className="space-y-4 p-4 pt-0 md:space-y-5 md:p-6 md:pt-0">
               <PathwayProgress completed={completed} />
               <p className="text-sm text-muted-foreground">{t("seasonProgressLine", { completed, season: seasonSuffix })}</p>
               <Button asChild variant="secondary" size="sm" className="rounded-full">
@@ -267,11 +267,11 @@ export default async function DashboardPage({
           </Card>
         </div>
 
-        <aside className="space-y-5">
+        <aside className="space-y-4 md:space-y-5">
           <div className="grid grid-cols-2 gap-3">
             <Link href={`/${params.locale}/portal/pathway`} className="focus-ring rounded-2xl">
               <Card className="h-full rounded-2xl border-border/70 bg-secondary/20 transition-colors hover:border-primary/40">
-                <CardContent className="space-y-1 p-4">
+                <CardContent className="space-y-1 p-3 md:p-4">
                   <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">{t("statCohorts")}</p>
                   <p className="font-display text-2xl font-bold">{completed}</p>
                 </CardContent>
@@ -279,7 +279,7 @@ export default async function DashboardPage({
             </Link>
             <Link href={`/${params.locale}/portal/community`} className="focus-ring rounded-2xl">
               <Card className="h-full rounded-2xl border-border/70 bg-secondary/20 transition-colors hover:border-primary/40">
-                <CardContent className="space-y-1 p-4">
+                <CardContent className="space-y-1 p-3 md:p-4">
                   <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">{t("statActivity")}</p>
                   <p className="font-display text-2xl font-bold">{cohortActivityCount}</p>
                 </CardContent>
@@ -287,7 +287,7 @@ export default async function DashboardPage({
             </Link>
             <Link href={`/${params.locale}/portal/videos`} className="focus-ring rounded-2xl">
               <Card className="h-full rounded-2xl border-border/70 bg-secondary/20 transition-colors hover:border-primary/40">
-                <CardContent className="space-y-1 p-4">
+                <CardContent className="space-y-1 p-3 md:p-4">
                   <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">{t("statUploads")}</p>
                   <p className="font-display text-2xl font-bold">{portal?.videos.length ?? 0}</p>
                 </CardContent>
@@ -295,7 +295,7 @@ export default async function DashboardPage({
             </Link>
             <Link href={`/${params.locale}/portal/rewards`} className="focus-ring rounded-2xl">
               <Card className="h-full rounded-2xl border-border/70 bg-secondary/20 transition-colors hover:border-primary/40">
-                <CardContent className="space-y-1 p-4">
+                <CardContent className="space-y-1 p-3 md:p-4">
                   <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">{t("statReward")}</p>
                   <p className="font-display text-lg font-bold leading-tight">
                     {portal?.reward ? getTierLabel(portal.reward.tier, params.locale) : "-"}
@@ -306,14 +306,14 @@ export default async function DashboardPage({
           </div>
 
           <Card className="rounded-2xl border-primary/30 bg-gradient-to-br from-primary/10 to-secondary/20">
-            <CardHeader className="pb-3">
+            <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Trophy className="h-5 w-5 text-primary" aria-hidden="true" />
                 {t("nextUnlock")}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="font-display text-3xl font-bold">{nextTier ? getTierLabel(nextTier, params.locale) : "Legacy"}</p>
+            <CardContent className="space-y-3 p-4 pt-0 md:space-y-4 md:p-6 md:pt-0">
+              <p className="font-display text-2xl font-bold md:text-3xl">{nextTier ? getTierLabel(nextTier, params.locale) : "Legacy"}</p>
               <p className="text-sm leading-6 text-muted-foreground">
                 {nextTier
                   ? t("nextTier", {

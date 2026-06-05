@@ -23,8 +23,8 @@ export function ProfileCompleteness({
   const missing = items.filter((item) => !item.done);
 
   return (
-    <Card className="rounded-3xl border-border/70 bg-secondary/15">
-      <CardContent className="space-y-4 p-5 md:p-6">
+    <Card className="rounded-[1.35rem] border-border/70 bg-secondary/15 md:rounded-3xl">
+      <CardContent className="space-y-3 p-4 md:space-y-4 md:p-6">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span

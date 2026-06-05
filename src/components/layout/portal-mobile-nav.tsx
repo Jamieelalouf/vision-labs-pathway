@@ -38,8 +38,8 @@ export function PortalMobileNav({
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 pb-[max(env(safe-area-inset-bottom),0.5rem)] backdrop-blur md:hidden">
-      <div className="mx-auto grid h-16 max-w-xl grid-cols-4">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/90 pb-[max(env(safe-area-inset-bottom),0.25rem)] shadow-[0_-8px_24px_-22px_rgba(0,0,0,0.8)] backdrop-blur md:hidden">
+      <div className="mx-auto grid h-12 max-w-lg grid-cols-4 px-1">
         {mobilePortalNav.map((item) => {
           const Icon = item.icon;
 
@@ -53,7 +53,7 @@ export function PortalMobileNav({
                   </span>
                   <span>{labels.more ?? item.label}</span>
                 </summary>
-                <div className="absolute bottom-16 right-2 min-w-44 rounded-xl border border-border bg-background p-2 shadow-2xl">
+                <div className="absolute bottom-12 right-2 min-w-44 rounded-xl border border-border bg-background p-2 shadow-2xl">
                   {overflowNav.map((overflowItem) => {
                     const targetPath = `/${locale}/portal/${overflowItem.href}`;
                     const isActive = pathname === targetPath || pathname?.startsWith(`${targetPath}/`);
@@ -87,7 +87,7 @@ export function PortalMobileNav({
               href={`/${locale}/portal/${item.href}`}
               className={`focus-ring flex flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors ${
                 item.isPost
-                  ? "relative -mt-3 rounded-full border border-primary/40 bg-primary px-3.5 py-2 text-primary-foreground shadow-[0_8px_20px_rgba(255,90,31,0.3)]"
+                  ? "mx-1 my-1 rounded-xl border border-primary/35 bg-primary/95 px-2 py-0.5 text-primary-foreground shadow-[0_6px_14px_-12px_rgba(255,90,31,0.65)]"
                   : isActive
                     ? "text-primary"
                     : "text-muted-foreground"

@@ -39,7 +39,12 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  if (process.env.VISION_LABS_DEMO_BYPASS === "1" && process.env.NODE_ENV !== "production") {
+  if (
+    process.env.VISION_LABS_DEMO_BYPASS === "1" &&
+    (process.env.NODE_ENV !== "production" ||
+      process.env.VERCEL_ENV === "preview" ||
+      process.env.VERCEL_ENV === "development")
+  ) {
     return response;
   }
 

@@ -22,7 +22,7 @@ type Copy = {
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <Button disabled={pending}>
+    <Button disabled={pending} className="w-full sm:w-auto">
       <Lock className="h-4 w-4" aria-hidden="true" />
       {label}
     </Button>
@@ -34,7 +34,7 @@ export function SettingsPasswordForm({ locale, copy }: { locale: string; copy: C
   const inputType = reveal ? "text" : "password";
 
   return (
-    <form action={changePasswordAction} className="space-y-4">
+    <form action={changePasswordAction} className="space-y-3 md:space-y-4">
       <input type="hidden" name="locale" value={locale} />
 
       <div className="space-y-2">
@@ -48,7 +48,7 @@ export function SettingsPasswordForm({ locale, copy }: { locale: string; copy: C
         />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-3 md:grid-cols-2 md:gap-4">
         <div className="space-y-2">
           <Label htmlFor="password">{copy.newPassword}</Label>
           <Input

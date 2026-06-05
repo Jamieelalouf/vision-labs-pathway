@@ -21,7 +21,7 @@ export function PendingPosts({
       {pending.map((post) => (
         <Card
           key={post.id}
-          className="animate-celebrate-in overflow-hidden rounded-3xl border-primary/30 bg-black/40"
+          className="animate-celebrate-in overflow-hidden rounded-[1.35rem] border-primary/30 bg-black/40 md:rounded-3xl"
         >
           <CardContent className="space-y-3 p-4 md:p-5">
             <div className="flex items-center gap-3">

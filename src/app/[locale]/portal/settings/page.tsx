@@ -45,14 +45,14 @@ export default async function SettingsPage({
     : null;
 
   return (
-    <section className="max-w-3xl space-y-6 pb-36 md:space-y-8 md:pb-8">
-      <Card className="relative overflow-hidden rounded-3xl border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)]">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/25 blur-3xl" aria-hidden="true" />
-        <CardContent className="relative space-y-3 p-5 md:p-8">
+    <section className="max-w-3xl space-y-5 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:space-y-8 md:pb-8">
+      <Card className="relative overflow-hidden rounded-[1.35rem] border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)] md:rounded-3xl">
+        <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/20 blur-3xl md:-right-16 md:-top-16 md:h-56 md:w-56 md:bg-primary/25" aria-hidden="true" />
+        <CardContent className="relative space-y-3 p-4 md:p-8">
           <Badge className="w-fit rounded-full bg-primary/20 text-xs uppercase tracking-[0.14em] text-primary hover:bg-primary/20">
             {t("eyebrow")}
           </Badge>
-          <h1 className="font-display text-3xl font-bold text-white md:text-5xl">{t("title")}</h1>
+          <h1 className="font-display text-2xl font-bold text-white md:text-5xl">{t("title")}</h1>
           <p className="text-sm text-white/75">{t("subtitle")}</p>
         </CardContent>
       </Card>
@@ -71,10 +71,10 @@ export default async function SettingsPage({
       ) : null}
 
       <Card className="rounded-2xl border-border/70 bg-secondary/15">
-        <CardHeader>
+        <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
           <CardTitle className="text-lg">{t("accountTitle")}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 p-4 pt-0 md:p-6 md:pt-0">
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
               <Mail className="h-5 w-5" aria-hidden="true" />
@@ -111,13 +111,13 @@ export default async function SettingsPage({
       </Card>
 
       <Card className="rounded-2xl border-border/70 bg-secondary/15">
-        <CardHeader>
+        <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
             <Mail className="h-5 w-5 text-primary" aria-hidden="true" />
             {t("emailTitle")}
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
           <SettingsEmailForm
             locale={params.locale}
             currentEmail={profile?.email ?? ""}
@@ -133,13 +133,13 @@ export default async function SettingsPage({
       </Card>
 
       <Card className="rounded-2xl border-border/70 bg-secondary/15">
-        <CardHeader>
+        <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
             <ShieldCheck className="h-5 w-5 text-primary" aria-hidden="true" />
             {t("passwordTitle")}
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
           <SettingsPasswordForm
             locale={params.locale}
             copy={{
@@ -156,10 +156,10 @@ export default async function SettingsPage({
       </Card>
 
       <Card className="rounded-2xl border-border/70 bg-secondary/15">
-        <CardHeader>
+        <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
           <CardTitle className="text-lg">{t("sessionTitle")}</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <CardContent className="flex flex-col gap-3 p-4 pt-0 sm:flex-row sm:items-center sm:justify-between md:gap-4 md:p-6 md:pt-0">
           <p className="text-sm text-muted-foreground">{t("sessionBody")}</p>
           <form action={signOutAction}>
             <Button variant="secondary" className="rounded-full">

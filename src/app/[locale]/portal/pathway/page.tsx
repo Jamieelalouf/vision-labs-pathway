@@ -33,14 +33,14 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
   const rewardCards = pathway.raw("rewardCards") as RewardCopy[];
 
   return (
-    <section className="space-y-6 pb-36 md:space-y-8 md:pb-8">
-      <Card className="relative overflow-hidden rounded-3xl border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)]">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/25 blur-3xl" aria-hidden="true" />
-        <CardContent className="relative flex flex-col gap-4 p-5 md:p-8">
+    <section className="space-y-5 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:space-y-8 md:pb-8">
+      <Card className="relative overflow-hidden rounded-[1.35rem] border-primary/30 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_60px_-24px_rgba(249,115,22,0.45)] md:rounded-3xl">
+        <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/20 blur-3xl md:-right-16 md:-top-16 md:h-56 md:w-56 md:bg-primary/25" aria-hidden="true" />
+        <CardContent className="relative flex flex-col gap-3 p-4 md:gap-4 md:p-8">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">{t("eyebrow")}</p>
-              <h1 className="mt-2 font-display text-3xl font-bold text-white md:text-5xl">{t("title")}</h1>
+              <h1 className="mt-2 font-display text-2xl font-bold text-white md:text-5xl">{t("title")}</h1>
             </div>
             <TierBadge tier={portal?.reward?.tier} />
           </div>
@@ -49,17 +49,17 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
       </Card>
 
       {portal?.reward?.status === "unlocked" && portal.reward.tier ? (
-        <Card className="animate-celebrate-in overflow-hidden rounded-3xl border-primary/40 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent">
-          <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between md:p-6">
+        <Card className="animate-celebrate-in overflow-hidden rounded-[1.35rem] border-primary/40 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent md:rounded-3xl">
+          <CardContent className="flex flex-col gap-3 p-4 md:flex-row md:items-center md:justify-between md:gap-4 md:p-6">
             <div className="flex items-start gap-3">
-              <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/20 text-primary">
-                <Sparkles className="animate-sparkle h-6 w-6" aria-hidden="true" />
+              <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary/20 text-primary md:h-12 md:w-12">
+                <Sparkles className="animate-sparkle h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                   {t("unlockedEyebrow")}
                 </p>
-                <p className="mt-1 font-display text-2xl font-bold">
+                <p className="mt-1 font-display text-xl font-bold md:text-2xl">
                   {t("unlockedTitle", { tier: getTierLabel(portal.reward.tier, params.locale) })}
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">{t("unlockedBody")}</p>
@@ -70,16 +70,16 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
       ) : null}
 
       <Card className="rounded-2xl border-border/70 bg-secondary/15">
-        <CardHeader>
+        <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
           <CardTitle>{t("progressTitle", { completed, season: seasonSuffix })}</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
           <PathwayProgress completed={completed} />
         </CardContent>
       </Card>
 
-      <section className="space-y-5">
-        <h2 className="font-display text-3xl font-bold">{t("rewardLadder")}</h2>
+      <section className="space-y-3 md:space-y-5">
+        <h2 className="font-display text-2xl font-bold md:text-3xl">{t("rewardLadder")}</h2>
         <div className="grid gap-4 md:grid-cols-2">
           {rewardCards.map((reward) => {
             const tier = reward.tier;
@@ -104,10 +104,10 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
 
       <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
         <Card className="rounded-2xl border-border/70 bg-secondary/15">
-          <CardHeader>
+          <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
             <CardTitle>{t("completedCohorts")}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-3 p-4 pt-0 md:p-6 md:pt-0">
             {completedEnrollments.length ? (
               completedEnrollments.map((enrollment) => {
                 const cohort = Array.isArray(enrollment.cohorts)
@@ -116,7 +116,7 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
                 return (
                   <div
                     key={enrollment.id}
-                    className="flex flex-col justify-between gap-3 rounded-xl border border-border/80 bg-background/40 p-4 sm:flex-row sm:items-center"
+                    className="flex flex-col justify-between gap-2 rounded-xl border border-border/80 bg-background/40 p-3 sm:flex-row sm:items-center md:gap-3 md:p-4"
                   >
                     <div>
                       <p className="font-medium">{cohort?.name ?? "Cohort"}</p>
@@ -138,10 +138,10 @@ export default async function PortalPathwayPage({ params }: { params: { locale: 
         </Card>
 
         <Card className="rounded-2xl border-border/70 bg-secondary/15">
-          <CardHeader>
+          <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
             <CardTitle>{t("rules")}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <CardContent className="space-y-2 p-4 pt-0 text-sm text-muted-foreground md:space-y-3 md:p-6 md:pt-0">
             {rules.map((rule) => (
               <p key={rule}>{rule}</p>
             ))}

@@ -23,12 +23,12 @@ export function CohortTimeline({
   className?: string;
 }) {
   return (
-    <div className={cn("grid gap-4 sm:grid-cols-2 lg:grid-cols-4", className)}>
+    <div className={cn("grid gap-3 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:grid-cols-2 sm:gap-4 sm:pb-0 lg:grid-cols-4", className)}>
       {items.map((item, index) => (
         <div
           key={`${item.step}-${item.title}`}
           className={cn(
-            "relative rounded-2xl border border-border bg-card p-5 transition-colors",
+            "relative scroll-mb-[calc(5rem+env(safe-area-inset-bottom))] rounded-2xl border border-border bg-card p-3.5 transition-colors md:p-5",
             item.isCompleted && "border-primary/50 bg-primary/10",
             item.isNext && "border-primary bg-primary/5 ring-1 ring-primary/40"
           )}
@@ -51,9 +51,9 @@ export function CohortTimeline({
               {item.statusLabel}
             </p>
           ) : null}
-          <h3 className="mt-4 font-display text-xl font-semibold leading-tight">{item.title}</h3>
+          <h3 className="mt-2 font-display text-lg font-semibold leading-tight md:mt-4 md:text-xl">{item.title}</h3>
           {item.date ? (
-            <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+            <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground md:mt-4">
               <CalendarDays className="h-4 w-4 text-primary" aria-hidden="true" />
               <span>{item.date}</span>
               {item.relativeDate ? (
@@ -62,10 +62,10 @@ export function CohortTimeline({
             </p>
           ) : null}
           {item.description ? (
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">{item.description}</p>
+            <p className="mt-3 text-sm leading-5 text-muted-foreground md:mt-4 md:leading-6">{item.description}</p>
           ) : null}
           {item.meta ? (
-            <p className="mt-4 border-t border-border pt-4 text-xs uppercase tracking-[0.14em] text-muted-foreground">
+            <p className="mt-3 border-t border-border pt-3 text-xs uppercase tracking-[0.14em] text-muted-foreground md:mt-4 md:pt-4">
               {item.meta}
             </p>
           ) : null}

@@ -52,27 +52,27 @@ export default async function RewardsPage({ params }: { params: { locale: Locale
           : Lock;
 
   return (
-    <section className="space-y-8">
+    <section className="space-y-5 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:space-y-8 md:pb-8">
       <div>
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
           {t("eyebrow")}
         </p>
-        <h1 className="mt-2 font-display text-4xl font-bold">{t("title")}</h1>
+        <h1 className="mt-2 font-display text-3xl font-bold md:text-4xl">{t("title")}</h1>
       </div>
 
       <Card className={reward ? "border-primary/30" : undefined}>
-        <CardHeader>
+        <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <CardTitle>{t("currentReward")}</CardTitle>
             <TierBadge tier={reward?.tier} />
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 p-4 pt-0 md:space-y-6 md:p-6 md:pt-0">
           {reward ? (
             <>
               <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
                 <div>
-                  <p className="font-display text-3xl font-bold">
+                  <p className="font-display text-2xl font-bold md:text-3xl">
                     {getRewardLabel(reward.tier, params.locale)}
                   </p>
                   <Badge variant="outline" className="mt-4 w-fit uppercase tracking-[0.12em]">
@@ -105,13 +105,13 @@ export default async function RewardsPage({ params }: { params: { locale: Locale
       </Card>
 
       <Card className="border-primary/20">
-        <CardHeader>
+        <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
           <CardTitle className="flex items-center gap-2">
             <Trophy className="h-5 w-5 text-primary" aria-hidden="true" />
             {t("nextUnlockTitle")}
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-5">
+        <CardContent className="space-y-4 p-4 pt-0 md:space-y-5 md:p-6 md:pt-0">
           <PathwayProgress completed={completed} />
           <p className="text-sm leading-6 text-muted-foreground">
             {nextTier
@@ -131,10 +131,10 @@ export default async function RewardsPage({ params }: { params: { locale: Locale
       </Card>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
           <CardTitle>{t("rules")}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm text-muted-foreground">
+        <CardContent className="space-y-2 p-4 pt-0 text-sm text-muted-foreground md:p-6 md:pt-0">
           {rules.map((rule) => (
             <p key={rule}>{rule}</p>
           ))}

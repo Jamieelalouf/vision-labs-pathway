@@ -239,8 +239,8 @@ export default async function CommunityPage({
     : null;
 
   return (
-    <section className="space-y-5 pb-36 md:space-y-6 md:pb-8">
-      <Card className="overflow-hidden rounded-3xl border-primary/25 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_55px_-28px_rgba(249,115,22,0.45)]">
+    <section className="space-y-5 pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:space-y-6 md:pb-8">
+      <Card className="overflow-hidden rounded-[1.35rem] border-primary/25 bg-gradient-to-br from-[#241036] via-[#11131f] to-[#22122e] shadow-[0_18px_55px_-28px_rgba(249,115,22,0.45)] md:rounded-3xl">
         <CardContent className="space-y-4 p-4 md:p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-2">
@@ -250,11 +250,11 @@ export default async function CommunityPage({
               <h1 className="font-display text-2xl font-bold text-white md:text-3xl">{t("title")}</h1>
             </div>
             {cohorts.length > 1 ? (
-              <form action={`/${params.locale}/portal/community`} className="flex flex-wrap items-center gap-2">
+              <form action={`/${params.locale}/portal/community`} className="flex w-full flex-wrap items-center gap-2 min-[430px]:w-auto">
                 <select
                   name="cohort"
                   defaultValue={selectedCohortId}
-                  className="h-9 rounded-full border border-white/20 bg-black/30 px-4 text-xs text-white/90"
+                  className="h-9 min-w-0 flex-1 rounded-full border border-white/20 bg-black/30 px-3 text-xs text-white/90 min-[430px]:flex-none md:px-4"
                   aria-label={t("cohortLabel")}
                 >
                   {cohorts.map((cohort: any) => (
@@ -271,10 +271,10 @@ export default async function CommunityPage({
           </div>
           {cohorts.length ? (
             <div className="flex flex-wrap gap-2 text-xs">
-              <Badge variant="outline" className="rounded-full border-white/20 bg-white/5 px-3 py-1 text-white/90">
+              <Badge variant="outline" className="max-w-full whitespace-normal rounded-full border-white/20 bg-white/5 px-3 py-1 text-left text-white/90">
                 {t("stats.activeCohort", { name: cohorts.find((c: any) => c.id === selectedCohortId)?.name ?? t("cohortFallback") })}
               </Badge>
-              <Badge variant="outline" className="rounded-full border-white/20 bg-white/5 px-3 py-1 text-white/90">
+              <Badge variant="outline" className="max-w-full whitespace-normal rounded-full border-white/20 bg-white/5 px-3 py-1 text-left text-white/90">
                 {t("stats.activity", { postsText, videosText })}
               </Badge>
             </div>
@@ -288,7 +288,7 @@ export default async function CommunityPage({
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="mx-auto w-full max-w-[640px] space-y-5">
             <CommunityFeedProvider>
-            <Card id="post" className="scroll-mb-28 rounded-3xl border-border/70 bg-secondary/15">
+            <Card id="post" className="scroll-mb-[calc(5rem+env(safe-area-inset-bottom))] rounded-[1.35rem] border-border/70 bg-secondary/15 md:rounded-3xl">
               <CardContent className="space-y-4 p-4 md:p-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">{t("feed.publish")}</p>
                 {uploadJustSucceeded ? (
@@ -325,9 +325,9 @@ export default async function CommunityPage({
                 />
             </CardContent>
             </Card>
-            <Card className="rounded-3xl border-border/70 bg-secondary/15">
+            <Card className="rounded-[1.35rem] border-border/70 bg-secondary/15 md:rounded-3xl">
               <CardContent className="space-y-4 p-4 md:p-5">
-                <details id="upload-panel" className="group rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-3 transition-colors hover:border-primary/60">
+                <details id="upload-panel" className="group scroll-mb-[calc(5rem+env(safe-area-inset-bottom))] rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-3 transition-colors hover:border-primary/60">
                   <summary className="focus-ring flex cursor-pointer list-none items-center gap-3 rounded-xl px-2 py-2 text-sm font-semibold text-foreground">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
                       <Upload className="h-5 w-5" aria-hidden="true" />
@@ -388,7 +388,7 @@ export default async function CommunityPage({
                 const reacted = reactions.some((reaction: any) => reaction.dancer_id === dancer.id);
 
                   return (
-                    <Card key={post.id} className="overflow-hidden rounded-3xl border-border/70 bg-black/40 shadow-[0_10px_35px_-28px_rgba(0,0,0,0.8)]">
+                    <Card key={post.id} className="scroll-mb-[calc(5rem+env(safe-area-inset-bottom))] overflow-hidden rounded-[1.35rem] border-border/70 bg-black/40 shadow-[0_10px_35px_-28px_rgba(0,0,0,0.8)] md:rounded-3xl">
                       <CardContent className="space-y-3 p-4 md:p-5">
                         <div className="flex items-start gap-3">
                         <AvatarCircle
@@ -460,7 +460,7 @@ export default async function CommunityPage({
                         <p className="text-xs text-muted-foreground">{t("feed.commentsCount", { count: comments.length })}</p>
                       </div>
 
-                      <div id={`comments-${post.id}`} className="scroll-mb-28">
+                      <div id={`comments-${post.id}`} className="scroll-mb-[calc(5rem+env(safe-area-inset-bottom))]">
                         <CommentThread
                           postId={post.id}
                           locale={params.locale}

@@ -18,9 +18,9 @@ export default function PortalError({
   }, [error]);
 
   return (
-    <section className="pb-36 md:pb-8">
-      <Card className="rounded-3xl border-destructive/30 bg-destructive/5">
-        <CardContent className="space-y-5 p-6 md:p-8">
+    <section className="pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-8">
+      <Card className="rounded-[1.35rem] border-destructive/30 bg-destructive/5 md:rounded-3xl">
+        <CardContent className="space-y-4 p-4 md:space-y-5 md:p-8">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-destructive">
               Something went wrong

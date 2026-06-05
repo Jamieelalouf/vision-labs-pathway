@@ -19,7 +19,7 @@ type Copy = {
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <Button disabled={pending}>
+    <Button disabled={pending} className="w-full sm:w-auto">
       <Mail className="h-4 w-4" aria-hidden="true" />
       {label}
     </Button>
@@ -36,10 +36,10 @@ export function SettingsEmailForm({
   copy: Copy;
 }) {
   return (
-    <form action={changeEmailAction} className="space-y-4">
+    <form action={changeEmailAction} className="space-y-3 md:space-y-4">
       <input type="hidden" name="locale" value={locale} />
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-3 md:grid-cols-2 md:gap-4">
         <div className="space-y-2">
           <Label htmlFor="current_email">{copy.currentEmail}</Label>
           <Input id="current_email" value={currentEmail} readOnly disabled className="opacity-70" />
