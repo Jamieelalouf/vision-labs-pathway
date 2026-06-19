@@ -177,6 +177,7 @@ export function CohortApplicationForm({
         type="url"
         inputMode="url"
         placeholder={copy.placeholders.videoLink}
+        required
       />
 
       <div className="space-y-2">

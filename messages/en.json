@@ -488,7 +488,7 @@
         "referredBy": "Referred by",
         "otherInfo": "Anything else we should know?",
         "age": "Age *",
-        "videoLink": "Video link"
+        "videoLink": "Video link *"
       },
       "placeholders": {
         "instagram": "@yourhandle",
